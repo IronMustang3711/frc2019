@@ -10,8 +10,8 @@
 
 
 package org.usfirst.frc3711.FRC2019.commands;
+
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc3711.FRC2019.Robot;
 
 /**
  *
