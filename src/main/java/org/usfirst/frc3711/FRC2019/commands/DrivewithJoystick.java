@@ -12,6 +12,8 @@
 package org.usfirst.frc3711.FRC2019.commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 import org.usfirst.frc3711.FRC2019.Robot;
 
 /**
@@ -39,6 +41,7 @@ public class DrivewithJoystick extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        Shuffleboard.selectTab(Robot.chassis.tab.getTitle());
     }
 
     // Called repeatedly when this Command is scheduled to run
