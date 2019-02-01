@@ -11,11 +11,13 @@
 
 package org.usfirst.frc3711.FRC2019;
 
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import org.usfirst.frc3711.FRC2019.commands.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc3711.FRC2019.commands.AutonomousCommand;
+import org.usfirst.frc3711.FRC2019.commands.DrivewithJoystick;
+import org.usfirst.frc3711.FRC2019.commands.ManualLinkageControl;
+
 import edu.wpi.first.wpilibj.Joystick;
-import org.usfirst.frc3711.FRC2019.subsystems.*;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**

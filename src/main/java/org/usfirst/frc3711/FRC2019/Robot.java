@@ -11,14 +11,19 @@
 
 package org.usfirst.frc3711.FRC2019;
 
+import org.usfirst.frc3711.FRC2019.commands.AutonomousCommand;
+import org.usfirst.frc3711.FRC2019.subsystems.Arm;
+import org.usfirst.frc3711.FRC2019.subsystems.Chassis;
+import org.usfirst.frc3711.FRC2019.subsystems.Elevator;
+import org.usfirst.frc3711.FRC2019.subsystems.Intake;
+import org.usfirst.frc3711.FRC2019.subsystems.Misc;
+import org.usfirst.frc3711.FRC2019.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc3711.FRC2019.commands.*;
-import org.usfirst.frc3711.FRC2019.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
