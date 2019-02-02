@@ -42,8 +42,8 @@ public class Misc extends Subsystem {
         addChild("PowerDistributionPanel",powerDistributionPanel);
         
         
-        lights = new DoubleSolenoid(0, 0, 1);
-        addChild("Lights",lights);
+        // lights = new DoubleSolenoid(0, 0, 1);
+       // addChild("Lights",lights);
         
         
 

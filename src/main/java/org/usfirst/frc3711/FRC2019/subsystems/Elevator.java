@@ -14,7 +14,7 @@ public class Elevator extends LinkageSubsystem {
     @Override
     void configureTalon() {
         super.configureTalon();
-
+        talon.setInverted(true);
         TalonSRXConfiguration config = new TalonSRXConfiguration();
 
 

@@ -1,18 +1,19 @@
 package org.usfirst.frc3711.FRC2019;
 
 public enum TalonID {
-  ARM(0),
-  ELEVATOR(1),
-  INTAKE(2),
-  WRIST(3),
+  ARM(12),
+  EJECTOR(1),
+  ELEVATOR(2),
+  INTAKE(15),
+  WRIST(4),
 
-  FRONT_HOOK(4),
-  REAR_SCREW(5),
+  FRONT_JACK(5),
+  REAR_JACK(27),
 
-  LEFT_FRONT(6),
-  LEFT_REAR(7),
-  RIGHT_FRONT(8),
-  RIGHT_REAR(9);
+  LEFT_FRONT(3),
+  LEFT_REAR(10),
+  RIGHT_FRONT(13),
+  RIGHT_REAR(11);
 
   private final int id;
 
