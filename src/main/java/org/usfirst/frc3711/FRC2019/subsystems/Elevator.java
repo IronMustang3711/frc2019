@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import org.usfirst.frc3711.FRC2019.TalonID;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class Elevator extends LinkageSubsystem {
     public Elevator() {
@@ -15,6 +17,7 @@ public class Elevator extends LinkageSubsystem {
     void configureTalon() {
         super.configureTalon();
         talon.setInverted(true);
+        talon.setSensorPhase(false);
         TalonSRXConfiguration config = new TalonSRXConfiguration();
 
 
@@ -35,7 +38,7 @@ Status Frame Periods
 //////////////////////////////////////////////////////////////////////
         {
             config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
-            config.primaryPID.selectedFeedbackCoefficient = 0.328293; //TODO:what is this
+           // config.primaryPID.selectedFeedbackCoefficient = 0.328293; //TODO:what is this
 
             // config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.Analog;
             //config.auxiliaryPID.selectedFeedbackCoefficient = 0.877686;
@@ -237,6 +240,8 @@ TODO Then enable the voltage compensation using enableVoltageCompensation().
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Elevator position", talon.getSensorCollection().getQuadraturePosition());
+        SmartDashboard.putNumber("Elevator Position 2", talon.getSelectedSensorPosition());
      super.periodic();
     }
 

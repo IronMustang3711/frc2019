@@ -14,6 +14,8 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class Wrist extends LinkageSubsystem {
 
@@ -27,6 +29,7 @@ public class Wrist extends LinkageSubsystem {
     void configureTalon() {
         super.configureTalon();
         talon.setInverted(true);
+        talon.setSensorPhase(false);
     }
 
     @Override
@@ -43,6 +46,9 @@ public class Wrist extends LinkageSubsystem {
     @Override
     public void periodic() {
        super.periodic();
+
+       SmartDashboard.putNumber("Wrist position", talon.getSensorCollection().getQuadraturePosition());
+       SmartDashboard.putNumber("Wrist position2", talon.getSelectedSensorPosition());
 
     }
 

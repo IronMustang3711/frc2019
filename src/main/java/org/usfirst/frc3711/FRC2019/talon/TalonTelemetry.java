@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.SensorCollection;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public class TalonTelemetry {
+public abstract class TalonTelemetry {
 
 //	double current;
 //	double busVoltage;
@@ -17,7 +17,7 @@ public class TalonTelemetry {
 		private String name;
 		private String subsystem = "MotorControllers";
 
-		MotorIOSendable(IMotorControllerEnhanced motor) {
+		public MotorIOSendable(IMotorControllerEnhanced motor) {
 			this.motor = motor;
 			this.name = "MotorController"+motor.getDeviceID()+"Outputs";
 
