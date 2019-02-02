@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.commands.DrivewithJoystick;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -64,6 +65,7 @@ public class Chassis extends Subsystem {
         tab.add(leftFront);
         tab.add(rightFront);
         tab.add(drive);
+      //  tab.add(new DrivewithJoystick());
 
     }
     private void configureTalons(){
@@ -76,7 +78,7 @@ public class Chassis extends Subsystem {
         leftRear.follow(leftFront);
 
         rightFront.setInverted(true);
-        leftFront.setInverted(true);
+        leftFront.setInverted(false);
 
         rightRear.setInverted(InvertType.FollowMaster);
         leftRear.setInverted(InvertType.FollowMaster);
@@ -130,6 +132,7 @@ public class Chassis extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
+        setDefaultCommand(new DrivewithJoystick());
     }
 
     @Override
