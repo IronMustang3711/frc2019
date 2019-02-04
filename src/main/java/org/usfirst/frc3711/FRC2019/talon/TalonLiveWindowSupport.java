@@ -29,6 +29,15 @@ public class TalonLiveWindowSupport extends SendableImpl {
 		builder.addDoubleProperty("d", this::getD, this::setD);
 		builder.addDoubleProperty("f", this::getF, this::setF);
 		builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
+		builder.addBooleanProperty("enabled", this::isEnabled, this::setEnabled);
+	}
+
+	private void setEnabled(boolean b) {
+		//TODO: ???
+	}
+
+	private boolean isEnabled() {
+		return controller.getMotorOutputPercent() != 0.0;
 	}
 
 	void safeState(){
