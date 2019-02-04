@@ -5,11 +5,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public abstract class LinkageSubsystem extends Subsystem {
+public abstract class TalonSubsystem extends Subsystem {
 
   public final WPI_TalonSRX talon;
 
-  public LinkageSubsystem(String name, int talonID){
+  public TalonSubsystem(String name, int talonID){
     super(name);
     this.talon = new WPI_TalonSRX(talonID);
     configureTalon();

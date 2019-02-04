@@ -4,7 +4,7 @@ package org.usfirst.frc3711.FRC2019.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.usfirst.frc3711.FRC2019.Robot;
-import org.usfirst.frc3711.FRC2019.subsystems.LinkageSubsystem;
+import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ManualClosedLoopLinkageControl extends Command {
 
 
-    private final LinkageSubsystem subsystem;
+    private final TalonSubsystem subsystem;
 
-    public ManualClosedLoopLinkageControl(LinkageSubsystem subsystem) {
+    public ManualClosedLoopLinkageControl(TalonSubsystem subsystem) {
       this.subsystem = subsystem;
       requires(subsystem);
       requires(Robot.chassis);

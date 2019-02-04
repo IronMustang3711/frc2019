@@ -20,7 +20,7 @@ import org.usfirst.frc3711.FRC2019.TalonID;
 /**
  *
  */
-public class Intake extends LinkageSubsystem {
+public class Intake extends TalonSubsystem {
 
 
     public Intake() {

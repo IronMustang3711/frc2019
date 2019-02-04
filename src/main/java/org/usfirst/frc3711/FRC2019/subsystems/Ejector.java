@@ -9,13 +9,12 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
  */
-public class Ejector extends LinkageSubsystem {
+public class Ejector extends TalonSubsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 

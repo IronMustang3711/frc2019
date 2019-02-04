@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc3711.FRC2019.Robot;
-import org.usfirst.frc3711.FRC2019.subsystems.LinkageSubsystem;
+import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 public class ManualLinkageControl extends Command {
 
-  private final LinkageSubsystem subsystem;
+  private final TalonSubsystem subsystem;
 
-  public ManualLinkageControl(LinkageSubsystem subsystem) {
+  public ManualLinkageControl(TalonSubsystem subsystem) {
     this.subsystem = subsystem;
     requires(subsystem);
     requires(Robot.chassis);

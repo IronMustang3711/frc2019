@@ -8,7 +8,7 @@ import org.usfirst.frc3711.FRC2019.TalonID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class Elevator extends LinkageSubsystem {
+public class Elevator extends TalonSubsystem {
     public Elevator() {
      super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
     }

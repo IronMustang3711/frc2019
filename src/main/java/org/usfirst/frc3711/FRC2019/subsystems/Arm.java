@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class Arm extends LinkageSubsystem {
+public class Arm extends TalonSubsystem {
 public ShuffleboardTab tab;
 
     public Arm() {

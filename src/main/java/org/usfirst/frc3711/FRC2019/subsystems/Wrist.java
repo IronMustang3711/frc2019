@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 
 
-public class Wrist extends LinkageSubsystem {
+public class Wrist extends TalonSubsystem {
 
 
 
