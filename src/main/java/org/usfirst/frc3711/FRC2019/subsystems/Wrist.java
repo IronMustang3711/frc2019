@@ -15,6 +15,7 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 import org.usfirst.frc3711.FRC2019.TalonID;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 
 
 public class Wrist extends LinkageSubsystem {
@@ -30,6 +31,8 @@ public class Wrist extends LinkageSubsystem {
         super.configureTalon();
         talon.setInverted(true);
         talon.setSensorPhase(false);
+        talon.selectProfileSlot(0,0);
+
     }
 
     @Override
@@ -41,6 +44,8 @@ public class Wrist extends LinkageSubsystem {
 
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
+
+        addChild("WristPID", new TalonLiveWindowSupport(talon));
     }
 
     @Override

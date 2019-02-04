@@ -13,6 +13,7 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 
 
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 import edu.wpi.first.wpilibj.Sendable;
@@ -38,6 +39,9 @@ public ShuffleboardTab tab;
         addChild("sensor collection",s2);
       tab.add(s);
       tab.add(s2);
+
+        addChild("ArmPID", new TalonLiveWindowSupport(talon));
+
     }
 
     @Override // Put code here to be run every loop

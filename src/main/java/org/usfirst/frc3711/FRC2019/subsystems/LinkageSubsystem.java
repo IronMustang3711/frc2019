@@ -20,6 +20,7 @@ public abstract class LinkageSubsystem extends Subsystem {
     talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     talon.setSensorPhase(true);
 
+
   }
   void telemetry(){
     double busVoltage = talon.getBusVoltage();
