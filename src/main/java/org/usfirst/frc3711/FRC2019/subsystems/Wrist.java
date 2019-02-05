@@ -10,9 +10,17 @@
 
 package org.usfirst.frc3711.FRC2019.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+
 import org.usfirst.frc3711.FRC2019.TalonID;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +29,9 @@ import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 public class Wrist extends TalonSubsystem {
     ShuffleboardTab tab;
+
+    NetworkTableEntry ntSetpoint;
+NetworkTableEntry ntClosedLoopEnabled;
 
     public Wrist() {
         super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());
@@ -32,6 +43,40 @@ public class Wrist extends TalonSubsystem {
         addChild("Wrist:sensor collection", s2);
         tab.add(s);
         tab.add(s2);
+
+        ntSetpoint = tab.add("setpoint", 0.0).getEntry();
+        ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
+   
+   
+         tab.add(new Command("closed loop control"){
+   
+   
+   
+           @Override
+           protected void execute() {
+              if(ntClosedLoopEnabled.getBoolean(false)){
+                  talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
+              }
+           }
+   
+           
+         
+             @Override
+             protected boolean isFinished() {
+                 return false;
+             }
+         });
+   
+         tab.add(new InstantCommand("Reset Encoder"){
+   
+           @Override
+           protected void execute() {
+              talon.setSelectedSensorPosition(0);
+              talon.getSensorCollection().setQuadraturePosition(0, 50);
+   
+           }
+   
+         });
     }
 
     @Override
@@ -40,6 +85,32 @@ public class Wrist extends TalonSubsystem {
         talon.setInverted(true);
         talon.setSensorPhase(false);
         talon.selectProfileSlot(0, 0);
+        talon.config_kP(0, 1.0);
+        TalonSRXConfiguration config = new TalonSRXConfiguration();
+
+        talon.getAllConfigs(config);
+
+        {
+            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.SensorDifference;
+            config.primaryPID.selectedFeedbackCoefficient = 2.0;
+
+            //  config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.PulseWidthEncodedPosition;
+            // config.auxiliaryPID.selectedFeedbackCoefficient = 1.0;
+
+            config.diff0Term = FeedbackDevice.QuadEncoder;
+            config.diff1Term = FeedbackDevice.RemoteSensor0;
+            //config.diff0Term = FeedbackDevice.RemoteSensor1;
+            //config.diff1Term = FeedbackDevice.PulseWidthEncodedPosition;
+
+            config.auxPIDPolarity = false;
+            config.remoteFilter0.remoteSensorDeviceID = TalonID.ARM.getId();
+            config.remoteFilter0.remoteSensorSource = RemoteSensorSource.TalonSRX_SelectedSensor;
+            
+            // config.remoteFilter1.remoteSensorDeviceID = 41;
+
+        }
+
+        talon.configAllSettings(config);
 
     }
 

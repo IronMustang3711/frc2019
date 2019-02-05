@@ -12,11 +12,16 @@
 package org.usfirst.frc3711.FRC2019.subsystems;
 
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +34,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Arm extends TalonSubsystem {
 public ShuffleboardTab tab;
+NetworkTableEntry ntSetpoint;
+NetworkTableEntry ntClosedLoopEnabled;
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
@@ -41,6 +48,40 @@ public ShuffleboardTab tab;
       tab.add(s2);
 
       //  addChild("ArmPID", new TalonLiveWindowSupport(talon));
+
+      ntSetpoint = tab.add("setpoint", 0.0).getEntry();
+      ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
+ 
+ 
+       tab.add(new Command("closed loop control"){
+ 
+ 
+ 
+         @Override
+         protected void execute() {
+            if(ntClosedLoopEnabled.getBoolean(false)){
+                talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
+            }
+         }
+ 
+         
+       
+           @Override
+           protected boolean isFinished() {
+               return false;
+           }
+       });
+ 
+       tab.add(new InstantCommand("Reset Encoder"){
+ 
+         @Override
+         protected void execute() {
+            talon.setSelectedSensorPosition(0);
+            talon.getSensorCollection().setQuadraturePosition(0, 50);
+ 
+         }
+ 
+       });
 
     }
 

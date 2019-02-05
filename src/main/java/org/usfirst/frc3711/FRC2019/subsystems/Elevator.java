@@ -4,17 +4,24 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends TalonSubsystem {
 
     ShuffleboardTab tab;
+    
+    NetworkTableEntry ntSetpoint;
+    NetworkTableEntry ntClosedLoopEnabled;
 
     public Elevator() {
      super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
@@ -26,6 +33,45 @@ public class Elevator extends TalonSubsystem {
         addChild("Elevator:sensor collection",s2);
       tab.add(s);
       tab.add(s2);
+
+     ntSetpoint = tab.add("setpoint", 0.0).getEntry();
+     ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
+
+
+      tab.add(new Command("closed loop control"){
+
+
+
+        @Override
+        protected void execute() {
+           if(ntClosedLoopEnabled.getBoolean(false)){
+               talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
+           }
+        }
+
+        
+      
+          @Override
+          protected boolean isFinished() {
+              return false;
+          }
+      });
+
+      tab.add(new InstantCommand("Reset Encoder"){
+
+        @Override
+        protected void execute() {
+           talon.setSelectedSensorPosition(0);
+           talon.getSensorCollection().setQuadraturePosition(0, 50);
+
+        }
+
+      });
+
+    //   Sendable s3 = new TalonLiveWindowSupport(talon);
+
+    //   addChild("closed loop stuff",s3);
+    //   tab.add(s3);
 
     }
 
@@ -100,10 +146,10 @@ Status Frame Periods
          The respective Soft Limit Enable must be enabled for this feature to take effect.
          */
 
-            config.forwardSoftLimitThreshold = 2767;
-            config.reverseSoftLimitThreshold = -1219;
-            config.forwardSoftLimitEnable = false; //todo: enable when thresholds are correct
-            config.reverseSoftLimitEnable = false;
+            config.forwardSoftLimitThreshold = 9223;
+            config.reverseSoftLimitThreshold = -6707;
+            config.forwardSoftLimitEnable = true; //todo: enable when thresholds are correct
+            config.reverseSoftLimitEnable = true;
 
         }
 
@@ -116,7 +162,7 @@ Status Frame Periods
         Ramp can be set in time from neutral to full using configOpenLoopRampRate().
          */
 
-            config.openloopRamp = 1.023000; //TODO: configure this
+           // config.openloopRamp = 1.023000; //TODO: configure this
             // config.closedloopRamp = 1.705000;
         }
 
@@ -135,8 +181,8 @@ Status Frame Periods
         Peak/Nominal Outputs Often a mechanism may not require full motor output.
         The application can cap the output via the peak forward and reverse config setting (through Tuner or API).
          */
-            config.peakOutputForward = 1.0;
-            config.peakOutputReverse = -1.0;
+            config.peakOutputForward = 0.6;
+            config.peakOutputReverse = -0.2;
 
         /*
         https://phoenix-documentation.readthedocs.io/en/latest/ch13_MC.html#ramping
@@ -151,7 +197,7 @@ Status Frame Periods
         }
 
 
-        config.neutralDeadband = 0.199413; //TODO: configure
+       // config.neutralDeadband = 0.199413; //TODO: configure
 
         /* ***************** Voltage Compensation *****************************/
         ////////////////////////////////////////////////////////////////
@@ -162,7 +208,7 @@ voltage measurement (in all control modes). Use the voltage compensation saturat
 what voltage represents 100% output.
 TODO Then enable the voltage compensation using enableVoltageCompensation().
  */
-            config.voltageCompSaturation = 9.296875;
+            config.voltageCompSaturation = 9.0;
 //        config.voltageMeasurementFilter = 16;
 //        config.velocityMeasurementPeriod = VelocityMeasPeriod.Period_25Ms;
 //        config.velocityMeasurementWindow = 8;
