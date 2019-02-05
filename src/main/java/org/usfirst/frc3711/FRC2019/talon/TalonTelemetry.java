@@ -1,17 +1,28 @@
 package org.usfirst.frc3711.FRC2019.talon;
 
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.SendableImpl;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 public abstract class TalonTelemetry {
 
-//	double current;
-//	double busVoltage;
-//	double motorOutputVoltage;
-//	double motorOutputPercent;
+public static void installMototIOTelemetry(TalonSubsystem subsystem){
 
+	subsystem.tab.add(
+					subsystem.addChildItem("Motor IO",new MotorIOSendable(subsystem.talon))
+	).withSize(2,2);
+}
+
+public static void installSensorCollectionTelemetry(TalonSubsystem subsystem){
+	subsystem.tab.add(
+					subsystem.addChildItem(
+									new SensorCollectionSendable(subsystem.talon.getSensorCollection())))
+					.withSize(2,2);
+}
 	public static class MotorIOSendable implements Sendable {
 		private final IMotorControllerEnhanced motor;
 		private String name;
@@ -58,6 +69,8 @@ public abstract class TalonTelemetry {
 	}
 
 
+
+
 	public static class SensorCollectionSendable implements Sendable{
 		private String name;
 		private String subsystem;
@@ -95,6 +108,22 @@ public abstract class TalonTelemetry {
 			builder.addDoubleProperty("quad velocity",()->(double)sensor.getQuadratureVelocity(),null);
 			builder.addBooleanProperty("quad a",sensor::getPinStateQuadA,null);
 			builder.addBooleanProperty("quad b",sensor::getPinStateQuadB,null);
+		}
+	}
+
+
+	public static class ClosedLoopSendable extends SendableImpl {
+		private final IMotorController controller;
+
+		public ClosedLoopSendable(IMotorController controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void initSendable(SendableBuilder builder) {
+			builder.addDoubleProperty("setpoint",()->controller.getClosedLoopTarget(0),null);
+			builder.addDoubleProperty("error",()->controller.getClosedLoopError(0),null);
+			builder.addDoubleProperty("delta error",()->controller.getErrorDerivative(0),null);
 		}
 	}
 

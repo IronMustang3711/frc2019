@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 public class Wrist extends TalonSubsystem {
-    ShuffleboardTab tab;
+   // ShuffleboardTab tab;
 
     NetworkTableEntry ntSetpoint;
 NetworkTableEntry ntClosedLoopEnabled;
@@ -35,16 +35,16 @@ NetworkTableEntry ntClosedLoopEnabled;
     public Wrist() {
         super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());
 
-        tab = Shuffleboard.getTab(Wrist.class.getSimpleName());
-        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
-        addChild("Wrist:motor io", s);
-        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
-        addChild("Wrist:sensor collection", s2);
-        tab.add(s);
-        tab.add(s2);
-
-        ntSetpoint = tab.add("setpoint", 0.0).getEntry();
-        ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
+       // tab = Shuffleboard.getTab(Wrist.class.getSimpleName());
+//        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
+//        addChild("Wrist:motor io", s);
+//        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
+//        addChild("Wrist:sensor collection", s2);
+//        tab.add(s);
+//        tab.add(s2);
+//
+//        ntSetpoint = tab.add("setpoint", 0.0).getEntry();
+//        ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
    
    
          tab.add(new Command("closed loop control"){
@@ -132,8 +132,8 @@ NetworkTableEntry ntClosedLoopEnabled;
     public void periodic() {
         super.periodic();
 
-        SmartDashboard.putNumber("Wrist position", talon.getSensorCollection().getQuadraturePosition());
-        SmartDashboard.putNumber("Wrist position2", talon.getSelectedSensorPosition());
+//        SmartDashboard.putNumber("Wrist position", talon.getSensorCollection().getQuadraturePosition());
+//        SmartDashboard.putNumber("Wrist position2", talon.getSelectedSensorPosition());
 
     }
 

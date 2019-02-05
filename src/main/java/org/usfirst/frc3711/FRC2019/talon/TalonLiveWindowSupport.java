@@ -33,15 +33,16 @@ public class TalonLiveWindowSupport extends SendableImpl {
 	}
 
 	private void setEnabled(boolean b) {
-		//TODO: ???
+		if(!b) safeState();
+		else setSetpoint(getSetpoint());
 	}
 
 	private boolean isEnabled() {
-		return controller.getMotorOutputPercent() != 0.0;
+		return controller.getControlMode() != ControlMode.Disabled;
 	}
 
 	void safeState(){
-		controller.set(ControlMode.PercentOutput,0);
+		controller.neutralOutput();
 	}
 
 	double getP(){

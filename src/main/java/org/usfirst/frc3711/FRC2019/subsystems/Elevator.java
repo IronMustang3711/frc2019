@@ -3,7 +3,9 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import edu.wpi.first.networktables.EntryListenerFlags;
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.commands.MotionMagicSetpoint;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -17,24 +19,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends TalonSubsystem {
 
-    ShuffleboardTab tab;
+
     
-    NetworkTableEntry ntSetpoint;
-    NetworkTableEntry ntClosedLoopEnabled;
+//    NetworkTableEntry ntSetpoint;
+//    NetworkTableEntry ntClosedLoopEnabled;
 
     public Elevator() {
      super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
 
-     tab = Shuffleboard.getTab(Elevator.class.getSimpleName());
-        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
-        addChild("Elevator:motor io", s);
-        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
-        addChild("Elevator:sensor collection",s2);
-      tab.add(s);
-      tab.add(s2);
+//
+//        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
+//        addChild("Elevator:motor io", s);
+//        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
+//        addChild("Elevator:sensor collection",s2);
+//      tab.add(s);
+//      tab.add(s2);
 
-     ntSetpoint = tab.add("setpoint", 0.0).getEntry();
-     ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
+//     ntSetpoint = tab.add("setpoint", 0.0).getEntry();
+//     ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
 
 
       tab.add(new Command("closed loop control"){
@@ -66,6 +68,14 @@ public class Elevator extends TalonSubsystem {
         }
 
       });
+
+      MotionMagicSetpoint motionMagicSetpoint = new MotionMagicSetpoint(this);
+      tab.add(motionMagicSetpoint);
+
+      ntSetpoint.addListener(entryNotification ->{
+        System.out.println("elevator setpoint updated: "+entryNotification.value.getDouble());
+        motionMagicSetpoint.setSetpoint(entryNotification.value.getDouble());
+      } , EntryListenerFlags.kUpdate);
 
     //   Sendable s3 = new TalonLiveWindowSupport(talon);
 
@@ -301,8 +311,7 @@ TODO Then enable the voltage compensation using enableVoltageCompensation().
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevator position", talon.getSensorCollection().getQuadraturePosition());
-        SmartDashboard.putNumber("Elevator Position 2", talon.getSelectedSensorPosition());
+
      super.periodic();
     }
 

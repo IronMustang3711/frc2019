@@ -33,24 +33,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Arm extends TalonSubsystem {
-public ShuffleboardTab tab;
-NetworkTableEntry ntSetpoint;
-NetworkTableEntry ntClosedLoopEnabled;
+//public ShuffleboardTab tab;
+//NetworkTableEntry ntSetpoint;
+//NetworkTableEntry ntClosedLoopEnabled;
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
-      tab = Shuffleboard.getTab(Arm.class.getSimpleName());
-        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
-        addChild("Arm:motor io", s);
-        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
-        addChild("Arm:sensor collection",s2);
-      tab.add(s);
-      tab.add(s2);
+      //tab = Shuffleboard.getTab(Arm.class.getSimpleName());
+//        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
+//        addChild("Arm:motor io", s);
+//        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
+//        addChild("Arm:sensor collection",s2);
+//      tab.add(s);
+//      tab.add(s2);
 
       //  addChild("ArmPID", new TalonLiveWindowSupport(talon));
 
-      ntSetpoint = tab.add("setpoint", 0.0).getEntry();
-      ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
+//      ntSetpoint = tab.add("setpoint", 0.0).getEntry();
+//      ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
  
  
        tab.add(new Command("closed loop control"){
@@ -103,8 +103,8 @@ NetworkTableEntry ntClosedLoopEnabled;
     @Override
     public void periodic() {
         super.periodic();
-            SmartDashboard.putNumber("Arm position", talon.getSensorCollection().getQuadraturePosition());
-            SmartDashboard.putNumber("Arm position2", talon.getSelectedSensorPosition());
+//            SmartDashboard.putNumber("Arm position", talon.getSensorCollection().getQuadraturePosition());
+//            SmartDashboard.putNumber("Arm position2", talon.getSelectedSensorPosition());
     }
 
 }
