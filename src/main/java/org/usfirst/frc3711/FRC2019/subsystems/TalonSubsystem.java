@@ -3,15 +3,20 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class TalonSubsystem extends Subsystem {
+
+  public final ShuffleboardTab tab;
 
   public final WPI_TalonSRX talon;
 
   public TalonSubsystem(String name, int talonID){
     super(name);
     this.talon = new WPI_TalonSRX(talonID);
+    this.tab = Shuffleboard.getTab(name);
     configureTalon();
   }
 
