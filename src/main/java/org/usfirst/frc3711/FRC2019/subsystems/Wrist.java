@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 public class Wrist extends TalonSubsystem {
@@ -49,7 +48,8 @@ NetworkTableEntry ntClosedLoopEnabled;
    
    
          tab.add(new Command("closed loop control"){
-   
+            
+            {requires(Wrist.this);}
    
    
            @Override
@@ -69,6 +69,8 @@ NetworkTableEntry ntClosedLoopEnabled;
    
          tab.add(new InstantCommand("Reset Encoder"){
    
+            {requires(Wrist.this);}
+
            @Override
            protected void execute() {
               talon.setSelectedSensorPosition(0);

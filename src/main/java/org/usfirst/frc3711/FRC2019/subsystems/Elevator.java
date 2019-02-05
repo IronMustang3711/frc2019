@@ -4,7 +4,6 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import org.usfirst.frc3711.FRC2019.TalonID;
-import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -40,7 +39,7 @@ public class Elevator extends TalonSubsystem {
 
       tab.add(new Command("closed loop control"){
 
-
+        {requires(Elevator.this);}
 
         @Override
         protected void execute() {

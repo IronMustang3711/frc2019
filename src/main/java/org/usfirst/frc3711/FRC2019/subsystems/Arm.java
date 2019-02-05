@@ -55,6 +55,7 @@ NetworkTableEntry ntClosedLoopEnabled;
  
        tab.add(new Command("closed loop control"){
  
+        {requires(Arm.this);}
  
  
          @Override
@@ -73,6 +74,7 @@ NetworkTableEntry ntClosedLoopEnabled;
        });
  
        tab.add(new InstantCommand("Reset Encoder"){
+           {requires(Arm.this);}
  
          @Override
          protected void execute() {
