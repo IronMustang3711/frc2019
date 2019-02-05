@@ -34,13 +34,13 @@ public ShuffleboardTab tab;
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
       tab = Shuffleboard.getTab(Arm.class.getSimpleName());
         Sendable s = new TalonTelemetry.MotorIOSendable(talon);
-        addChild("motor io", s);
+        addChild("Arm:motor io", s);
         Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
-        addChild("sensor collection",s2);
+        addChild("Arm:sensor collection",s2);
       tab.add(s);
       tab.add(s2);
 
-        addChild("ArmPID", new TalonLiveWindowSupport(talon));
+      //  addChild("ArmPID", new TalonLiveWindowSupport(talon));
 
     }
 

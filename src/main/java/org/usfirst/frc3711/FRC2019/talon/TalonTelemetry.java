@@ -53,7 +53,7 @@ public abstract class TalonTelemetry {
 			builder.addDoubleProperty("outputVoltage",motor::getMotorOutputVoltage,null);
 			builder.addDoubleProperty("outputCurrent",motor::getOutputCurrent,null);
 			builder.addDoubleProperty("selectedSensorPosition",()->(double)motor.getSelectedSensorPosition(0),null);
-			builder.addDoubleProperty("selectedSensorVelocity",()->(double)motor.getSelectedSensorPosition(0),null);
+			builder.addDoubleProperty("selectedSensorVelocity",()->(double)motor.getSelectedSensorVelocity(0),null);
 		}
 	}
 

@@ -4,13 +4,29 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
+
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
 public class Elevator extends TalonSubsystem {
+
+    ShuffleboardTab tab;
+
     public Elevator() {
      super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
+
+     tab = Shuffleboard.getTab(Elevator.class.getSimpleName());
+        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
+        addChild("Elevator:motor io", s);
+        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
+        addChild("Elevator:sensor collection",s2);
+      tab.add(s);
+      tab.add(s2);
+
     }
 
     @Override
@@ -173,46 +189,46 @@ TODO Then enable the voltage compensation using enableVoltageCompensation().
         ////////////////////////////////////////////////////////////////
 
         {
-            config.slot0.kP = 504.000000;
-            config.slot0.kI = 5.600000;
-            config.slot0.kD = 0.200000;
-            config.slot0.kF = 19.300000;
-            config.slot0.integralZone = 900;
-            config.slot0.allowableClosedloopError = 217;
+            config.slot0.kP = 0.0;
+            config.slot0.kI =0.0;
+            config.slot0.kD = 0.0;
+            config.slot0.kF =0.0;
+            config.slot0.integralZone = 1000;
+            config.slot0.allowableClosedloopError = 10;
             config.slot0.maxIntegralAccumulator = 254.000000;
-            config.slot0.closedLoopPeakOutput = 0.869990;
-            config.slot0.closedLoopPeriod = 33;
+            config.slot0.closedLoopPeakOutput =1.0;
+            config.slot0.closedLoopPeriod = 1;
 
 
-            config.slot1.kP = 155.600000;
-            config.slot1.kI = 5.560000;
-            config.slot1.kD = 8.868600;
-            config.slot1.kF = 454.000000;
-            config.slot1.integralZone = 100;
-            config.slot1.allowableClosedloopError = 200;
-            config.slot1.maxIntegralAccumulator = 91.000000;
-            config.slot1.closedLoopPeakOutput = 0.199413;
-            config.slot1.closedLoopPeriod = 34;
+            // config.slot1.kP = 155.600000;
+            // config.slot1.kI = 5.560000;
+            // config.slot1.kD = 8.868600;
+            // config.slot1.kF = 454.000000;
+            // config.slot1.integralZone = 100;
+            // config.slot1.allowableClosedloopError = 200;
+            // config.slot1.maxIntegralAccumulator = 91.000000;
+            // config.slot1.closedLoopPeakOutput = 0.199413;
+            // config.slot1.closedLoopPeriod = 34;
 
-            config.slot2.kP = 223.232000;
-            config.slot2.kI = 34.000000;
-            config.slot2.kD = 67.000000;
-            config.slot2.kF = 6.323232;
-            config.slot2.integralZone = 44;
-            config.slot2.allowableClosedloopError = 343;
-            config.slot2.maxIntegralAccumulator = 334.000000;
-            config.slot2.closedLoopPeakOutput = 0.399804;
-            config.slot2.closedLoopPeriod = 14;
+            // config.slot2.kP = 223.232000;
+            // config.slot2.kI = 34.000000;
+            // config.slot2.kD = 67.000000;
+            // config.slot2.kF = 6.323232;
+            // config.slot2.integralZone = 44;
+            // config.slot2.allowableClosedloopError = 343;
+            // config.slot2.maxIntegralAccumulator = 334.000000;
+            // config.slot2.closedLoopPeakOutput = 0.399804;
+            // config.slot2.closedLoopPeriod = 14;
 
-            config.slot3.kP = 34.000000;
-            config.slot3.kI = 32.000000;
-            config.slot3.kD = 436.000000;
-            config.slot3.kF = 0.343430;
-            config.slot3.integralZone = 2323;
-            config.slot3.allowableClosedloopError = 543;
-            config.slot3.maxIntegralAccumulator = 687.000000;
-            config.slot3.closedLoopPeakOutput = 0.129032;
-            config.slot3.closedLoopPeriod = 12;
+            // config.slot3.kP = 34.000000;
+            // config.slot3.kI = 32.000000;
+            // config.slot3.kD = 436.000000;
+            // config.slot3.kF = 0.343430;
+            // config.slot3.integralZone = 2323;
+            // config.slot3.allowableClosedloopError = 543;
+            // config.slot3.maxIntegralAccumulator = 687.000000;
+            // config.slot3.closedLoopPeakOutput = 0.129032;
+            // config.slot3.closedLoopPeriod = 12;
         }
 
 
