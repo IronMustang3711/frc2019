@@ -85,6 +85,18 @@ public abstract class TalonSubsystem extends Subsystem {
   }
 
 
+ public void configMotionMagicClosedLoop(){
+    // talon.config_kP(0,1.0,50);
+    // talon.config_kI(0,0,50);
+    // talon.config_IntegralZone(0,0,50);
+    // talon.config_kD(0,0,50);
+    // talon.config_kF(0,1.0,50);
+ 
+ 
+    // talon.configMotionCruiseVelocity(800);
+    // talon.configMotionAcceleration(700);
+  }
+
   void configureTalon(){
     talon.configFactoryDefault();
     talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);

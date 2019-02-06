@@ -30,21 +30,15 @@ public class MotionMagicSetpoint extends Command {
     super(subsystem.getName()+"MotionMagicSetpoint");
     this.subsystem = subsystem;
     requires(subsystem);
+
+
+    this.setpoint = subsystem.talon.getSelectedSensorPosition();
+
   }
 
   @Override
   protected void initialize() {
-
-    this.setpoint = subsystem.talon.getSelectedSensorPosition();
-
-   subsystem.talon.config_kP(0,0,50);
-   subsystem.talon.config_kI(0,0,50);
-   subsystem.talon.config_IntegralZone(0,0,50);
-   subsystem.talon.config_kD(0,0,50);
-
-
-   subsystem.talon.configMotionCruiseVelocity(100);
-   subsystem.talon.configMotionAcceleration(100);
+      subsystem.configMotionMagicClosedLoop();
   }
 
   public void setSetpoint(double setpoint){

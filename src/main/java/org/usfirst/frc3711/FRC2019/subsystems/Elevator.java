@@ -38,7 +38,7 @@ public class Elevator extends TalonSubsystem {
 //     ntSetpoint = tab.add("setpoint", 0.0).getEntry();
 //     ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
 
-
+      //  TalonTelemetry.installClosedLoopTelemetry(this);
       tab.add(new Command("closed loop control"){
 
         {requires(Elevator.this);}
@@ -77,12 +77,34 @@ public class Elevator extends TalonSubsystem {
         motionMagicSetpoint.setSetpoint(entryNotification.value.getDouble());
       } , EntryListenerFlags.kUpdate);
 
+      MotionMagicSetpoint top = new MotionMagicSetpoint(this);
+      top.setSetpoint(7000);
+      addChild("top", top);
+      tab.add(top);
+
+      MotionMagicSetpoint home = new MotionMagicSetpoint(this);
+      home.setSetpoint(1000);
+      addChild("home",home);
+      tab.add(home);
+
     //   Sendable s3 = new TalonLiveWindowSupport(talon);
 
     //   addChild("closed loop stuff",s3);
     //   tab.add(s3);
 
     }
+
+   public void configMotionMagicClosedLoop(){
+        talon.config_kP(0,1.0,50);
+        talon.config_kI(0,0,50);
+        talon.config_IntegralZone(0,0,50);
+        talon.config_kD(0,0,50);
+        talon.config_kF(0,1.0,50);
+     
+     
+        talon.configMotionCruiseVelocity(800);
+        talon.configMotionAcceleration(700);
+      }
 
     @Override
     void configureTalon() {
@@ -178,9 +200,9 @@ Status Frame Periods
         /* ***************** Motion_Magic *****************************/
         ////////////////////////////////////////////////////////////////
         {
-            config.motionCruiseVelocity = 37;
-            config.motionAcceleration = 3;
-            config.motionProfileTrajectoryPeriod = 11;
+            config.motionCruiseVelocity = 500;
+            config.motionAcceleration = 500;
+           // config.motionProfileTrajectoryPeriod = 11;
         }
 
         /* ***************** Peak/Nominal *****************************/
@@ -190,8 +212,8 @@ Status Frame Periods
         Peak/Nominal Outputs Often a mechanism may not require full motor output.
         The application can cap the output via the peak forward and reverse config setting (through Tuner or API).
          */
-            config.peakOutputForward = 0.6;
-            config.peakOutputReverse = -0.2;
+            config.peakOutputForward = 0.7;
+            config.peakOutputReverse = -0.4;
 
         /*
         https://phoenix-documentation.readthedocs.io/en/latest/ch13_MC.html#ramping
@@ -233,9 +255,9 @@ TODO Then enable the voltage compensation using enableVoltageCompensation().
         /*
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
-            // config.peakCurrentLimit = 20;
-            //config.peakCurrentDuration = 200;
-            // config.continuousCurrentLimit = 30;
+             config.peakCurrentLimit =8;
+            config.peakCurrentDuration = 1000;
+             config.continuousCurrentLimit = 4;
         }
 
 
@@ -247,7 +269,7 @@ TODO Then enable the voltage compensation using enableVoltageCompensation().
             config.slot0.kP = 0.0;
             config.slot0.kI =0.0;
             config.slot0.kD = 0.0;
-            config.slot0.kF =0.0;
+            config.slot0.kF =0.1;
             config.slot0.integralZone = 1000;
             config.slot0.allowableClosedloopError = 10;
             config.slot0.maxIntegralAccumulator = 254.000000;
@@ -301,6 +323,8 @@ TODO Then enable the voltage compensation using enableVoltageCompensation().
 //        config.customParam1 = 5;
 
         talon.configAllSettings(config);
+
+        talon.enableCurrentLimit(true);
 
     }
 

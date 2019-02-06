@@ -29,8 +29,8 @@ import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 public class Wrist extends TalonSubsystem {
    // ShuffleboardTab tab;
 
-    NetworkTableEntry ntSetpoint;
-NetworkTableEntry ntClosedLoopEnabled;
+//     NetworkTableEntry ntSetpoint;
+// NetworkTableEntry ntClosedLoopEnabled;
 
     public Wrist() {
         super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());

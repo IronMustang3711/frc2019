@@ -27,13 +27,18 @@ public class ManualLinkageControl extends Command {
   protected void execute() {
     double output = Robot.oi.joystick1.getY();
 
-    output *= -0.5;
+    //output *= -0.5;
 
     SmartDashboard.putNumber(subsystem.getName() + " output",output);
 
     subsystem.talon.set(ControlMode.PercentOutput,output);
 
     Robot.chassis.drive(0,0); // just in case
+  }
+
+  @Override
+  protected void end() {
+    subsystem.talon.neutralOutput();
   }
 
   @Override

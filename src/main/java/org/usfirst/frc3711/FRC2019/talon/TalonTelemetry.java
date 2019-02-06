@@ -19,9 +19,14 @@ public static void installMototIOTelemetry(TalonSubsystem subsystem){
 
 public static void installSensorCollectionTelemetry(TalonSubsystem subsystem){
 	subsystem.tab.add(
-					subsystem.addChildItem(
+					subsystem.addChildItem("sensor collection",
 									new SensorCollectionSendable(subsystem.talon.getSensorCollection())))
 					.withSize(2,2);
+}
+
+public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
+	subsystem.tab.add(subsystem.addChildItem("Closed Loop Stuff", new ClosedLoopSendable(subsystem.talon)))
+	.withSize(2, 2);
 }
 	public static class MotorIOSendable implements Sendable {
 		private final IMotorControllerEnhanced motor;
@@ -112,6 +117,7 @@ public static void installSensorCollectionTelemetry(TalonSubsystem subsystem){
 	}
 
 
+	//TODO: only call closed loop functions when in closed loop mode!
 	public static class ClosedLoopSendable extends SendableImpl {
 		private final IMotorController controller;
 
