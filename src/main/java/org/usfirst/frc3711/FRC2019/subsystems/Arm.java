@@ -45,6 +45,8 @@ public class Arm extends TalonSubsystem {
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
+      TalonTelemetry.installClosedLoopTelemetry(this);
+
       //tab = Shuffleboard.getTab(Arm.class.getSimpleName());
 //        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
 //        addChild("Arm:motor io", s);

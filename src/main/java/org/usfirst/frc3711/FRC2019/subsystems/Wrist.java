@@ -34,8 +34,10 @@ public class Wrist extends TalonSubsystem {
 
     public Wrist() {
         super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());
+      TalonTelemetry.installClosedLoopTelemetry(this);
 
-       // tab = Shuffleboard.getTab(Wrist.class.getSimpleName());
+
+      // tab = Shuffleboard.getTab(Wrist.class.getSimpleName());
 //        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
 //        addChild("Wrist:motor io", s);
 //        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());

@@ -51,7 +51,6 @@ public abstract class TalonSubsystem extends Subsystem {
 
     TalonTelemetry.installMototIOTelemetry(this);
     TalonTelemetry.installSensorCollectionTelemetry(this);
-    TalonTelemetry.installClosedLoopTelemetry(this);
 
 
     configureTalon();

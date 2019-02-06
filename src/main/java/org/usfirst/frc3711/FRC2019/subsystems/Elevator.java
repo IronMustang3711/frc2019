@@ -20,12 +20,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Elevator extends TalonSubsystem {
 
 
-    
-//    NetworkTableEntry ntSetpoint;
-//    NetworkTableEntry ntClosedLoopEnabled;
 
-    public Elevator() {
-     super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
+
+  public Elevator() {
+    super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
 
 //
 //        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
@@ -38,80 +36,81 @@ public class Elevator extends TalonSubsystem {
 //     ntSetpoint = tab.add("setpoint", 0.0).getEntry();
 //     ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
 
-      //  TalonTelemetry.installClosedLoopTelemetry(this);
-      tab.add(new Command("closed loop control"){
+      TalonTelemetry.installClosedLoopTelemetry(this);
+    tab.add(new Command("closed loop control") {
 
-        {requires(Elevator.this);}
+      {
+        requires(Elevator.this);
+      }
 
-        @Override
-        protected void execute() {
-           if(ntClosedLoopEnabled.getBoolean(false)){
-               talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
-           }
+      @Override
+      protected void execute() {
+        if (ntClosedLoopEnabled.getBoolean(false)) {
+          talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
         }
+      }
 
-        
-      
-          @Override
-          protected boolean isFinished() {
-              return false;
-          }
-      });
 
-      tab.add(new InstantCommand("Reset Encoder"){
+      @Override
+      protected boolean isFinished() {
+        return false;
+      }
+    });
 
-        @Override
-        protected void execute() {
-           talon.setSelectedSensorPosition(0);
-           talon.getSensorCollection().setQuadraturePosition(0, 50);
+    tab.add(new InstantCommand("Reset Encoder") {
 
-        }
+      @Override
+      protected void execute() {
+        talon.setSelectedSensorPosition(0);
+        talon.getSensorCollection().setQuadraturePosition(0, 50);
 
-      });
+      }
 
-      MotionMagicSetpoint motionMagicSetpoint = new MotionMagicSetpoint(this);
-      tab.add(motionMagicSetpoint);
+    });
 
-      ntSetpoint.addListener(entryNotification ->{
-        System.out.println("elevator setpoint updated: "+entryNotification.value.getDouble());
-        motionMagicSetpoint.setSetpoint(entryNotification.value.getDouble());
-      } , EntryListenerFlags.kUpdate);
+    MotionMagicSetpoint motionMagicSetpoint = new MotionMagicSetpoint(this);
+    tab.add(motionMagicSetpoint);
 
-      MotionMagicSetpoint top = new MotionMagicSetpoint(this);
-      top.setSetpoint(7000);
-      addChild("top", top);
-      tab.add(top);
+    ntSetpoint.addListener(entryNotification -> {
+      System.out.println("elevator setpoint updated: " + entryNotification.value.getDouble());
+      motionMagicSetpoint.setSetpoint(entryNotification.value.getDouble());
+    }, EntryListenerFlags.kUpdate);
 
-      MotionMagicSetpoint home = new MotionMagicSetpoint(this);
-      home.setSetpoint(1000);
-      addChild("home",home);
-      tab.add(home);
+    MotionMagicSetpoint top = new MotionMagicSetpoint(this);
+    top.setSetpoint(7000);
+    addChild("top", top);
+    tab.add(top);
+
+    MotionMagicSetpoint home = new MotionMagicSetpoint(this);
+    home.setSetpoint(1000);
+    addChild("home", home);
+    tab.add(home);
 
     //   Sendable s3 = new TalonLiveWindowSupport(talon);
 
     //   addChild("closed loop stuff",s3);
     //   tab.add(s3);
 
-    }
+  }
 
-   public void configMotionMagicClosedLoop(){
-        talon.config_kP(0,1.0,50);
-        talon.config_kI(0,0,50);
-        talon.config_IntegralZone(0,0,50);
-        talon.config_kD(0,0,50);
-        talon.config_kF(0,1.0,50);
-     
-     
-        talon.configMotionCruiseVelocity(800);
-        talon.configMotionAcceleration(700);
-      }
+  public void configMotionMagicClosedLoop() {
+    talon.config_kP(0, 1.0, 50);
+    talon.config_kI(0, 0, 50);
+    talon.config_IntegralZone(0, 0, 50);
+    talon.config_kD(0, 0, 50);
+    talon.config_kF(0, 1.0, 50);
 
-    @Override
-    void configureTalon() {
-        super.configureTalon();
-        talon.setInverted(true);
-        talon.setSensorPhase(false);
-        TalonSRXConfiguration config = new TalonSRXConfiguration();
+
+    talon.configMotionCruiseVelocity(800);
+    talon.configMotionAcceleration(700);
+  }
+
+  @Override
+  void configureTalon() {
+    super.configureTalon();
+    talon.setInverted(true);
+    talon.setSensorPhase(false);
+    TalonSRXConfiguration config = new TalonSRXConfiguration();
 
 
         /*
@@ -127,25 +126,25 @@ Soft Limit override (convenient to temporarily override configs)
 Status Frame Periods
          */
 
-/* ***************** Encoder/Sensor Setup *****************************/
+    /* ***************** Encoder/Sensor Setup *****************************/
 //////////////////////////////////////////////////////////////////////
-        {
-            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
-           // config.primaryPID.selectedFeedbackCoefficient = 0.328293;
+    {
+      config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
+      // config.primaryPID.selectedFeedbackCoefficient = 0.328293;
 
-            // config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.Analog;
-            //config.auxiliaryPID.selectedFeedbackCoefficient = 0.877686;
+      // config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.Analog;
+      //config.auxiliaryPID.selectedFeedbackCoefficient = 0.877686;
 
-            //config.sum0Term = FeedbackDevice.QuadEncoder;
-            //config.sum1Term = FeedbackDevice.RemoteSensor0;
-            //config.diff0Term = FeedbackDevice.RemoteSensor1;
-            //config.diff1Term = FeedbackDevice.PulseWidthEncodedPosition;
+      //config.sum0Term = FeedbackDevice.QuadEncoder;
+      //config.sum1Term = FeedbackDevice.RemoteSensor0;
+      //config.diff0Term = FeedbackDevice.RemoteSensor1;
+      //config.diff1Term = FeedbackDevice.PulseWidthEncodedPosition;
 
-            //config.auxPIDPolarity = true;
-            //config.remoteFilter0.remoteSensorDeviceID = 22;
-            config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
-            // config.remoteFilter1.remoteSensorDeviceID = 41;
-            config.remoteFilter1.remoteSensorSource = RemoteSensorSource.Off;
+      //config.auxPIDPolarity = true;
+      //config.remoteFilter0.remoteSensorDeviceID = 22;
+      config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
+      // config.remoteFilter1.remoteSensorDeviceID = 41;
+      config.remoteFilter1.remoteSensorSource = RemoteSensorSource.Off;
 
 
 //        config.feedbackNotContinuous = false;
@@ -157,18 +156,18 @@ Status Frame Periods
 //        config.pulseWidthPeriod_EdgesPerRot = 9;
 //        config.pulseWidthPeriod_FilterWindowSz = 32;
 
-        }
-/* ***************** limit switch *****************************/
+    }
+    /* ***************** limit switch *****************************/
 ////////////////////////////////////////////////////////////////
-        {
-            config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
-            config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
-            //config.forwardLimitSwitchDeviceID = 6;
-            // config.reverseLimitSwitchDeviceID = 5;
-            config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
-            config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
-            //        config.limitSwitchDisableNeutralOnLOS = true;
-            //        config.softLimitDisableNeutralOnLOS = true;
+    {
+      config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
+      config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
+      //config.forwardLimitSwitchDeviceID = 6;
+      // config.reverseLimitSwitchDeviceID = 5;
+      config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
+      config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
+      //        config.limitSwitchDisableNeutralOnLOS = true;
+      //        config.softLimitDisableNeutralOnLOS = true;
 
                 /*
         Soft limits can be used to disable motor drive when the “Sensor Position” is outside of a specified range.
@@ -177,43 +176,43 @@ Status Frame Periods
          The respective Soft Limit Enable must be enabled for this feature to take effect.
          */
 
-            config.forwardSoftLimitThreshold = 9223;
-            config.reverseSoftLimitThreshold = -6707;
-            config.forwardSoftLimitEnable = true;
-            config.reverseSoftLimitEnable = true;
+      config.forwardSoftLimitThreshold = 9223;
+      config.reverseSoftLimitThreshold = -6707;
+      config.forwardSoftLimitEnable = true;
+      config.reverseSoftLimitEnable = true;
 
-        }
+    }
 
-        /* ***************** Ramping *****************************/
-        ////////////////////////////////////////////////////////////////
-        {
+    /* ***************** Ramping *****************************/
+    ////////////////////////////////////////////////////////////////
+    {
         /*
         The Talon SRX can be set to honor a ramp rate to prevent instantaneous changes in throttle.
         This ramp rate is in effect regardless of which mode is selected (throttle, slave, or closed-loop).
         Ramp can be set in time from neutral to full using configOpenLoopRampRate().
          */
 
-           // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
-            // config.closedloopRamp = 1.705000;
-        }
+      // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
+      // config.closedloopRamp = 1.705000;
+    }
 
-        /* ***************** Motion_Magic *****************************/
-        ////////////////////////////////////////////////////////////////
-        {
-            config.motionCruiseVelocity = 500;
-            config.motionAcceleration = 500;
-           // config.motionProfileTrajectoryPeriod = 11;
-        }
+    /* ***************** Motion_Magic *****************************/
+    ////////////////////////////////////////////////////////////////
+    {
+      config.motionCruiseVelocity = 500;
+      config.motionAcceleration = 500;
+      // config.motionProfileTrajectoryPeriod = 11;
+    }
 
-        /* ***************** Peak/Nominal *****************************/
-        ////////////////////////////////////////////////////////////////
-        {
+    /* ***************** Peak/Nominal *****************************/
+    ////////////////////////////////////////////////////////////////
+    {
         /*
         Peak/Nominal Outputs Often a mechanism may not require full motor output.
         The application can cap the output via the peak forward and reverse config setting (through Tuner or API).
          */
-            config.peakOutputForward = 0.7;
-            config.peakOutputReverse = -0.4;
+      config.peakOutputForward = 0.7;
+      config.peakOutputReverse = -0.4;
 
         /*
         https://phoenix-documentation.readthedocs.io/en/latest/ch13_MC.html#ramping
@@ -223,106 +222,106 @@ Status Frame Periods
        This is useful for mechanisms that require a minimum output for movement,
        and can be used as a simpler alternative to the kI (integral) component of closed-looping in some circumstances.
          */
-            config.nominalOutputForward = 0;
-            config.nominalOutputReverse = 0;
-        }
+      config.nominalOutputForward = 0;
+      config.nominalOutputReverse = 0;
+    }
 
 
-       // config.neutralDeadband = 0.199413; //TODO: configure
+    // config.neutralDeadband = 0.199413; //TODO: configure
 
-        /* ***************** Voltage Compensation *****************************/
-        ////////////////////////////////////////////////////////////////
-        {
+    /* ***************** Voltage Compensation *****************************/
+    ////////////////////////////////////////////////////////////////
+    {
 /*
 Talon SRX and Victor SPX can be configured to adjust their outputs in response to the battery
 voltage measurement (in all control modes). Use the voltage compensation saturation config to determine
 what voltage represents 100% output.
  */
-            config.voltageCompSaturation = 9.0;
+      config.voltageCompSaturation = 9.0;
 //        config.voltageMeasurementFilter = 16;
 //        config.velocityMeasurementPeriod = VelocityMeasPeriod.Period_25Ms;
 //        config.velocityMeasurementWindow = 8;
 
-        }
+    }
 
 
-        /* ***************** Current Limit *****************************/
-        ////////////////////////////////////////////////////////////////
-       {
+    /* ***************** Current Limit *****************************/
+    ////////////////////////////////////////////////////////////////
+    {
         /*
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
-             config.peakCurrentLimit =8;
-            config.peakCurrentDuration = 1000;
-             config.continuousCurrentLimit = 4;
-        }
-
-
-
-        /* ***************** PID SLOTS *****************************/
-        ////////////////////////////////////////////////////////////////
-
-        {
-            config.slot0.kP = 0.0;
-            config.slot0.kI =0.0;
-            config.slot0.kD = 0.0;
-            config.slot0.kF =0.1;
-            config.slot0.integralZone = 1000;
-            config.slot0.allowableClosedloopError = 10;
-            config.slot0.maxIntegralAccumulator = 254.000000;
-            config.slot0.closedLoopPeakOutput =1.0;
-            config.slot0.closedLoopPeriod = 1;
-
-
-            // config.slot1.kP = 155.600000;
-            // config.slot1.kI = 5.560000;
-            // config.slot1.kD = 8.868600;
-            // config.slot1.kF = 454.000000;
-            // config.slot1.integralZone = 100;
-            // config.slot1.allowableClosedloopError = 200;
-            // config.slot1.maxIntegralAccumulator = 91.000000;
-            // config.slot1.closedLoopPeakOutput = 0.199413;
-            // config.slot1.closedLoopPeriod = 34;
-
-            // config.slot2.kP = 223.232000;
-            // config.slot2.kI = 34.000000;
-            // config.slot2.kD = 67.000000;
-            // config.slot2.kF = 6.323232;
-            // config.slot2.integralZone = 44;
-            // config.slot2.allowableClosedloopError = 343;
-            // config.slot2.maxIntegralAccumulator = 334.000000;
-            // config.slot2.closedLoopPeakOutput = 0.399804;
-            // config.slot2.closedLoopPeriod = 14;
-
-            // config.slot3.kP = 34.000000;
-            // config.slot3.kI = 32.000000;
-            // config.slot3.kD = 436.000000;
-            // config.slot3.kF = 0.343430;
-            // config.slot3.integralZone = 2323;
-            // config.slot3.allowableClosedloopError = 543;
-            // config.slot3.maxIntegralAccumulator = 687.000000;
-            // config.slot3.closedLoopPeakOutput = 0.129032;
-            // config.slot3.closedLoopPeriod = 12;
-        }
-
-
-      // These are important:
-        talon.configAllSettings(config);
-        talon.enableVoltageCompensation(true);
-        talon.enableCurrentLimit(true);
-
+      config.peakCurrentLimit = 8;
+      config.peakCurrentDuration = 1000;
+      config.continuousCurrentLimit = 4;
     }
 
-    @Override
-    public void initDefaultCommand() {
 
+
+    /* ***************** PID SLOTS *****************************/
+    ////////////////////////////////////////////////////////////////
+
+    {
+      config.slot0.kP = 0.0;
+      config.slot0.kI = 0.0;
+      config.slot0.kD = 0.0;
+      config.slot0.kF = 0.1;
+      config.slot0.integralZone = 1000;
+      config.slot0.allowableClosedloopError = 10;
+      config.slot0.maxIntegralAccumulator = 254.000000;
+      config.slot0.closedLoopPeakOutput = 1.0;
+      config.slot0.closedLoopPeriod = 1;
+
+
+      // config.slot1.kP = 155.600000;
+      // config.slot1.kI = 5.560000;
+      // config.slot1.kD = 8.868600;
+      // config.slot1.kF = 454.000000;
+      // config.slot1.integralZone = 100;
+      // config.slot1.allowableClosedloopError = 200;
+      // config.slot1.maxIntegralAccumulator = 91.000000;
+      // config.slot1.closedLoopPeakOutput = 0.199413;
+      // config.slot1.closedLoopPeriod = 34;
+
+      // config.slot2.kP = 223.232000;
+      // config.slot2.kI = 34.000000;
+      // config.slot2.kD = 67.000000;
+      // config.slot2.kF = 6.323232;
+      // config.slot2.integralZone = 44;
+      // config.slot2.allowableClosedloopError = 343;
+      // config.slot2.maxIntegralAccumulator = 334.000000;
+      // config.slot2.closedLoopPeakOutput = 0.399804;
+      // config.slot2.closedLoopPeriod = 14;
+
+      // config.slot3.kP = 34.000000;
+      // config.slot3.kI = 32.000000;
+      // config.slot3.kD = 436.000000;
+      // config.slot3.kF = 0.343430;
+      // config.slot3.integralZone = 2323;
+      // config.slot3.allowableClosedloopError = 543;
+      // config.slot3.maxIntegralAccumulator = 687.000000;
+      // config.slot3.closedLoopPeakOutput = 0.129032;
+      // config.slot3.closedLoopPeriod = 12;
     }
 
-    @Override
-    public void periodic() {
 
-     super.periodic();
-    }
+    // These are important:
+    talon.configAllSettings(config);
+    talon.enableVoltageCompensation(true);
+    talon.enableCurrentLimit(true);
+
+  }
+
+  @Override
+  public void initDefaultCommand() {
+
+  }
+
+  @Override
+  public void periodic() {
+
+    super.periodic();
+  }
 
 }
 
