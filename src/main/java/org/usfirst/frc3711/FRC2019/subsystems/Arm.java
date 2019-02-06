@@ -129,7 +129,7 @@ public class Arm extends TalonSubsystem {
 
 
         /*
-        TODO: things not handled with config:
+  things not handled with config:
 Current Limit Enable (though the thresholds are configs)
 Voltage Compensation Enable (though the nominal voltage is a config)
 Control Mode and Target/Output demand (percent, position, velocity, etc.)
@@ -145,7 +145,6 @@ Status Frame Periods
 //////////////////////////////////////////////////////////////////////
         {
             config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
-           // config.primaryPID.selectedFeedbackCoefficient = 0.328293; //TODO:what is this
 
             // config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.Analog;
             //config.auxiliaryPID.selectedFeedbackCoefficient = 0.877686;
@@ -175,7 +174,7 @@ Status Frame Periods
 /* ***************** limit switch *****************************/
 ////////////////////////////////////////////////////////////////
         {
-            config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated; //Todo: FeedbackConnector?
+            config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
             config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
             //config.forwardLimitSwitchDeviceID = 6;
             // config.reverseLimitSwitchDeviceID = 5;
@@ -191,9 +190,9 @@ Status Frame Periods
          The respective Soft Limit Enable must be enabled for this feature to take effect.
          */
 
-            config.forwardSoftLimitThreshold = 2500;
+            config.forwardSoftLimitThreshold = 2500; //TODO: make sure these are valid
             config.reverseSoftLimitThreshold = -100;
-            config.forwardSoftLimitEnable = true; //todo: enable when thresholds are correct
+            config.forwardSoftLimitEnable = true;
             config.reverseSoftLimitEnable = true;
 
         }
@@ -251,7 +250,6 @@ Status Frame Periods
 Talon SRX and Victor SPX can be configured to adjust their outputs in response to the battery
 voltage measurement (in all control modes). Use the voltage compensation saturation config to determine
 what voltage represents 100% output.
-TODO Then enable the voltage compensation using enableVoltageCompensation().
  */
             config.voltageCompSaturation = 9.0;
 //        config.voltageMeasurementFilter = 16;
@@ -263,8 +261,7 @@ TODO Then enable the voltage compensation using enableVoltageCompensation().
 
         /* ***************** Current Limit *****************************/
         ////////////////////////////////////////////////////////////////
-       {
-            //TODO: do we want this?
+        {
 
         /*
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
@@ -339,6 +336,7 @@ TODO Then enable the voltage compensation using enableVoltageCompensation().
         talon.configAllSettings(config);
 
         talon.enableCurrentLimit(true);
+        talon.enableVoltageCompensation(true);
 
 
       
