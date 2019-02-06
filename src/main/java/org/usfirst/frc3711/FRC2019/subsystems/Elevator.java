@@ -37,7 +37,10 @@ public class Elevator extends TalonSubsystem {
 //     ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
 
       TalonTelemetry.installClosedLoopTelemetry(this);
-    tab.add(new Command("closed loop control") {
+
+      tab.add(addChildItem("motion magic thing",new MotionMagicSetpoint.Wrapper(this)));
+
+    tab.add(new Command("closed loop control(Position)") {
 
       {
         requires(Elevator.this);
