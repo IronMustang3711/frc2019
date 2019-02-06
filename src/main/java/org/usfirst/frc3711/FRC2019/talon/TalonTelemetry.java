@@ -1,5 +1,6 @@
 package org.usfirst.frc3711.FRC2019.talon;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
@@ -7,6 +8,9 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SendableImpl;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public abstract class TalonTelemetry {
 
@@ -117,7 +121,6 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 	}
 
 
-	//TODO: only call closed loop functions when in closed loop mode!
 	public static class ClosedLoopSendable extends SendableImpl {
 		private final IMotorController controller;
 
@@ -127,10 +130,28 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 
 		@Override
 		public void initSendable(SendableBuilder builder) {
-			builder.addDoubleProperty("setpoint",()->controller.getClosedLoopTarget(0),null);
-			builder.addDoubleProperty("error",()->controller.getClosedLoopError(0),null);
-			builder.addDoubleProperty("delta error",()->controller.getErrorDerivative(0),null);
+			builder.addDoubleProperty("setpoint",this::getSetpoint,null);
+			builder.addDoubleProperty("error",this::getError,null);
+			builder.addDoubleProperty("delta error",this::getDeltaError,null);
+		}
+		double getSetpoint(){
+			if(closedLoopModes.contains(controller.getControlMode()))
+				return controller.getClosedLoopTarget(0);
+			else return -1;
+		}
+		double getError(){
+			if(closedLoopModes.contains(controller.getControlMode()))
+				return controller.getClosedLoopError(0);
+			else return -1;
+		}
+		double getDeltaError(){
+			if(closedLoopModes.contains(controller.getControlMode()))
+				return controller.getErrorDerivative(0);
+			else return -1;
 		}
 	}
+
+	private static final Set<ControlMode> closedLoopModes =
+					EnumSet.complementOf(EnumSet.of(ControlMode.Disabled, ControlMode.Follower, ControlMode.PercentOutput));
 
 }

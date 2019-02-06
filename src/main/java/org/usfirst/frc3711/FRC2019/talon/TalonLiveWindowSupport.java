@@ -7,6 +7,8 @@ import com.ctre.phoenix.motorcontrol.IMotorController;
 import edu.wpi.first.wpilibj.SendableImpl;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +26,7 @@ public class TalonLiveWindowSupport extends SendableImpl {
 		super.initSendable(builder);
 		builder.setSmartDashboardType("PIDController");
 		builder.setSafeState(this::safeState);
-		builder.addDoubleProperty("p",this::getP,this::setP);
+		builder.addDoubleProperty("p", this::getP, this::setP);
 		builder.addDoubleProperty("i", this::getI, this::setI);
 		builder.addDoubleProperty("d", this::getD, this::setD);
 		builder.addDoubleProperty("f", this::getF, this::setF);
@@ -33,7 +35,7 @@ public class TalonLiveWindowSupport extends SendableImpl {
 	}
 
 	private void setEnabled(boolean b) {
-		if(!b) safeState();
+		if (!b) safeState();
 		else setSetpoint(getSetpoint());
 	}
 
@@ -41,49 +43,65 @@ public class TalonLiveWindowSupport extends SendableImpl {
 		return controller.getControlMode() != ControlMode.Disabled;
 	}
 
-	void safeState(){
+	void safeState() {
 		controller.neutralOutput();
 	}
 
-	double getP(){
-		return controller.configGetParameter(ParamEnum.eProfileParamSlot_P,0,10);
+	double getP() {
+		if(closedLoopModes.contains(controller.getControlMode()))
+			return controller.configGetParameter(ParamEnum.eProfileParamSlot_P, 0, 10);
+		else return -1;
 	}
 
-	 void setP(double p){
+	void setP(double p) {
 		ErrorCode errorCode = controller.config_kP(0, p, 10);
-		if(errorCode != ErrorCode.OK){
-			LOG.log(Level.SEVERE,"talon timeout");
+		if (errorCode != ErrorCode.OK) {
+			LOG.log(Level.SEVERE, "talon timeout");
 		}
 	}
 
-	double getI(){
-		return controller.configGetParameter(ParamEnum.eProfileParamSlot_I,0,10);
-	}
-	void setI(double i){
-		controller.config_kI(0,i,10);
-	}
-	double getD(){
-		return controller.configGetParameter(ParamEnum.eProfileParamSlot_D,0,10);
-	}
-	void setD(double d){
-		controller.config_kD(0,d,10);
+	double getI() {
+		if(closedLoopModes.contains(controller.getControlMode()))
+			return controller.configGetParameter(ParamEnum.eProfileParamSlot_I, 0, 10);
+		else return -1;
 	}
 
-	double getF(){
-		return controller.configGetParameter(ParamEnum.eProfileParamSlot_F,0,10);
-	}
-	void setF(double f){
-		controller.config_kF(0,f,10);
+	void setI(double i) {
+		controller.config_kI(0, i, 10);
 	}
 
-
-	double getSetpoint(){
-		return controller.getClosedLoopTarget(0);
+	double getD() {
+		if(closedLoopModes.contains(controller.getControlMode()))
+			return controller.configGetParameter(ParamEnum.eProfileParamSlot_D, 0, 10);
+		else return -1;
 	}
 
-	void setSetpoint(double setpoint){
-		controller.set(ControlMode.Position,setpoint);
+	void setD(double d) {
+		controller.config_kD(0, d, 10);
+	}
+
+	double getF() {
+		if(closedLoopModes.contains(controller.getControlMode()))
+			return controller.configGetParameter(ParamEnum.eProfileParamSlot_F, 0, 10);
+		else return -1;
+	}
+
+	void setF(double f) {
+		controller.config_kF(0, f, 10);
 	}
 
 
+	double getSetpoint() {
+		if(closedLoopModes.contains(controller.getControlMode()))
+			return controller.getClosedLoopTarget(0);
+		else return -1;
+	}
+
+	void setSetpoint(double setpoint) {
+		controller.set(ControlMode.MotionMagic, setpoint);
+	}
+
+
+	public static final Set<ControlMode> closedLoopModes =
+					EnumSet.complementOf(EnumSet.of(ControlMode.Disabled, ControlMode.Follower, ControlMode.PercentOutput));
 }
