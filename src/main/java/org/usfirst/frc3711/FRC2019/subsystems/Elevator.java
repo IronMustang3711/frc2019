@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.commands.MotionMagicSetpoint;
+import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -25,16 +26,7 @@ public class Elevator extends TalonSubsystem {
   public Elevator() {
     super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
 
-//
-//        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
-//        addChild("Elevator:motor io", s);
-//        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
-//        addChild("Elevator:sensor collection",s2);
-//      tab.add(s);
-//      tab.add(s2);
 
-//     ntSetpoint = tab.add("setpoint", 0.0).getEntry();
-//     ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
 
       TalonTelemetry.installClosedLoopTelemetry(this);
 
@@ -89,10 +81,10 @@ public class Elevator extends TalonSubsystem {
     addChild("home", home);
     tab.add(home);
 
-    //   Sendable s3 = new TalonLiveWindowSupport(talon);
+       Sendable s3 = new TalonLiveWindowSupport(talon);
 
-    //   addChild("closed loop stuff",s3);
-    //   tab.add(s3);
+       addChild("closed loop stuff",s3);
+       tab.add(s3);
 
   }
 
@@ -202,8 +194,8 @@ Status Frame Periods
     /* ***************** Motion_Magic *****************************/
     ////////////////////////////////////////////////////////////////
     {
-      config.motionCruiseVelocity = 500;
-      config.motionAcceleration = 500;
+      config.motionCruiseVelocity = 800;
+      config.motionAcceleration = 700;
       // config.motionProfileTrajectoryPeriod = 11;
     }
 
