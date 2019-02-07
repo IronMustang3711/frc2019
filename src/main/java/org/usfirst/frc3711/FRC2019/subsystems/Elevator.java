@@ -2,23 +2,168 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.networktables.EntryListenerFlags;
-import org.usfirst.frc3711.FRC2019.TalonID;
-import org.usfirst.frc3711.FRC2019.commands.MotionMagicSetpoint;
-import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
-import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
-
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.commands.MotionMagicSetpoint;
+import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
+import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
+import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 public class Elevator extends TalonSubsystem {
+  @SuppressWarnings("WeakerAccess")
+  static class TalonSettings {
+    static class PIDSlots {
+      public static final SlotConfiguration POSITION_SLOT =
+              SlotConfigBuilder.newBuilder()
+                      .withKP(1.0)
+                      .build();
+
+
+      /*
+      config.slot0.integralZone = 1000;
+      config.slot0.allowableClosedloopError = 10;
+      config.slot0.maxIntegralAccumulator = 254.000000;
+      config.slot0.closedLoopPeakOutput = 1.0;
+      config.slot0.closedLoopPeriod = 1;
+      todo: reapply integral?
+       */
+      public static final SlotConfiguration MM_SLOT =
+              SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
+                      .withKF(1.0)
+                      .build();
+
+      public static SlotConfiguration configurationForSlot(int slot){
+        switch (slot){
+          case 0: return MM_SLOT;
+          case 1: return POSITION_SLOT;
+          default: throw new IllegalArgumentException("invalid slot: "+slot);
+        }
+      }
+
+      public static ControlMode controlModeForSlot(int slot) {
+        switch (slot) {
+          case 0:
+            return ControlMode.MotionMagic;
+          case 1:
+            return ControlMode.Position;
+          default:
+            throw new IllegalArgumentException("Invalid Slot: " + slot);
+        }
+      }
+
+
+    }
+
+    public static final TalonSRXConfiguration CONFIGURATION = new TalonSRXConfiguration();
+
+
+    @SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
+    static TalonSRXConfiguration applyConfig(TalonSRXConfiguration config){
+      config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
+
+      config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
+      config.remoteFilter1.remoteSensorSource = RemoteSensorSource.Off;
+
+      config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
+      config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
+
+      config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
+      config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
+
+      config.forwardSoftLimitThreshold = 9223;
+      config.reverseSoftLimitThreshold = -6707;
+      config.forwardSoftLimitEnable = true;
+      config.reverseSoftLimitEnable = true;
+
+
+      // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
+      // config.closedloopRamp = 1.705000;
+
+      config.motionCruiseVelocity = 800;
+      config.motionAcceleration = 700;
+
+      config.peakOutputForward = 0.7;
+      config.peakOutputReverse = -0.4;
+
+
+
+        /*
+        https://phoenix-documentation.readthedocs.io/en/latest/ch13_MC.html#ramping
+       The nominal outputs can be selected to ensure that any non-zero requested motor output gets promoted
+       to a minimum output. For example, if the nominal forward is set to +0.10 (+10%), then any motor request
+       within (0%, +10%) will be promoted to +10% assuming request is beyond the neutral dead band.
+       This is useful for mechanisms that require a minimum output for movement,
+       and can be used as a simpler alternative to the kI (integral) component of closed-looping in some circumstances.
+         */
+      config.nominalOutputForward = 0;
+      config.nominalOutputReverse = 0;
+
+
+      // config.neutralDeadband = 0.199413; //TODO: configure
+
+
+
+      /*
+Talon SRX and Victor SPX can be configured to adjust their outputs in response to the battery
+voltage measurement (in all control modes). Use the voltage compensation saturation config to determine
+what voltage represents 100% output.
+ */
+      config.voltageCompSaturation = 9.0;
+
+
+              /*
+        After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
+         */
+      config.peakCurrentLimit = 8;
+      config.peakCurrentDuration = 1000;
+      config.continuousCurrentLimit = 3;
+
+      config.slot0 = PIDSlots.configurationForSlot(0);
+      config.slot1 = PIDSlots.configurationForSlot(1);
+
+      return config;
+    }
+
+
+
+    /*
+ things not handled with config:
+[x]Current Limit Enable (though the thresholds are configs)
+[x]Voltage Compensation Enable (though the nominal voltage is a config)
+Control Mode and Target/Output demand (percent, position, velocity, etc.)
+[x]Invert direction and sensor phase
+[x]Closed-loop slot selection [0,3] for primary and aux PID loops.
+Neutral mode override (convenient to temporarily override configs)
+Limit switch override (convenient to temporarily override configs)
+Soft Limit override (convenient to temporarily override configs)
+Status Frame Periods
+  */
+    public static void configure(TalonSRX talon){
+      talon.configFactoryDefault();
+
+      talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+      talon.selectProfileSlot(0,0); //motion magic slot & primary pid
+
+
+      talon.setInverted(true);
+      talon.setSensorPhase(false);
+
+      talon.enableVoltageCompensation(true);
+      talon.enableCurrentLimit(true);
+
+      talon.getAllConfigs(CONFIGURATION);
+      applyConfig(CONFIGURATION);
+      talon.configAllSettings(CONFIGURATION);
+
+
+    }
+  }
 
 
 
@@ -83,228 +228,25 @@ public class Elevator extends TalonSubsystem {
 
        Sendable s3 = new TalonLiveWindowSupport(talon);
 
-       addChild("closed loop stuff",s3);
+       addChild("closed loop stuff(LW)",s3);
        tab.add(s3);
 
   }
 
-  public void configMotionMagicClosedLoop() {
-    talon.config_kP(0, 1.0, 50);
-    talon.config_kI(0, 0, 50);
-    talon.config_IntegralZone(0, 0, 50);
-    talon.config_kD(0, 0, 50);
-    talon.config_kF(0, 1.0, 50);
 
-
-    talon.configMotionCruiseVelocity(800);
-    talon.configMotionAcceleration(700);
+  void setSetpoint(double position, boolean mm){
+    if(mm)
+      talon.set(ControlMode.MotionMagic,position);
+    else
+      talon.set(ControlMode.Position,position);
   }
+
+
 
   @Override
   void configureTalon() {
     super.configureTalon();
-    talon.setInverted(true);
-    talon.setSensorPhase(false);
-    TalonSRXConfiguration config = new TalonSRXConfiguration();
-
-
-        /*
-        TODO: things not handled with config:
-Current Limit Enable (though the thresholds are configs)
-Voltage Compensation Enable (though the nominal voltage is a config)
-Control Mode and Target/Output demand (percent, position, velocity, etc.)
-Invert direction and sensor phase
-Closed-loop slot selection [0,3] for primary and aux PID loops.
-Neutral mode override (convenient to temporarily override configs)
-Limit switch override (convenient to temporarily override configs)
-Soft Limit override (convenient to temporarily override configs)
-Status Frame Periods
-         */
-
-    /* ***************** Encoder/Sensor Setup *****************************/
-//////////////////////////////////////////////////////////////////////
-    {
-      config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
-      // config.primaryPID.selectedFeedbackCoefficient = 0.328293;
-
-      // config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.Analog;
-      //config.auxiliaryPID.selectedFeedbackCoefficient = 0.877686;
-
-      //config.sum0Term = FeedbackDevice.QuadEncoder;
-      //config.sum1Term = FeedbackDevice.RemoteSensor0;
-      //config.diff0Term = FeedbackDevice.RemoteSensor1;
-      //config.diff1Term = FeedbackDevice.PulseWidthEncodedPosition;
-
-      //config.auxPIDPolarity = true;
-      //config.remoteFilter0.remoteSensorDeviceID = 22;
-      config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
-      // config.remoteFilter1.remoteSensorDeviceID = 41;
-      config.remoteFilter1.remoteSensorSource = RemoteSensorSource.Off;
-
-
-//        config.feedbackNotContinuous = false;
-//        config.remoteSensorClosedLoopDisableNeutralOnLOS = false;
-//        config.clearPositionOnLimitF = true;
-//        config.clearPositionOnLimitR = true;
-//        config.clearPositionOnQuadIdx = false;
-//
-//        config.pulseWidthPeriod_EdgesPerRot = 9;
-//        config.pulseWidthPeriod_FilterWindowSz = 32;
-
-    }
-    /* ***************** limit switch *****************************/
-////////////////////////////////////////////////////////////////
-    {
-      config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
-      config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
-      //config.forwardLimitSwitchDeviceID = 6;
-      // config.reverseLimitSwitchDeviceID = 5;
-      config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
-      config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
-      //        config.limitSwitchDisableNeutralOnLOS = true;
-      //        config.softLimitDisableNeutralOnLOS = true;
-
-                /*
-        Soft limits can be used to disable motor drive when the “Sensor Position” is outside of a specified range.
-        Forward throttle will be disabled if the “Sensor Position” is greater than the Forward Soft Limit.
-         Reverse throttle will be disabled if the “Sensor Position” is less than the Reverse Soft Limit.
-         The respective Soft Limit Enable must be enabled for this feature to take effect.
-         */
-
-      config.forwardSoftLimitThreshold = 9223;
-      config.reverseSoftLimitThreshold = -6707;
-      config.forwardSoftLimitEnable = true;
-      config.reverseSoftLimitEnable = true;
-
-    }
-
-    /* ***************** Ramping *****************************/
-    ////////////////////////////////////////////////////////////////
-    {
-        /*
-        The Talon SRX can be set to honor a ramp rate to prevent instantaneous changes in throttle.
-        This ramp rate is in effect regardless of which mode is selected (throttle, slave, or closed-loop).
-        Ramp can be set in time from neutral to full using configOpenLoopRampRate().
-         */
-
-      // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
-      // config.closedloopRamp = 1.705000;
-    }
-
-    /* ***************** Motion_Magic *****************************/
-    ////////////////////////////////////////////////////////////////
-    {
-      config.motionCruiseVelocity = 800;
-      config.motionAcceleration = 700;
-      // config.motionProfileTrajectoryPeriod = 11;
-    }
-
-    /* ***************** Peak/Nominal *****************************/
-    ////////////////////////////////////////////////////////////////
-    {
-        /*
-        Peak/Nominal Outputs Often a mechanism may not require full motor output.
-        The application can cap the output via the peak forward and reverse config setting (through Tuner or API).
-         */
-      config.peakOutputForward = 0.7;
-      config.peakOutputReverse = -0.4;
-
-        /*
-        https://phoenix-documentation.readthedocs.io/en/latest/ch13_MC.html#ramping
-       The nominal outputs can be selected to ensure that any non-zero requested motor output gets promoted
-       to a minimum output. For example, if the nominal forward is set to +0.10 (+10%), then any motor request
-       within (0%, +10%) will be promoted to +10% assuming request is beyond the neutral dead band.
-       This is useful for mechanisms that require a minimum output for movement,
-       and can be used as a simpler alternative to the kI (integral) component of closed-looping in some circumstances.
-         */
-      config.nominalOutputForward = 0;
-      config.nominalOutputReverse = 0;
-    }
-
-
-    // config.neutralDeadband = 0.199413; //TODO: configure
-
-    /* ***************** Voltage Compensation *****************************/
-    ////////////////////////////////////////////////////////////////
-    {
-/*
-Talon SRX and Victor SPX can be configured to adjust their outputs in response to the battery
-voltage measurement (in all control modes). Use the voltage compensation saturation config to determine
-what voltage represents 100% output.
- */
-      config.voltageCompSaturation = 9.0;
-//        config.voltageMeasurementFilter = 16;
-//        config.velocityMeasurementPeriod = VelocityMeasPeriod.Period_25Ms;
-//        config.velocityMeasurementWindow = 8;
-
-    }
-
-
-    /* ***************** Current Limit *****************************/
-    ////////////////////////////////////////////////////////////////
-    {
-        /*
-        After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
-         */
-      config.peakCurrentLimit = 8;
-      config.peakCurrentDuration = 1000;
-      config.continuousCurrentLimit = 4;
-    }
-
-
-
-    /* ***************** PID SLOTS *****************************/
-    ////////////////////////////////////////////////////////////////
-
-    {
-      config.slot0.kP = 0.0;
-      config.slot0.kI = 0.0;
-      config.slot0.kD = 0.0;
-      config.slot0.kF = 0.1;
-      config.slot0.integralZone = 1000;
-      config.slot0.allowableClosedloopError = 10;
-      config.slot0.maxIntegralAccumulator = 254.000000;
-      config.slot0.closedLoopPeakOutput = 1.0;
-      config.slot0.closedLoopPeriod = 1;
-
-
-      // config.slot1.kP = 155.600000;
-      // config.slot1.kI = 5.560000;
-      // config.slot1.kD = 8.868600;
-      // config.slot1.kF = 454.000000;
-      // config.slot1.integralZone = 100;
-      // config.slot1.allowableClosedloopError = 200;
-      // config.slot1.maxIntegralAccumulator = 91.000000;
-      // config.slot1.closedLoopPeakOutput = 0.199413;
-      // config.slot1.closedLoopPeriod = 34;
-
-      // config.slot2.kP = 223.232000;
-      // config.slot2.kI = 34.000000;
-      // config.slot2.kD = 67.000000;
-      // config.slot2.kF = 6.323232;
-      // config.slot2.integralZone = 44;
-      // config.slot2.allowableClosedloopError = 343;
-      // config.slot2.maxIntegralAccumulator = 334.000000;
-      // config.slot2.closedLoopPeakOutput = 0.399804;
-      // config.slot2.closedLoopPeriod = 14;
-
-      // config.slot3.kP = 34.000000;
-      // config.slot3.kI = 32.000000;
-      // config.slot3.kD = 436.000000;
-      // config.slot3.kF = 0.343430;
-      // config.slot3.integralZone = 2323;
-      // config.slot3.allowableClosedloopError = 543;
-      // config.slot3.maxIntegralAccumulator = 687.000000;
-      // config.slot3.closedLoopPeakOutput = 0.129032;
-      // config.slot3.closedLoopPeriod = 12;
-    }
-
-
-    // These are important:
-    talon.configAllSettings(config);
-    talon.enableVoltageCompensation(true);
-    talon.enableCurrentLimit(true);
-
+    TalonSettings.configure(talon);
   }
 
   @Override
