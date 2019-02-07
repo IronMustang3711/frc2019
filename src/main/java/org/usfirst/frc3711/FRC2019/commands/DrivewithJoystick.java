@@ -51,12 +51,12 @@ public class DrivewithJoystick extends Command {
         double forward = joy.getY();
        
         forward = forward * forward * forward;
-        forward *= -0.5;
+        forward *= -0.8;
 
         double turn = joy.getTwist(); // If it doesn't work, try getZ
       
         turn = turn * turn * turn;
-        turn *= 0.5;
+        turn *= 0.65;
         Robot.chassis.drive(forward, turn);
 
     }

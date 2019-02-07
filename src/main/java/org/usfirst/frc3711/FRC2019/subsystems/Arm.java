@@ -94,7 +94,7 @@ public class Arm extends TalonSubsystem {
 
     @Override // Put code here to be run every loop
     public void initDefaultCommand() {
-        setDefaultCommand(new SetpointCommand("stow", this, 0 , ControlMode.MotionMagic));
+       // setDefaultCommand(new SetpointCommand("stow", this, 0 , ControlMode.MotionMagic));
     }
 
     public void configMotionMagicClosedLoop(){

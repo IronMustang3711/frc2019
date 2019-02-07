@@ -90,6 +90,10 @@ public class OI {
         ejector = new JoystickButton(joystick1, 2);
 
 
+        elevatorUp = new JoystickButton(joystick1, 11);
+        elevatorDown = new JoystickButton(joystick1, 12);
+
+
         MotionMagicSetpoint top = new MotionMagicSetpoint(Robot.elevator);
         top.setSetpoint(7000);
         elevatorUp.whenPressed(top);

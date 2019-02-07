@@ -137,7 +137,7 @@ public class Wrist extends TalonSubsystem {
 
     @Override
     public void initDefaultCommand() {
-        setDefaultCommand(new SetpointCommand("stow", this, 40 , ControlMode.MotionMagic));
+       // setDefaultCommand(new SetpointCommand("stow", this, 40 , ControlMode.MotionMagic));
     }
 
     @Override
