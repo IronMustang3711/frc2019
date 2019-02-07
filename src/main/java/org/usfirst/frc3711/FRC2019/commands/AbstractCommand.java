@@ -37,6 +37,6 @@ public abstract class AbstractCommand extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return isTimedOut();
 	}
 }

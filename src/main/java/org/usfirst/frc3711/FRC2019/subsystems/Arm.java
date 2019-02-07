@@ -97,9 +97,9 @@ public class Arm extends TalonSubsystem {
     }
 
     public void configMotionMagicClosedLoop(){
-        talon.config_kP(0, 2.2, 50);
-        talon.config_kI(0,0,50);
-        talon.config_IntegralZone(0,0,50);
+        talon.config_kP(0, 4, 50);
+        talon.config_kI(0,0.0,50);
+        talon.config_IntegralZone(0,200,50);
         talon.config_kD(0,0,50);
         talon.config_kF(0,4.0,50);
      
