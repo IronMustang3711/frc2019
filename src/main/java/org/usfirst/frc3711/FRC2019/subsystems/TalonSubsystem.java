@@ -95,7 +95,7 @@ public abstract class TalonSubsystem extends Subsystem {
   void configureTalon(){
     talon.configFactoryDefault();
     talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-
+    talon.selectProfileSlot(0,0);
 
 
    // talon.setSensorPhase(true);

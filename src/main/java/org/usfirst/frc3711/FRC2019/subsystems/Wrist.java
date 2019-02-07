@@ -83,6 +83,18 @@ public class Wrist extends TalonSubsystem {
          });
     }
 
+
+    public void configMotionMagicClosedLoop(){
+         talon.config_kP(0,1.0,50);
+         talon.config_kI(0,0,50);
+         talon.config_IntegralZone(0,0,50);
+         talon.config_kD(0,0,50);
+         talon.config_kF(0,1.0,50);
+
+
+         talon.configMotionCruiseVelocity(800);
+         talon.configMotionAcceleration(700);
+    }
     @Override
     void configureTalon() {
         super.configureTalon();
@@ -95,24 +107,28 @@ public class Wrist extends TalonSubsystem {
         talon.getAllConfigs(config);
 
         {
-            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.SensorDifference;
-            config.primaryPID.selectedFeedbackCoefficient = 2.0;
-
-            //  config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.PulseWidthEncodedPosition;
-            // config.auxiliaryPID.selectedFeedbackCoefficient = 1.0;
-
-            config.diff0Term = FeedbackDevice.QuadEncoder;
-            config.diff1Term = FeedbackDevice.RemoteSensor0;
-            //config.diff0Term = FeedbackDevice.RemoteSensor1;
-            //config.diff1Term = FeedbackDevice.PulseWidthEncodedPosition;
-
-            config.auxPIDPolarity = false;
-            config.remoteFilter0.remoteSensorDeviceID = TalonID.ARM.getId();
-            config.remoteFilter0.remoteSensorSource = RemoteSensorSource.TalonSRX_SelectedSensor;
-            
-            // config.remoteFilter1.remoteSensorDeviceID = 41;
-
+            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
         }
+
+//        {
+//            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.SensorDifference;
+//            config.primaryPID.selectedFeedbackCoefficient = 2.0;
+//
+//            //  config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.PulseWidthEncodedPosition;
+//            // config.auxiliaryPID.selectedFeedbackCoefficient = 1.0;
+//
+//            config.diff0Term = FeedbackDevice.QuadEncoder;
+//            config.diff1Term = FeedbackDevice.RemoteSensor0;
+//            //config.diff0Term = FeedbackDevice.RemoteSensor1;
+//            //config.diff1Term = FeedbackDevice.PulseWidthEncodedPosition;
+//
+//            config.auxPIDPolarity = false;
+//            config.remoteFilter0.remoteSensorDeviceID = TalonID.ARM.getId();
+//            config.remoteFilter0.remoteSensorSource = RemoteSensorSource.TalonSRX_SelectedSensor;
+//
+//            // config.remoteFilter1.remoteSensorDeviceID = 41;
+//
+//        }
 
         talon.configAllSettings(config);
 
