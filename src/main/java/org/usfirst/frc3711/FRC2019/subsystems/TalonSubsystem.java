@@ -49,14 +49,6 @@ public abstract class TalonSubsystem extends Subsystem {
         onDisableClosedLoop();
     },EntryListenerFlags.kUpdate);
 
-//    Sendable sensorCollection = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
-//    addChild("sensor collection",sensorCollection);
-//    tab.add(sensorCollection).withSize(2,2);
-//
-//    Sendable motorIO = new TalonTelemetry.MotorIOSendable(talon);
-//    addChild("motor io",motorIO);
-//    tab.add(motorIO).withSize(2,2);
-
     TalonTelemetry.installMototIOTelemetry(this);
     TalonTelemetry.installSensorCollectionTelemetry(this);
 
@@ -66,12 +58,15 @@ public abstract class TalonSubsystem extends Subsystem {
 
   protected void onSetpointChange(double newSetpoint){
     this.setpoint = newSetpoint;
+    System.out.println(getName() + ": new setpoint("+newSetpoint+")");
+
   }
 
   protected void onEnableClosedLoop(){
-
+    System.out.println(getName() + ": Enable closed loop");
   }
   protected void onDisableClosedLoop(){
+    System.out.println(getName() + ": Disable closed loop");
     talon.neutralOutput();
   }
 

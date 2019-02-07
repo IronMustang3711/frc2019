@@ -17,9 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.LayoutType;
 
-/**
- * Add your docs here.
- */
+//TODO: does this even work?
 public class PositionClosedLoop extends Command {
 
     private final TalonSubsystem subsystem;
@@ -52,7 +50,7 @@ public class PositionClosedLoop extends Command {
 
     @Override
     protected void end() {
-        subsystem.talon.set(ControlMode.PercentOutput, 0.0);
+        subsystem.talon.neutralOutput();
     }
 
     @Override

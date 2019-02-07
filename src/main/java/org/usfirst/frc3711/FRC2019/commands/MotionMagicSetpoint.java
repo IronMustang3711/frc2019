@@ -1,6 +1,7 @@
 package org.usfirst.frc3711.FRC2019.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SendableImpl;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
@@ -12,14 +13,14 @@ public class MotionMagicSetpoint extends Command {
     public final MotionMagicSetpoint command;
 
     public Wrapper(TalonSubsystem subsystem){
+
       this.command = new MotionMagicSetpoint(subsystem);
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
      command.initSendable(builder); //TODO????
-
-
+      builder.addDoubleProperty("setpoint", command::getSetpoint,command::setSetpoint);
     }
   }
 
@@ -43,6 +44,11 @@ public class MotionMagicSetpoint extends Command {
 
   public void setSetpoint(double setpoint){
     this.setpoint = setpoint;
+    execute();
+  }
+
+  public double getSetpoint(){
+    return setpoint;
   }
 
   @Override

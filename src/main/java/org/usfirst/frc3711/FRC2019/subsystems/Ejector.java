@@ -7,29 +7,35 @@
 
 package org.usfirst.frc3711.FRC2019.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import org.usfirst.frc3711.FRC2019.TalonID;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Add your docs here.
  */
 public class Ejector extends TalonSubsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+ public Ejector(){
+   super(Ejector.class.getSimpleName(),TalonID.EJECTOR.getId());
+ }
 
-  public Ejector(){
-    super(Ejector.class.getSimpleName(),TalonID.EJECTOR.getId());
-  }
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  @Override
-  public void periodic() {
-    super.periodic();
-    SmartDashboard.putNumber("Ejector Position", talon.getSensorCollection().getQuadraturePosition());
-  }
+  public boolean isRunning(){
+    return talon.getOutputCurrent() != 0;
+}
+
+public void run(){
+    talon.set(ControlMode.PercentOutput, 1.0);
+}
+
+public void stop(){
+    talon.neutralOutput();
+}
 }
