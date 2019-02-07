@@ -21,6 +21,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.commands.MotionMagicSetpoint;
+import org.usfirst.frc3711.FRC2019.commands.SetpointCommand;
 import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
@@ -93,7 +94,7 @@ public class Arm extends TalonSubsystem {
 
     @Override // Put code here to be run every loop
     public void initDefaultCommand() {
-
+        setDefaultCommand(new SetpointCommand("stow", this, 0 , ControlMode.MotionMagic));
     }
 
     public void configMotionMagicClosedLoop(){

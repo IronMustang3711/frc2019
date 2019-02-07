@@ -39,8 +39,9 @@ public class SetpointCommand extends AbstractCommand{
 
     @Override
     protected boolean isFinished() {
-        return super.isFinished() ||  
-            (Math.abs(subsystem.talon.getClosedLoopError()) < 100.0 
-            && Math.abs(subsystem.talon.getErrorDerivative()) < 4.0);
+        return false;
+        // return super.isFinished() ||  
+        //     (Math.abs(subsystem.talon.getClosedLoopError()) < 100.0 
+        //     && Math.abs(subsystem.talon.getErrorDerivative()) < 4.0);
     }
 }
