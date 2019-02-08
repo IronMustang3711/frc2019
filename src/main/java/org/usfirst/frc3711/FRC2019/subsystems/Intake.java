@@ -49,6 +49,14 @@ public class Intake extends TalonSubsystem {
         talon.set(ControlMode.PercentOutput, 1.0);
     }
 
+    public void inhale(){
+        talon.set(ControlMode.PercentOutput,1.0);
+    }
+
+    public void exhale(){
+        talon.set(ControlMode.PercentOutput,-1.0);
+    }
+
     public void stop(){
         talon.neutralOutput();
     }

@@ -35,6 +35,17 @@ public void run(){
     talon.set(ControlMode.PercentOutput, 1.0);
 }
 
+public void stow(){
+//TODO:
+}
+public void hook(){
+  //TODO:
+}
+public void eject(){
+  //TODO;
+}
+
+
 public void stop(){
     talon.neutralOutput();
 }
