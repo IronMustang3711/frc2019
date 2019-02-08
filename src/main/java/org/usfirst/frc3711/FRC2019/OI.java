@@ -11,13 +11,7 @@
 
 package org.usfirst.frc3711.FRC2019;
 
-import org.usfirst.frc3711.FRC2019.commands.AutonomousCommand;
-import org.usfirst.frc3711.FRC2019.commands.DrivewithJoystick;
-import org.usfirst.frc3711.FRC2019.commands.ManualLinkageControl;
-import org.usfirst.frc3711.FRC2019.commands.MotionMagicSetpoint;
-import org.usfirst.frc3711.FRC2019.commands.RobotPoser;
-import org.usfirst.frc3711.FRC2019.commands.RunEjector;
-import org.usfirst.frc3711.FRC2019.commands.RunIntake;
+import org.usfirst.frc3711.FRC2019.commands.*;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -94,13 +88,13 @@ public class OI {
         elevatorDown = new JoystickButton(joystick1, 12);
 
 
-        MotionMagicSetpoint top = new MotionMagicSetpoint(Robot.elevator);
-        top.setSetpoint(7000);
-        elevatorUp.whenPressed(top);
-
-        MotionMagicSetpoint home = new MotionMagicSetpoint(Robot.elevator);
-        home.setSetpoint(1000);
-        elevatorDown.whenPressed(home);
+//        MotionMagicSetpoint top = new MotionMagicSetpoint(Robot.elevator);
+//        top.setSetpoint(7000);
+//        elevatorUp.whenPressed(top);
+//
+//        MotionMagicSetpoint home = new MotionMagicSetpoint(Robot.elevator);
+//        home.setSetpoint(1000);
+//        elevatorDown.whenPressed(home);
 
 
         stow.whenPressed(new RobotPoser(RobotPose.STOW));
@@ -123,6 +117,8 @@ public class OI {
 
        var tab = Shuffleboard.getTab("Poses");
        tab.add(new RobotPoser(RobotPose.STOW));
+       tab.add(new CommandSequences.RestingPose());
+       tab.add(new CommandSequences.StagingPose());
 
 
        stow.whenPressed(new RobotPoser(RobotPose.STOW));

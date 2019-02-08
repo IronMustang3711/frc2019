@@ -21,9 +21,9 @@ public class RobotPoser extends Command {
 
 	@Override
 	protected void initialize() {
-		Robot.elevator.configMotionMagicClosedLoop();
-		Robot.arm.configMotionMagicClosedLoop();
-		Robot.wrist.configMotionMagicClosedLoop();
+//		Robot.elevator.configMotionMagicClosedLoop();
+//		Robot.arm.configMotionMagicClosedLoop();
+//		Robot.wrist.configMotionMagicClosedLoop();
 
 	}
 

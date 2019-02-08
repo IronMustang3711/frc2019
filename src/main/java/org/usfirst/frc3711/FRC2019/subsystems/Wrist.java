@@ -10,24 +10,146 @@
 
 package org.usfirst.frc3711.FRC2019.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
-
-import org.usfirst.frc3711.FRC2019.TalonID;
-import org.usfirst.frc3711.FRC2019.commands.SetpointCommand;
-
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 public class Wrist extends TalonSubsystem {
+    @SuppressWarnings("WeakerAccess")
+    static class TalonSettings {
+        static class PIDSlots {
+            public static final SlotConfiguration POSITION_SLOT =
+                    SlotConfigBuilder.newBuilder()
+                            .withKP(2.0)
+                            .build();
+
+            public static final SlotConfiguration MM_SLOT =
+                    SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
+                            .withKP(4.0)
+                            .withKI(0.01)
+                            .withIntegralZone(100)
+                            .withKF(1.0)
+                            .build();
+
+            public static SlotConfiguration configurationForSlot(int slot){
+                switch (slot){
+                    case 0: return MM_SLOT;
+                    case 1: return POSITION_SLOT;
+                    default: throw new IllegalArgumentException("invalid slot: "+slot);
+                }
+            }
+        }
+
+
+        public static final TalonSRXConfiguration CONFIGURATION = new TalonSRXConfiguration();
+
+        @SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
+        static TalonSRXConfiguration applyConfig(TalonSRXConfiguration config){
+            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
+
+            config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
+            config.remoteFilter1.remoteSensorSource = RemoteSensorSource.Off;
+
+            config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
+            config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
+
+            config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
+            config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
+
+            config.forwardSoftLimitThreshold = 2500;
+            config.reverseSoftLimitThreshold = -100;
+            config.forwardSoftLimitEnable = true;
+            config.reverseSoftLimitEnable = true;
+
+
+            // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
+            // config.closedloopRamp = 1.705000;
+
+            config.motionCruiseVelocity = 700;
+            config.motionAcceleration = 600;
+
+            config.peakOutputForward = 0.6;
+            config.peakOutputReverse = -0.3;
+
+
+
+        /*
+        https://phoenix-documentation.readthedocs.io/en/latest/ch13_MC.html#ramping
+       The nominal outputs can be selected to ensure that any non-zero requested motor output gets promoted
+       to a minimum output. For example, if the nominal forward is set to +0.10 (+10%), then any motor request
+       within (0%, +10%) will be promoted to +10% assuming request is beyond the neutral dead band.
+       This is useful for mechanisms that require a minimum output for movement,
+       and can be used as a simpler alternative to the kI (integral) component of closed-looping in some circumstances.
+         */
+            config.nominalOutputForward = 0;
+            config.nominalOutputReverse = 0;
+
+
+            // config.neutralDeadband = 0.199413; //TODO: configure
+
+
+
+      /*
+Talon SRX and Victor SPX can be configured to adjust their outputs in response to the battery
+voltage measurement (in all control modes). Use the voltage compensation saturation config to determine
+what voltage represents 100% output.
+ */
+            config.voltageCompSaturation = 9.0;
+
+
+              /*
+        After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
+         */
+            config.peakCurrentLimit = 8;
+            config.peakCurrentDuration = 1000;
+            config.continuousCurrentLimit = 3;
+
+            config.slot0 = PIDSlots.configurationForSlot(0);
+            config.slot1 = PIDSlots.configurationForSlot(1);
+
+            return config;
+        }
+
+
+
+        /*
+	 things not handled with config:
+	[x]Current Limit Enable (though the thresholds are configs)
+	[x]Voltage Compensation Enable (though the nominal voltage is a config)
+	Control Mode and Target/Output demand (percent, position, velocity, etc.)
+	[x]Invert direction and sensor phase
+	[x]Closed-loop slot selection [0,3] for primary and aux PID loops.
+	Neutral mode override (convenient to temporarily override configs)
+	Limit switch override (convenient to temporarily override configs)
+	Soft Limit override (convenient to temporarily override configs)
+	Status Frame Periods
+	  */
+        public static void configure(TalonSRX talon){
+            talon.configFactoryDefault();
+
+            talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+            talon.selectProfileSlot(0,0); //motion magic slot & primary pid
+
+
+            talon.setInverted(true);
+            talon.setSensorPhase(false);
+
+            talon.enableVoltageCompensation(true);
+            talon.enableCurrentLimit(true);
+
+            talon.getAllConfigs(CONFIGURATION);
+            applyConfig(CONFIGURATION);
+            talon.configAllSettings(CONFIGURATION);
+
+        }
+    }
+
    // ShuffleboardTab tab;
 
 //     NetworkTableEntry ntSetpoint;
@@ -85,54 +207,21 @@ public class Wrist extends TalonSubsystem {
     }
 
 
-    public void configMotionMagicClosedLoop(){
-         talon.config_kP(0,4.0,50);
-         talon.config_kI(0,0.01,50);
-         talon.config_IntegralZone(0,100,50);
-         talon.config_kD(0,0,50);
-         talon.config_kF(0,1.0,50);
-
-
-         talon.configMotionCruiseVelocity(800);
-         talon.configMotionAcceleration(700);
-    }
+//    public void configMotionMagicClosedLoop(){
+//         talon.config_kP(0,4.0,50);
+//         talon.config_kI(0,0.01,50);
+//         talon.config_IntegralZone(0,100,50);
+//         talon.config_kD(0,0,50);
+//         talon.config_kF(0,1.0,50);
+//
+//
+//         talon.configMotionCruiseVelocity(800);
+//         talon.configMotionAcceleration(700);
+//    }
     @Override
     void configureTalon() {
         super.configureTalon();
-        talon.setInverted(true);
-        talon.setSensorPhase(false);
-        talon.selectProfileSlot(0, 0);
-        talon.config_kP(0, 1.0);
-        TalonSRXConfiguration config = new TalonSRXConfiguration();
-
-        talon.getAllConfigs(config);
-
-        {
-            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
-        }
-
-//        {
-//            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.SensorDifference;
-//            config.primaryPID.selectedFeedbackCoefficient = 2.0;
-//
-//            //  config.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.PulseWidthEncodedPosition;
-//            // config.auxiliaryPID.selectedFeedbackCoefficient = 1.0;
-//
-//            config.diff0Term = FeedbackDevice.QuadEncoder;
-//            config.diff1Term = FeedbackDevice.RemoteSensor0;
-//            //config.diff0Term = FeedbackDevice.RemoteSensor1;
-//            //config.diff1Term = FeedbackDevice.PulseWidthEncodedPosition;
-//
-//            config.auxPIDPolarity = false;
-//            config.remoteFilter0.remoteSensorDeviceID = TalonID.ARM.getId();
-//            config.remoteFilter0.remoteSensorSource = RemoteSensorSource.TalonSRX_SelectedSensor;
-//
-//            // config.remoteFilter1.remoteSensorDeviceID = 41;
-//
-//        }
-
-        talon.configAllSettings(config);
-
+        TalonSettings.configure(talon);
     }
 
     @Override

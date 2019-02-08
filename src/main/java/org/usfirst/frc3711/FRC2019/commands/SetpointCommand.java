@@ -29,7 +29,11 @@ public class SetpointCommand extends AbstractCommand{
     @Override
     protected void initialize() {
        if(ControlMode.MotionMagic.equals(mode)){
-           subsystem.configMotionMagicClosedLoop();
+           subsystem.talon.selectProfileSlot(0,0);
+           //subsystem.configMotionMagicClosedLoop();
+       }
+       else if(ControlMode.Position.equals(mode)){
+           subsystem.talon.selectProfileSlot(1,0);
        }
     }
     @Override

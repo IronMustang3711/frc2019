@@ -175,7 +175,7 @@ Status Frame Periods
 
       TalonTelemetry.installClosedLoopTelemetry(this);
 
-      tab.add(addChildItem("motion magic thing",new MotionMagicSetpoint.Wrapper(this)));
+     // tab.add(addChildItem("motion magic thing",new MotionMagicSetpoint.Wrapper(this)));
 
     tab.add(new Command("closed loop control(Position)") {
 
@@ -208,20 +208,20 @@ Status Frame Periods
 
     });
 
-    MotionMagicSetpoint motionMagicSetpoint = new MotionMagicSetpoint(this);
-    tab.add(motionMagicSetpoint);
+//    MotionMagicSetpoint motionMagicSetpoint = new MotionMagicSetpoint(this);
+//    tab.add(motionMagicSetpoint);
+//
+//    ntSetpoint.addListener(entryNotification -> {
+//      System.out.println("elevator setpoint updated: " + entryNotification.value.getDouble());
+//      motionMagicSetpoint.setSetpoint(entryNotification.value.getDouble());
+//    }, EntryListenerFlags.kUpdate);
 
-    ntSetpoint.addListener(entryNotification -> {
-      System.out.println("elevator setpoint updated: " + entryNotification.value.getDouble());
-      motionMagicSetpoint.setSetpoint(entryNotification.value.getDouble());
-    }, EntryListenerFlags.kUpdate);
-
-    MotionMagicSetpoint top = new MotionMagicSetpoint(this);
+    MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,7000,-1);
     top.setSetpoint(7000);
     addChild("top", top);
     tab.add(top);
 
-    MotionMagicSetpoint home = new MotionMagicSetpoint(this);
+    MotionMagicSetpoint home = new MotionMagicSetpoint("bottom",this,1000,-1);
     home.setSetpoint(1000);
     addChild("home", home);
     tab.add(home);
