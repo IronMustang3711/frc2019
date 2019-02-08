@@ -137,8 +137,8 @@ what voltage represents 100% output.
             talon.selectProfileSlot(0,0); //motion magic slot & primary pid
 
 
-            talon.setInverted(true);
-            talon.setSensorPhase(false);
+            talon.setInverted(false);
+            talon.setSensorPhase(true);
 
             talon.enableVoltageCompensation(true);
             talon.enableCurrentLimit(true);
