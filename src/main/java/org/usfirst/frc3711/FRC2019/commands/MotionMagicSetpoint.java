@@ -27,6 +27,13 @@ public class MotionMagicSetpoint extends Command {
   private final TalonSubsystem subsystem;
   private double setpoint;
 
+  public MotionMagicSetpoint(String name, TalonSubsystem subsystem,double setpoint){
+    super(subsystem.getName()+":"+name,subsystem);
+    this.subsystem = subsystem;
+    this.setpoint = setpoint;
+    requires(subsystem);
+  }
+
   public MotionMagicSetpoint(String name,TalonSubsystem subsystem, double setpoint,double timeout) {
     super(subsystem.getName()+":"+name,timeout,subsystem);
     this.subsystem = subsystem;

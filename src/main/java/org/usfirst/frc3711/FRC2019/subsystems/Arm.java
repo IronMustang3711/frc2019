@@ -210,12 +210,12 @@ what voltage represents 100% output.
  
        });
 
-       MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,2000,-1);
+       MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,2000);
        top.setSetpoint(2000);
        addChild("top", top);
        tab.add(top);
  
-       MotionMagicSetpoint home = new MotionMagicSetpoint("home",this,1000,-1);
+       MotionMagicSetpoint home = new MotionMagicSetpoint("home",this,1000);
        home.setSetpoint(1000);
        addChild("home",home);
        tab.add(home);

@@ -216,12 +216,12 @@ Status Frame Periods
 //      motionMagicSetpoint.setSetpoint(entryNotification.value.getDouble());
 //    }, EntryListenerFlags.kUpdate);
 
-    MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,7000,-1);
+    MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,7000);
     top.setSetpoint(7000);
     addChild("top", top);
     tab.add(top);
 
-    MotionMagicSetpoint home = new MotionMagicSetpoint("bottom",this,1000,-1);
+    MotionMagicSetpoint home = new MotionMagicSetpoint("bottom",this,1000);
     home.setSetpoint(1000);
     addChild("home", home);
     tab.add(home);

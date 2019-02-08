@@ -17,9 +17,9 @@ public class CommandSequences {
 		public RestingPose(){
 			super(RestingPose.class.getSimpleName());
 			addSequential(elevatorToHome());
-			addSequential(new MotionMagicSetpoint("Rest",Robot.arm,0,-1));
-			addParallel(new MotionMagicSetpoint("Rest",Robot.wrist,0,-1));
-			addSequential(new MotionMagicSetpoint("Rest",Robot.elevator,0,-1));
+			addSequential(new MotionMagicSetpoint("Rest",Robot.arm,0));
+			addParallel(new MotionMagicSetpoint("Rest",Robot.wrist,0));
+			addSequential(new MotionMagicSetpoint("Rest",Robot.elevator,0));
 		}
 
 	}
@@ -28,9 +28,9 @@ public class CommandSequences {
 		public StagingPose(){
 			super(StagingPose.class.getSimpleName());
 			addSequential(elevatorToHome());
-			addSequential(new MotionMagicSetpoint("Staging",Robot.arm,400,-1));
-			addParallel(new MotionMagicSetpoint("Staging",Robot.wrist,400,-1));
-			addParallel(new MotionMagicSetpoint("Home",Robot.elevator,500,-1));
+			addSequential(new MotionMagicSetpoint("Staging",Robot.arm,400));
+			addParallel(new MotionMagicSetpoint("Staging",Robot.wrist,400));
+			addParallel(new MotionMagicSetpoint("Home",Robot.elevator,500));
 		}
 	}
 

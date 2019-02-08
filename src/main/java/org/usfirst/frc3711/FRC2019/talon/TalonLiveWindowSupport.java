@@ -82,7 +82,7 @@ public class TalonLiveWindowSupport extends SendableImpl {
 
 	double getF() {
 		if(closedLoopModes.contains(controller.getControlMode()))
-			return controller.configGetParameter(ParamEnum.eProfileParamSlot_F, 0, 10);
+			return controller.configGetParameter(ParamEnum.eProfileParamSlot_F, 0, 40);
 		else return -1;
 	}
 
