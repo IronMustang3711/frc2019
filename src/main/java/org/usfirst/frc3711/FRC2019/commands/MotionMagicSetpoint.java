@@ -67,7 +67,7 @@ public class MotionMagicSetpoint extends Command {
 
   @Override
   protected void end() {
-    subsystem.talon.neutralOutput();
+   // subsystem.talon.neutralOutput();
   }
 
   @Override

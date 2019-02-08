@@ -226,10 +226,10 @@ Status Frame Periods
     addChild("home", home);
     tab.add(home);
 
-       Sendable s3 = new TalonLiveWindowSupport(talon);
-
-       addChild("closed loop stuff(LW)",s3);
-       tab.add(s3);
+//       Sendable s3 = new TalonLiveWindowSupport(talon);
+//
+//       addChild("closed loop stuff(LW)",s3);
+//       tab.add(s3);
 
   }
 

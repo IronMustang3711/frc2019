@@ -32,8 +32,8 @@ public class Wrist extends TalonSubsystem {
             public static final SlotConfiguration MM_SLOT =
                     SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
                             .withKP(4.0)
-                            .withKI(0.01)
-                            .withIntegralZone(100)
+//                            .withKI(0.01)
+//                            .withIntegralZone(100)
                             .withKF(1.0)
                             .build();
 
@@ -62,8 +62,8 @@ public class Wrist extends TalonSubsystem {
             config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
             config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
-            config.forwardSoftLimitThreshold = 2500;
-            config.reverseSoftLimitThreshold = -100;
+            config.forwardSoftLimitThreshold = 500;
+            config.reverseSoftLimitThreshold = -2000;
             config.forwardSoftLimitEnable = true;
             config.reverseSoftLimitEnable = true;
 

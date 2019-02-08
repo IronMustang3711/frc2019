@@ -9,17 +9,24 @@ import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 public class CommandSequences {
 
 	public static Command elevatorToHome(){
-		return new MotionMagicSetpoint("Home",Robot.elevator,500,1.5);
+		return new MotionMagicSetpoint("Home",Robot.elevator,2000,1.5);
 	}
 
 	public static class RestingPose extends CommandGroup {
 
 		public RestingPose(){
 			super(RestingPose.class.getSimpleName());
-			addSequential(elevatorToHome());
+			requires(Robot.arm);
+			requires(Robot.wrist);
+			requires(Robot.elevator);
+
+			addParallel(new MotionMagicSetpoint("Rest",Robot.wrist,0,2.0));
+			addSequential(new MotionMagicSetpoint("Home",Robot.elevator,2000,2.0));
+
 			addSequential(new MotionMagicSetpoint("Rest",Robot.arm,0));
-			addParallel(new MotionMagicSetpoint("Rest",Robot.wrist,0));
 			addSequential(new MotionMagicSetpoint("Rest",Robot.elevator,0));
+
+
 		}
 
 	}
@@ -27,10 +34,26 @@ public class CommandSequences {
 	public static class StagingPose extends CommandGroup {
 		public StagingPose(){
 			super(StagingPose.class.getSimpleName());
-			addSequential(elevatorToHome());
-			addSequential(new MotionMagicSetpoint("Staging",Robot.arm,400));
-			addParallel(new MotionMagicSetpoint("Staging",Robot.wrist,400));
-			addParallel(new MotionMagicSetpoint("Home",Robot.elevator,500));
+			requires(Robot.arm);
+			requires(Robot.wrist);
+			requires(Robot.elevator);
+
+			addParallel(new MotionMagicSetpoint("0",Robot.wrist,0,2.0));
+			addParallel(new MotionMagicSetpoint("0",Robot.arm,0,2.0));
+			addSequential(new MotionMagicSetpoint("Home",Robot.elevator,2000,2.0));
+
+
+			addParallel(new MotionMagicSetpoint("Staging",Robot.wrist,0));
+			addParallel(new MotionMagicSetpoint("Home",Robot.elevator,2000));
+			addSequential(new MotionMagicSetpoint("Staging",Robot.arm,800));
+
+		}
+
+		@Override
+		protected void end() {
+			Robot.elevator.talon.neutralOutput();
+			Robot.arm.talon.neutralOutput();
+			Robot.wrist.talon.neutralOutput();
 		}
 	}
 

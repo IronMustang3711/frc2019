@@ -83,7 +83,7 @@ public class Arm extends TalonSubsystem {
             config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
             config.forwardSoftLimitThreshold = 2500;
-            config.reverseSoftLimitThreshold = -100;
+            config.reverseSoftLimitThreshold = -2500;
             config.forwardSoftLimitEnable = true;
             config.reverseSoftLimitEnable = true;
 
@@ -128,7 +128,7 @@ what voltage represents 100% output.
          */
             config.peakCurrentLimit = 8;
             config.peakCurrentDuration = 1000;
-            config.continuousCurrentLimit = 3;
+            config.continuousCurrentLimit = 2;
 
             config.slot0 = PIDSlots.configurationForSlot(0);
             config.slot1 = PIDSlots.configurationForSlot(1);
@@ -160,12 +160,14 @@ what voltage represents 100% output.
             talon.setInverted(true);
             talon.setSensorPhase(false);
 
-            talon.enableVoltageCompensation(true);
-            talon.enableCurrentLimit(true);
+
 
             talon.getAllConfigs(CONFIGURATION);
             applyConfig(CONFIGURATION);
             talon.configAllSettings(CONFIGURATION);
+
+            talon.enableVoltageCompensation(true);
+            talon.enableCurrentLimit(true);
 
         }
     }
@@ -176,27 +178,27 @@ what voltage represents 100% output.
       TalonTelemetry.installClosedLoopTelemetry(this);
 
 
- 
- 
-       tab.add(new Command("closed loop control"){
- 
-        {requires(Arm.this);}
- 
- 
-         @Override
-         protected void execute() {
-            if(ntClosedLoopEnabled.getBoolean(false)){
-                talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
-            }
-         }
- 
-         
-       
-           @Override
-           protected boolean isFinished() {
-               return false;
-           }
-       });
+//
+//
+//       tab.add(new Command("closed loop control"){
+//
+//        {requires(Arm.this);}
+//
+//
+//         @Override
+//         protected void execute() {
+//            if(ntClosedLoopEnabled.getBoolean(false)){
+//                talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
+//            }
+//         }
+//
+//
+//
+//           @Override
+//           protected boolean isFinished() {
+//               return false;
+//           }
+//       });
  
        tab.add(new InstantCommand("Reset Encoder"){
            {requires(Arm.this);}
@@ -210,15 +212,15 @@ what voltage represents 100% output.
  
        });
 
-       MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,2000);
-       top.setSetpoint(2000);
-       addChild("top", top);
-       tab.add(top);
- 
-       MotionMagicSetpoint home = new MotionMagicSetpoint("home",this,1000);
-       home.setSetpoint(1000);
-       addChild("home",home);
-       tab.add(home);
+//       MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,2000);
+//       top.setSetpoint(2000);
+//       addChild("top", top);
+//       tab.add(top);
+//
+//       MotionMagicSetpoint home = new MotionMagicSetpoint("home",this,1000);
+//       home.setSetpoint(1000);
+//       addChild("home",home);
+//       tab.add(home);
 
     }
 
