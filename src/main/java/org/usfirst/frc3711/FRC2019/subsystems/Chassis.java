@@ -39,7 +39,7 @@ public class Chassis extends Subsystem {
         addChild("left front",leftFront);
 
         leftRear = new WPI_TalonSRX(TalonID.LEFT_REAR.getId());
-
+        addChild("left rear",leftRear);
         
         rightFront = new WPI_TalonSRX(TalonID.RIGHT_FRONT.getId());
         addChild("right front",rightFront);
@@ -67,13 +67,15 @@ public class Chassis extends Subsystem {
 
         tab = Shuffleboard.getTab(Chassis.class.getSimpleName());
 
-        tab.getLayout("left", BuiltInLayouts.kList)
-                .add(leftFront).getParent()
-                .add(leftRear).getParent()
-           .getLayout("right",BuiltInLayouts.kList)
-                .add(rightFront).getParent()
-                .add(rightRear);
+      var leftContainer =  tab.getLayout("left", BuiltInLayouts.kList);
+                leftContainer.add(leftFront);
+                leftContainer.add(leftRear);
 
+          var rightContainer = tab.getLayout("right",BuiltInLayouts.kList);
+            rightContainer.add(rightFront);
+            rightContainer.add(rightRear);
+
+            
 
         tab.add(drive);
       //  tab.add(new DrivewithJoystick());
