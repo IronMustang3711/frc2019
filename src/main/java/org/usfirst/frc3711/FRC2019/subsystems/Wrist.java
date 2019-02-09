@@ -16,9 +16,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
 import edu.wpi.first.hal.sim.DriverStationSim;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
@@ -158,21 +161,15 @@ what voltage represents 100% output.
 //     NetworkTableEntry ntSetpoint;
 // NetworkTableEntry ntClosedLoopEnabled;
 
+NetworkTableEntry fullPowerMode;
+
     public Wrist() {
         super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());
       TalonTelemetry.installClosedLoopTelemetry(this);
 
 
-      // tab = Shuffleboard.getTab(Wrist.class.getSimpleName());
-//        Sendable s = new TalonTelemetry.MotorIOSendable(talon);
-//        addChild("Wrist:motor io", s);
-//        Sendable s2 = new TalonTelemetry.SensorCollectionSendable(talon.getSensorCollection());
-//        addChild("Wrist:sensor collection", s2);
-//        tab.add(s);
-//        tab.add(s2);
-//
-//        ntSetpoint = tab.add("setpoint", 0.0).getEntry();
-//        ntClosedLoopEnabled = tab.add("setpoint enabled",false).getEntry();
+    fullPowerMode = tab.add("full power", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+
    
    
          tab.add(new Command("closed loop control"){
@@ -185,6 +182,7 @@ what voltage represents 100% output.
             @Override
             protected void initialize() {
                lowPower = true;
+               fullPowerMode.setBoolean(true);
                 talon.selectProfileSlot(1, 0);
             }
    
@@ -193,10 +191,10 @@ what voltage represents 100% output.
            protected void execute() {
               if(!ntClosedLoopEnabled.getBoolean(false)) return;
 
-                if( Math.abs(talon.getErrorDerivative()) < 2.0  &&  Math.abs(talon.getClosedLoopError()) < 100){
+                if( Math.abs(talon.getErrorDerivative()) < 1.0  &&  Math.abs(talon.getClosedLoopError()) < 100){
                    
                     if(!lowPower){
-                        DriverStation.reportWarning("low power mode", false);
+                       fullPowerMode.setBoolean(false);
                         talon.configVoltageCompSaturation(5.0);
                         lowPower = true;
                     }
@@ -204,9 +202,9 @@ what voltage represents 100% output.
                   
                 } else {
                     if(lowPower){
-                    DriverStation.reportWarning("active mode", false);
-                    lowPower = false;
-                    talon.configVoltageCompSaturation(9.0);
+                        fullPowerMode.setBoolean(true);
+                        lowPower = false;
+                        talon.configVoltageCompSaturation(9.0);
                     }
 
 
