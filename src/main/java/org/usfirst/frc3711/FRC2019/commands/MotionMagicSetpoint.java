@@ -59,6 +59,12 @@ public class MotionMagicSetpoint extends Command {
     return setpoint;
   }
 
+@Override
+protected void initialize() {
+  super.initialize();
+  subsystem.talon.selectProfileSlot(0, 0);
+}
+
   @Override
   protected void execute() {
     subsystem.talon.selectProfileSlot(0,0);

@@ -7,7 +7,7 @@ public enum TalonID {
   INTAKE(15),
   WRIST(4),
 
-  FRONT_JACK(5),
+  DOG_LEG(5),
   REAR_JACK(27),
 
   LEFT_FRONT(3),

@@ -14,6 +14,9 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+
+import edu.wpi.first.hal.sim.DriverStationSim;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc3711.FRC2019.TalonID;
@@ -26,7 +29,7 @@ public class Wrist extends TalonSubsystem {
         static class PIDSlots {
             public static final SlotConfiguration POSITION_SLOT =
                     SlotConfigBuilder.newBuilder()
-                            .withKP(2.0)
+                            .withKP(4.0)
                             .build();
 
             public static final SlotConfiguration MM_SLOT =
@@ -62,8 +65,8 @@ public class Wrist extends TalonSubsystem {
             config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
             config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
-            config.forwardSoftLimitThreshold = 500;
-            config.reverseSoftLimitThreshold = -2000;
+            config.forwardSoftLimitThreshold = 100;
+            config.reverseSoftLimitThreshold = -2600;
             config.forwardSoftLimitEnable = true;
             config.reverseSoftLimitEnable = true;
 
@@ -71,11 +74,11 @@ public class Wrist extends TalonSubsystem {
             // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
             // config.closedloopRamp = 1.705000;
 
-            config.motionCruiseVelocity = 700;
-            config.motionAcceleration = 600;
+            config.motionCruiseVelocity = 100;
+            config.motionAcceleration = 100;
 
-            config.peakOutputForward = 0.6;
-            config.peakOutputReverse = -0.3;
+            config.peakOutputForward = 0.70;
+            config.peakOutputReverse = -0.6;
 
 
 
@@ -107,8 +110,8 @@ what voltage represents 100% output.
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
             config.peakCurrentLimit = 8;
-            config.peakCurrentDuration = 1000;
-            config.continuousCurrentLimit = 3;
+            config.peakCurrentDuration = 500;
+            config.continuousCurrentLimit = 2;
 
             config.slot0 = PIDSlots.configurationForSlot(0);
             config.slot1 = PIDSlots.configurationForSlot(1);
@@ -175,13 +178,51 @@ what voltage represents 100% output.
          tab.add(new Command("closed loop control"){
             
             {requires(Wrist.this);}
+
+            boolean lowPower;
+
+
+            @Override
+            protected void initialize() {
+               lowPower = true;
+                talon.selectProfileSlot(1, 0);
+            }
    
    
            @Override
            protected void execute() {
-              if(ntClosedLoopEnabled.getBoolean(false)){
-                  talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
-              }
+              if(!ntClosedLoopEnabled.getBoolean(false)) return;
+
+                if( Math.abs(talon.getErrorDerivative()) < 2.0  &&  Math.abs(talon.getClosedLoopError()) < 100){
+                   
+                    if(!lowPower){
+                        DriverStation.reportWarning("low power mode", false);
+                        talon.configVoltageCompSaturation(5.0);
+                        lowPower = true;
+                    }
+
+                  
+                } else {
+                    if(lowPower){
+                    DriverStation.reportWarning("active mode", false);
+                    lowPower = false;
+                    talon.configVoltageCompSaturation(9.0);
+                    }
+
+
+                }
+
+                  talon.set(ControlMode.Position, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
+  
+                   
+                
+           }
+
+           @Override
+           protected void end() {
+              talon.configVoltageCompSaturation(9.0);
+              talon.selectProfileSlot(0, 0);
+              disable();
            }
    
            
