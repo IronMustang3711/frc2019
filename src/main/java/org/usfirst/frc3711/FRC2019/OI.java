@@ -11,6 +11,7 @@
 
 package org.usfirst.frc3711.FRC2019;
 
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc3711.FRC2019.commands.*;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -107,6 +108,7 @@ public class OI {
 
 
 
+        SmartDashboard.putData(new InstantCommand("Disable all",Robot::disableAll));
 
         
 
