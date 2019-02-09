@@ -183,7 +183,7 @@ NetworkTableEntry fullPowerMode;
             protected void initialize() {
                lowPower = true;
                fullPowerMode.setBoolean(true);
-                talon.selectProfileSlot(1, 0);
+               // talon.selectProfileSlot(1, 0);
             }
    
    
@@ -210,7 +210,7 @@ NetworkTableEntry fullPowerMode;
 
                 }
 
-                  talon.set(ControlMode.Position, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
+                  talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
   
                    
                 

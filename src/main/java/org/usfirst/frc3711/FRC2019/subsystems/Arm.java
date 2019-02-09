@@ -53,8 +53,8 @@ public class Arm extends TalonSubsystem {
 
             public static final SlotConfiguration MM_SLOT =
                     SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-                            .withKP(4.0)
-                            .withKF(4.0)
+                            .withKP(2.0)
+                            .withKF(2.0)
                             .build();
 
             public static SlotConfiguration configurationForSlot(int slot){
@@ -82,8 +82,8 @@ public class Arm extends TalonSubsystem {
             config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
             config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
-            config.forwardSoftLimitThreshold = 2500;
-            config.reverseSoftLimitThreshold = -2500;
+            config.forwardSoftLimitThreshold = 3000;
+            config.reverseSoftLimitThreshold = -3000;
             config.forwardSoftLimitEnable = true;
             config.reverseSoftLimitEnable = true;
 
@@ -91,10 +91,10 @@ public class Arm extends TalonSubsystem {
             // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
             // config.closedloopRamp = 1.705000;
 
-            config.motionCruiseVelocity = 200;
-            config.motionAcceleration = 400;
+            config.motionCruiseVelocity = 75;
+            config.motionAcceleration = 75;
 
-            config.peakOutputForward = 0.6;
+            config.peakOutputForward = 0.8;
             config.peakOutputReverse = -0.3;
 
 
@@ -127,7 +127,7 @@ what voltage represents 100% output.
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
             config.peakCurrentLimit = 8;
-            config.peakCurrentDuration = 1000;
+            config.peakCurrentDuration = 3000;
             config.continuousCurrentLimit = 2;
 
             config.slot0 = PIDSlots.configurationForSlot(0);
@@ -178,27 +178,32 @@ what voltage represents 100% output.
       TalonTelemetry.installClosedLoopTelemetry(this);
 
 
-//
-//
-//       tab.add(new Command("closed loop control"){
-//
-//        {requires(Arm.this);}
-//
-//
-//         @Override
-//         protected void execute() {
-//            if(ntClosedLoopEnabled.getBoolean(false)){
-//                talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
-//            }
-//         }
-//
-//
-//
-//           @Override
-//           protected boolean isFinished() {
-//               return false;
-//           }
-//       });
+
+
+      tab.add(new Command("closed loop control"){
+
+       {requires(Arm.this);}
+
+
+        @Override
+        protected void execute() {
+           if(ntClosedLoopEnabled.getBoolean(false)){
+               talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
+           }
+        }
+
+        @Override
+            protected void end() {
+                disable();
+            }
+
+
+
+          @Override
+          protected boolean isFinished() {
+              return false;
+          }
+      });
  
        tab.add(new InstantCommand("Reset Encoder"){
            {requires(Arm.this);}
