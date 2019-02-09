@@ -53,8 +53,8 @@ public class Arm extends TalonSubsystem {
 
             public static final SlotConfiguration MM_SLOT =
                     SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-                            .withKP(2.0)
-                            .withKF(2.0)
+                            .withKP(1.0)
+                            .withKF(1.0)
                             .build();
 
             public static SlotConfiguration configurationForSlot(int slot){
@@ -88,14 +88,14 @@ public class Arm extends TalonSubsystem {
             config.reverseSoftLimitEnable = true;
 
 
-            // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
+             config.openloopRamp = 1.023000; //TODO: configure this / or dont?
             // config.closedloopRamp = 1.705000;
 
             config.motionCruiseVelocity = 75;
-            config.motionAcceleration = 75;
+            config.motionAcceleration = 40;
 
             config.peakOutputForward = 0.8;
-            config.peakOutputReverse = -0.3;
+            config.peakOutputReverse = -0.5;
 
 
 
@@ -126,9 +126,9 @@ what voltage represents 100% output.
               /*
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
-            config.peakCurrentLimit = 8;
-            config.peakCurrentDuration = 3000;
-            config.continuousCurrentLimit = 2;
+            config.peakCurrentLimit = 4;
+            config.peakCurrentDuration = 4000;
+            config.continuousCurrentLimit = 1;
 
             config.slot0 = PIDSlots.configurationForSlot(0);
             config.slot1 = PIDSlots.configurationForSlot(1);
