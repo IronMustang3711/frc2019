@@ -1,5 +1,6 @@
 package edu.wpi.first.wpilibj.command;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -56,6 +57,16 @@ public class DelegatingCommandTest {
 	@Before
 	public void setUp() throws Exception {
 		mockCommand = new MockCommand();
+	}
+
+	private static void checkEq(Command a, Command b){
+		assertEquals("finished",a.isFinished(),b.isFinished());
+		assertEquals("canceled",a.isCanceled(),b.isCanceled());
+		assertEquals("completed",a.isCompleted(),b.isCompleted());
+		assertEquals("running",a.isRunning(),b.isRunning());
+		assertEquals("timeout",a.isTimedOut(),b.isTimedOut());
+		assertEquals("interruptable",a.isInterruptible(),b.isInterruptible());
+		assertEquals("willRunWhenDisabled",a.willRunWhenDisabled(),b.willRunWhenDisabled());
 	}
 
 	private static void checkInitialState(Command c){
@@ -135,6 +146,7 @@ public class DelegatingCommandTest {
 
 
 
+	//@Ignore
 	@Test
 	public void testCommandLifeCycle() {
 		Scheduler.getInstance().enable();
@@ -166,34 +178,59 @@ public class DelegatingCommandTest {
 	}
 
 	@Test
-	public void testDelegateCommand() {
+	public void testDelegateCommandLifecycle1() {
 
 		DelegatingCommandFixture delegatingCommand = new DelegatingCommandFixture(mockCommand);
 		Scheduler.getInstance().enable();
-		delegatingCommand.setRunWhenDisabled(true);
-		assertTrue(mockCommand.willRunWhenDisabled());
 
+		checkEq(delegatingCommand,mockCommand);
+
+
+		delegatingCommand.setRunWhenDisabled(true);
+
+		checkEq(delegatingCommand,mockCommand);
 		checkInitialState(delegatingCommand);
 		checkInitialState(mockCommand);
+
 
 		delegatingCommand.start();
 		Scheduler.getInstance().run();
 
+		checkEq(delegatingCommand,mockCommand);
 		checkCommandStarted(delegatingCommand);
 		checkMockCommandStarted(mockCommand);
 
-
-		assertThat(delegatingCommand.execCalls, is(equalTo(mockCommand.execCalls)));
-
 		Scheduler.getInstance().run();
-
+		checkEq(delegatingCommand,mockCommand);
 		assertThat(delegatingCommand.execCalls, is(equalTo(mockCommand.execCalls)));
 		checkMockCommandExecution(mockCommand,1);
 
-		Scheduler.getInstance().run();
 
+		Scheduler.getInstance().run();
+		checkEq(delegatingCommand,mockCommand);
 		assertThat(delegatingCommand.execCalls, is(equalTo(mockCommand.execCalls)));
 		checkMockCommandExecution(mockCommand,2);
+
+
+		delegatingCommand.cancel();
+		checkEq(delegatingCommand,mockCommand);
+		assertTrue(delegatingCommand.isCanceled());
+		checkMockCommandPostCancel(mockCommand);
+
+
+		Scheduler.getInstance().run();
+		checkEq(delegatingCommand,mockCommand);
+		assertThat("command should not be running",
+				delegatingCommand.isRunning(), is(false));
+		assertThat("end has been called once",
+				delegatingCommand.endCalls, is(1));
+		assertThat("removed has been called once",
+				delegatingCommand.removedCalls, is(1));
+
+
+
+
+
 
 	}
 
@@ -222,7 +259,7 @@ public class DelegatingCommandTest {
 		@Override
 		public void end() {
 			endCalls++;
-			super.end();
+			//super.end();
 		}
 
 		@Override

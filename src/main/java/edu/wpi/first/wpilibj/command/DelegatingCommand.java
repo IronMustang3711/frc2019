@@ -45,7 +45,7 @@ public class DelegatingCommand extends Command {
 	@Override
 	public void removed() {
 		super.removed();
-		delegate.removed();
+		//delegate.removed();
 	}
 
 	/**
@@ -121,7 +121,8 @@ public class DelegatingCommand extends Command {
 	 */
 	@Override
 	public void end() {
-		delegate.end();
+		super.end();
+		//delegate.end();
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class DelegatingCommand extends Command {
 	 */
 	@Override
 	public void _end() {
-		delegate._end();
+		super._end();//delegate._end();
 	}
 
 	/**
@@ -145,7 +146,7 @@ public class DelegatingCommand extends Command {
 	@Override
 	public void interrupted() {
 		super.interrupted();
-		delegate.interrupted();
+		//delegate.interrupted();
 	}
 
 	/**
@@ -153,7 +154,8 @@ public class DelegatingCommand extends Command {
 	 */
 	@Override
 	public void _interrupted() {
-		delegate._interrupted();
+		super._interrupted();
+		//delegate._interrupted();
 	}
 
 	/**
@@ -189,16 +191,16 @@ public class DelegatingCommand extends Command {
 		delegate.lockChanges();
 	}
 
-	/**
-	 * If changes are locked, then this will throw an {@link IllegalUseOfCommandException}.
-	 *
-	 * @param message the message to say (it is appended by a default message)
-	 */
-	@Override
-	public void validate(String message) {
-		super.validate(message);
-		//delegate.validate(message);
-	}
+//	/**
+//	 * If changes are locked, then this will throw an {@link IllegalUseOfCommandException}.
+//	 *
+//	 * @param message the message to say (it is appended by a default message)
+//	 */
+//	@Override
+//	public void validate(String message) {
+//		super.validate(message);
+//		//delegate.validate(message);
+//	}
 
 	/**
 	 * Sets the parent of this command. No actual change is made to the group.
@@ -325,6 +327,7 @@ public class DelegatingCommand extends Command {
 	 */
 	@Override
 	public boolean isInterruptible() {
+		assert super.isInterruptible() == delegate.isInterruptible();
 		return super.isInterruptible();//delegate.isInterruptible();
 	}
 
@@ -336,7 +339,7 @@ public class DelegatingCommand extends Command {
 	@Override
 	public void setInterruptible(boolean interruptible) {
 		super.setInterruptible(interruptible);
-		//delegate.setInterruptible(interruptible);
+		delegate.setInterruptible(interruptible);
 	}
 
 	/**
@@ -382,6 +385,7 @@ public class DelegatingCommand extends Command {
 	 */
 	@Override
 	public boolean willRunWhenDisabled() {
+		assert super.willRunWhenDisabled() == delegate.willRunWhenDisabled();
 		return super.willRunWhenDisabled();//delegate.willRunWhenDisabled();
 	}
 
@@ -402,17 +406,17 @@ public class DelegatingCommand extends Command {
 		//delegate.initSendable(builder);
 	}
 
-	@Override
-	@Deprecated
-	public void free() {
-		super.free();
-		delegate.free();
-	}
+//	@Override
+//	@Deprecated
+//	public void free() {
+//		super.free();
+//		delegate.free();
+//	}
 
 	@Override
 	public void close() {
 		super.close();
-		delegate.close();
+		//delegate.close();
 	}
 
 
