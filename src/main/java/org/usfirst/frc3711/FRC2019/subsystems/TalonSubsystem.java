@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
-public abstract class TalonSubsystem extends Subsystem {
+public abstract class TalonSubsystem extends RobotSubsystem {
 
   public final ShuffleboardTab tab;
 
@@ -151,4 +151,11 @@ public abstract class TalonSubsystem extends Subsystem {
 //  protected void initDefaultCommand() {
 //
 //  }
+
+
+  @Override
+  public void disable() {
+    super.disable();
+    talon.neutralOutput();
+  }
 }

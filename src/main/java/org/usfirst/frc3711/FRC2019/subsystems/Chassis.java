@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Chassis extends Subsystem {
+public class Chassis extends RobotSubsystem {
 
 
     private WPI_TalonSRX leftFront;
@@ -130,5 +130,11 @@ public class Chassis extends Subsystem {
         telemetry();
     }
 
+    @Override
+    public void disable() {
+        super.disable();
+        leftFront.neutralOutput();
+        rightFront.neutralOutput();
+    }
 }
 
