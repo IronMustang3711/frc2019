@@ -5,11 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 public abstract class TalonSubsystem extends RobotSubsystem {
@@ -77,27 +73,15 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   }
 
 
-// public void configMotionMagicClosedLoop(){
-//    // talon.config_kP(0,1.0,50);
-//    // talon.config_kI(0,0,50);
-//    // talon.config_IntegralZone(0,0,50);
-//    // talon.config_kD(0,0,50);
-//    // talon.config_kF(0,1.0,50);
-//
-//
-//    // talon.configMotionCruiseVelocity(800);
-//    // talon.configMotionAcceleration(700);
-//  }
+  @Override
+  protected void initDefaultCommand() {
+
+  }
 
   void configureTalon(){
     talon.configFactoryDefault();
     talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     talon.selectProfileSlot(0,0);
-
-
-   // talon.setSensorPhase(true);
-
-
   }
 
 
