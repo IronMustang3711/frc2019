@@ -118,6 +118,11 @@ public class Robot extends TimedRobot {
         }
     }
 
+    static void disableAll(){
+        for(RobotSubsystem subsystem : Robot.subsystems){
+            subsystem.disable();
+        }
+    }
     @Override
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
