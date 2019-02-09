@@ -14,8 +14,6 @@ import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 public abstract class TalonSubsystem extends RobotSubsystem {
 
-  public final ShuffleboardTab tab;
-
   final NetworkTableEntry ntSetpoint;
   final NetworkTableEntry ntClosedLoopEnabled;
 
@@ -29,7 +27,6 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   public TalonSubsystem(String name, int talonID){
     super(name);
     this.talon = new WPI_TalonSRX(talonID);
-    this.tab = Shuffleboard.getTab(name);
 
     ntSetpoint = tab.add("setpoint", 0.0).getEntry();
 
