@@ -18,6 +18,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
@@ -39,8 +41,11 @@ public class Arm extends TalonSubsystem {
 
             public static final SlotConfiguration MM_SLOT =
                     SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-                            .withKP(1.0)
+                            .withKP(1.5)
+                            .withKI(1e-9)
                             .withKF(1.0)
+                            .withMaxIntegralAccumulator(10000)
+                            .withClosedLoopPeakOutput(0.9)
                             .build();
 
             public static SlotConfiguration configurationForSlot(int slot){
@@ -77,7 +82,7 @@ public class Arm extends TalonSubsystem {
              config.openloopRamp = 1.023000; //TODO: configure this / or dont?
             // config.closedloopRamp = 1.705000;
 
-            config.motionCruiseVelocity = 75;
+            config.motionCruiseVelocity = 70;
             config.motionAcceleration = 40;
 
             config.peakOutputForward = 0.8;
@@ -113,7 +118,7 @@ what voltage represents 100% output.
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
             config.peakCurrentLimit = 4;
-            config.peakCurrentDuration = 4000;
+            config.peakCurrentDuration = 5000;
             config.continuousCurrentLimit = 1;
 
             config.slot0 = PIDSlots.configurationForSlot(0);
@@ -158,15 +163,25 @@ what voltage represents 100% output.
         }
     }
 
+    
+
     private final TalonTelemetry.MotionMagicTelemetry mmTelemetry;
+    private final SendableChooser<ControlMode> modeChooser;
+
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
       mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
 
       TalonTelemetry.installClosedLoopTelemetry(this);
+      modeChooser = new SendableChooser<>();
+      addChild("mode chooser",modeChooser);
+      modeChooser.setDefaultOption("MotionMagic", ControlMode.MotionMagic);
+      modeChooser.addOption("Position", ControlMode.Position);
+        
+      tab.add(modeChooser);
 
-
+      tab.add(this);
 
 
       tab.add(new Command("closed loop control"){
@@ -177,7 +192,8 @@ what voltage represents 100% output.
         @Override
         protected void execute() {
            if(ntClosedLoopEnabled.getBoolean(false)){
-               talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
+               talon.set(modeChooser.getSelected(),
+                ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
            }
         }
 
@@ -219,8 +235,9 @@ what voltage represents 100% output.
     }
 
     @Override
-    public void initDefaultCommand() {
-       // setDefaultCommand(new SetpointCommand("stow", this, 0 , ControlMode.MotionMagic));
+    protected void onSetpointChange(double newSetpoint) {
+        super.onSetpointChange(newSetpoint);
+        talon.setIntegralAccumulator(0);
     }
 
 
