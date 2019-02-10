@@ -24,7 +24,7 @@ public class MotionMagicSetpoint extends Command {
 //    }
 //  }
 
-  private final TalonSubsystem subsystem;
+  protected final TalonSubsystem subsystem;
   private double setpoint;
 
   public MotionMagicSetpoint(String name, TalonSubsystem subsystem,double setpoint){

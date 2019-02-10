@@ -98,7 +98,6 @@ public class OI {
 //        elevatorDown.whenPressed(home);
 
 
-        stow.whenPressed(new RobotPoser(RobotPose.STOW));
         elevator.whileHeld(new ManualLinkageControl(Robot.elevator));
         arm.whileHeld(new ManualLinkageControl(Robot.arm));
         wrist.whileHeld(new ManualLinkageControl(Robot.wrist));
@@ -121,6 +120,8 @@ public class OI {
        tab.add(new RobotPoser(RobotPose.STOW));
        tab.add(new CommandSequences.RestingPose());
        tab.add(new CommandSequences.StagingPose());
+       tab.add(new CommandSequences.Hatch0());
+       tab.add(new CommandSequences.Hatch1());
 
 
        stow.whenPressed(new RobotPoser(RobotPose.STOW));

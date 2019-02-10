@@ -55,6 +55,23 @@ public class Arm extends TalonSubsystem {
                     default: throw new IllegalArgumentException("invalid slot: "+slot);
                 }
             }
+            public static SlotConfiguration configurationForMode(ControlMode mode){
+                switch(mode){
+                    case Position:
+                    case Disabled:
+                        return POSITION_SLOT;
+                    case MotionMagic:
+                        return MM_SLOT;
+                    default:
+                    throw new IllegalArgumentException("Control Mode:"+mode);
+                }
+            }
+            public static int slotForMode(ControlMode mode){
+                switch(mode){
+                    case MotionMagic: return 1;
+                    default: return 0;
+                }
+            }
         }
 
 
@@ -191,10 +208,20 @@ what voltage represents 100% output.
 
         @Override
         protected void execute() {
-           if(ntClosedLoopEnabled.getBoolean(false)){
-               talon.set(modeChooser.getSelected(),
-                ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
-           }
+          ControlMode mode = modeChooser.getSelected();
+          SlotConfiguration configuration = TalonSettings.PIDSlots.configurationForMode(mode);
+          int slot = TalonSettings.PIDSlots.slotForMode(mode);
+          double sp = ntSetpoint.getDouble(talon.getSelectedSensorPosition());
+          talon.configureSlot(configuration, slot,50);
+          talon.set(mode,sp);
+        //   if(mode == ControlMode.MotionMagic){
+        //     talon.set(mode,sp,DemandType.ArbitraryFeedForward,1.0);
+        //   }
+        //   else {
+        //     talon.set(mode,sp);
+        //   }
+
+           
         }
 
         @Override

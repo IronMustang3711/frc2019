@@ -123,7 +123,7 @@ public class Robot extends TimedRobot {
         }
     }
 
-    static void disableAll(){
+    public static void disableAll(){
         for(RobotSubsystem subsystem : Robot.subsystems){
             subsystem.disable();
         }

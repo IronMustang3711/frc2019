@@ -1,15 +1,103 @@
 package org.usfirst.frc3711.FRC2019.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc3711.FRC2019.Robot;
+import org.usfirst.frc3711.FRC2019.RobotPose;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 public class CommandSequences {
 
 	public static Command elevatorToHome(){
 		return new MotionMagicSetpoint("Home",Robot.elevator,2000,1.5);
+	}
+
+	public static class Hatch0 extends CommandGroup {
+		public Hatch0(){
+		super(Hatch0.class.getSimpleName());
+		requires(Robot.arm);
+		requires(Robot.wrist);
+		requires(Robot.elevator);
+
+
+		double elevatorUpTimeout = 1.0;
+		double elevatorPosition = 2000;
+		
+		addParallel(new MotionMagicSetpoint("Wrist Vertical",Robot.wrist,10),elevatorUpTimeout);
+		addParallel(new MotionMagicSetpoint("Arm Vertical",Robot.arm,10),elevatorUpTimeout);
+		addSequential(
+			new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition,0.5){
+				@Override
+				protected boolean isFinished() {
+					return isTimedOut() && Math.abs(subsystem.talon.getSelectedSensorVelocity()) < 2.0 ;
+				}
+			}
+		);
+
+
+		addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator, elevatorPosition));
+		addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));		
+		addSequential(new MotionMagicSetpoint("Hold Wrist",Robot.wrist,-10));
+
+
+		}
+
+		@Override
+		protected void end() {
+			super.end();
+			new RobotPoser(RobotPose.STOW).start();
+		}
+
+		@Override
+		protected void interrupted() {
+			super.interrupted();
+			end();
+		}
+	}
+
+	public static class Hatch1 extends CommandGroup {
+		public Hatch1(){
+			super(Hatch1.class.getSimpleName());
+			requires(Robot.arm);
+			requires(Robot.wrist);
+			requires(Robot.elevator);
+	
+	
+			double elevatorUpTimeout = 1.4;
+			double elevatorPosition = 7000;
+			
+			addParallel(new MotionMagicSetpoint("Wrist Vertical",Robot.wrist,100),elevatorUpTimeout);
+			addParallel(new MotionMagicSetpoint("Arm Vertical",Robot.arm,40),elevatorUpTimeout);
+			addSequential(
+			new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition,0.5){
+				@Override
+				protected boolean isFinished() {
+					return isTimedOut() && subsystem.talon.getSelectedSensorVelocity() == 0 ;
+				}
+			}
+		);
+	
+			addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator, elevatorPosition));
+			addParallel(new MotionMagicSetpoint("Hold Wrist",Robot.wrist,-10));
+			addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
+	
+			}
+	
+			@Override
+			protected void end() {
+				super.end();
+				DriverStation.reportError("END", true);
+				new RobotPoser(RobotPose.STOW).start();
+			}
+
+			@Override
+			protected void interrupted() {
+				super.interrupted();
+				end();
+			}
 	}
 
 	public static class RestingPose extends CommandGroup {
