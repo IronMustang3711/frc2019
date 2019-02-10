@@ -139,25 +139,26 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 			builder.addDoubleProperty("delta error",this::getDeltaError,null);
 		}
 		double getSetpoint(){
-			if(closedLoopModes.contains(controller.getControlMode()))
+			if(CLOSED_LOOP_MODES.contains(controller.getControlMode()))
 				return controller.getClosedLoopTarget(0);
 			else return -1;
 		}
 		double getError(){
-			if(closedLoopModes.contains(controller.getControlMode()))
+			if(CLOSED_LOOP_MODES.contains(controller.getControlMode()))
 				return controller.getClosedLoopError(0);
 			else return -1;
 		}
 		double getDeltaError(){
-			if(closedLoopModes.contains(controller.getControlMode()))
+			if(CLOSED_LOOP_MODES.contains(controller.getControlMode()))
 				return controller.getErrorDerivative(0);
 			else return -1;
 		}
 	}
 
-	private static final Set<ControlMode> closedLoopModes =
-					EnumSet.complementOf(EnumSet.of(ControlMode.Disabled, ControlMode.Follower, ControlMode.PercentOutput));
-
+	private static final Set<ControlMode> CLOSED_LOOP_MODES
+	 = EnumSet.complementOf(EnumSet.of(ControlMode.Disabled, ControlMode.Follower, ControlMode.PercentOutput));
+	private static final Set<ControlMode> MOTION_PROFILE_MODES 
+	= EnumSet.of(ControlMode.MotionMagic,ControlMode.MotionProfile,ControlMode.MotionProfileArc);
 
 	static class BasicTelemetry implements Runnable{
 		protected final TalonSubsystem subsystem;
@@ -188,12 +189,7 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 
 	}
 
-	/*
-	SmartDashboard.putNumber("ClosedLoopTarget", tal.getClosedLoopTarget(Constants.kPIDLoopIdx));
-    		SmartDashboard.putNumber("ActTrajVelocity", tal.getActiveTrajectoryVelocity());
-    		SmartDashboard.putNumber("ActTrajPosition", tal.getActiveTrajectoryPosition());
-    		SmartDashboard.putNumber("ActTrajHeading", tal.getActiveTrajectoryHeading());
-	 */
+
 	public static class MotionMagicTelemetry extends  BasicTelemetry {
 
 		final NetworkTableEntry target;
@@ -201,6 +197,7 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 		final NetworkTableEntry iAccum;
 		final NetworkTableEntry trajPosition;
 		final NetworkTableEntry trajVelocity;
+		final NetworkTableEntry trajHeading;
 		final NetworkTableEntry trajFF;
 
 		public MotionMagicTelemetry(TalonSubsystem subsystem) {
@@ -211,6 +208,7 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 			iAccum = table.getEntry("iAccum");
 			trajPosition = table.getEntry("trajPosition");
 			trajVelocity = table.getEntry("trajVelocity");
+			trajHeading = table.getEntry("trajHeading");
 			trajFF = table.getEntry("trajFF");
 
 		}
@@ -218,11 +216,14 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 		@Override
 		public void run() {
 			super.run();
+			if(!CLOSED_LOOP_MODES.contains(subsystem.talon.getControlMode())) return;
 			target.setDouble(subsystem.talon.getClosedLoopTarget());
 			error.setDouble(subsystem.talon.getClosedLoopError());
 			iAccum.setDouble(subsystem.talon.getIntegralAccumulator());
+			if(!MOTION_PROFILE_MODES.contains(subsystem.talon.getControlMode())) return;
 			trajPosition.setDouble(subsystem.talon.getActiveTrajectoryPosition());
 			trajVelocity.setDouble(subsystem.talon.getActiveTrajectoryVelocity());
+			trajHeading.setDouble(subsystem.talon.getActiveTrajectoryHeading());
 			trajFF.setDouble(subsystem.talon.getActiveTrajectoryArbFeedFwd());
 		}
 	}
