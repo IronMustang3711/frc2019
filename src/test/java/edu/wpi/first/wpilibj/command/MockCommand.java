@@ -26,7 +26,7 @@ class MockCommand extends Command {
 
     @Override
     protected boolean isFinished() {
-        return false;
+        return isTimedOut();
     }
 
     @Override

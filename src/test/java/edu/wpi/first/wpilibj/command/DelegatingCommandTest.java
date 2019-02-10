@@ -109,6 +109,36 @@ public class DelegatingCommandTest {
 
 	}
 
+	@Test
+	public void testTimeout() throws InterruptedException {
+		mockCommand.setTimeout(0.0001);
+
+		DelegatingCommandFixture delegatingCommand = new DelegatingCommandFixture(mockCommand);
+		delegatingCommand.setRunWhenDisabled(true);
+
+		Scheduler.getInstance().enable();
+
+		CommandTestUtils.checkEq(delegatingCommand,mockCommand);
+
+		delegatingCommand.start();
+		CommandTestUtils.checkEq(delegatingCommand,mockCommand);
+
+		Scheduler.getInstance().run();
+		CommandTestUtils.checkEq(delegatingCommand,mockCommand);
+
+
+		Scheduler.getInstance().run();
+		Thread.sleep(200);
+		Scheduler.getInstance().run();
+		CommandTestUtils.checkEq(delegatingCommand,mockCommand);
+
+
+		assertTrue(mockCommand.isFinished());
+		assertTrue(delegatingCommand.isFinished());
+
+
+	}
+
 	static class DelegatingCommandFixture extends DelegatingCommand {
 		int initCalls;
 		int execCalls;
@@ -139,7 +169,7 @@ public class DelegatingCommandTest {
 
 		@Override
 		public boolean isFinished() {
-			return false;
+			return super.isFinished();
 		}
 
 		@Override

@@ -112,7 +112,7 @@ public class DelegatingCommand extends Command {
 	 */
 	@Override
 	public boolean isFinished() {
-		return delegate.isFinished();
+		return delegate.isFinished() || isTimedOut();
 	}
 
 	/**
