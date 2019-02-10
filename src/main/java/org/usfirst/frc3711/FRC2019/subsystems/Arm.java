@@ -12,29 +12,15 @@
 package org.usfirst.frc3711.FRC2019.subsystems;
 
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
-
-import org.usfirst.frc3711.FRC2019.TalonID;
-import org.usfirst.frc3711.FRC2019.commands.MotionMagicSetpoint;
-import org.usfirst.frc3711.FRC2019.commands.SetpointCommand;
-import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
-import org.usfirst.frc3711.FRC2019.talon.TalonLiveWindowSupport;
-import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
-
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
+import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 
 
@@ -172,9 +158,12 @@ what voltage represents 100% output.
         }
     }
 
+    private final TalonTelemetry.MotionMagicTelemetry mmTelemetry;
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
+      mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
+
       TalonTelemetry.installClosedLoopTelemetry(this);
 
 
@@ -229,34 +218,29 @@ what voltage represents 100% output.
 
     }
 
-    @Override // Put code here to be run every loop
+    @Override
     public void initDefaultCommand() {
        // setDefaultCommand(new SetpointCommand("stow", this, 0 , ControlMode.MotionMagic));
     }
 
-//    public void configMotionMagicClosedLoop(){
-//        talon.config_kP(0, 4, 50);
-//        talon.config_kI(0,0.0,50);
-//        talon.config_IntegralZone(0,200,50);
-//        talon.config_kD(0,0,50);
-//        talon.config_kF(0,4.0,50);
-//
-//
-//        talon.configMotionCruiseVelocity(200);
-//        talon.configMotionAcceleration(100);
+
 //      }
 
     @Override
     void configureTalon() {
         super.configureTalon();
         TalonSettings.configure(talon);
+
+        /* Set relevant frame periods to be at least as fast as periodic rate */
+        talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10);
+        talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10);
+
     }
 
     @Override
     public void periodic() {
         super.periodic();
-//            SmartDashboard.putNumber("Arm position", talon.getSensorCollection().getQuadraturePosition());
-//            SmartDashboard.putNumber("Arm position2", talon.getSelectedSensorPosition());
+        mmTelemetry.run();
     }
 
 }

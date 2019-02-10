@@ -4,8 +4,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SendableImpl;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
@@ -154,4 +158,72 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 	private static final Set<ControlMode> closedLoopModes =
 					EnumSet.complementOf(EnumSet.of(ControlMode.Disabled, ControlMode.Follower, ControlMode.PercentOutput));
 
+
+	static class BasicTelemetry implements Runnable{
+		protected final TalonSubsystem subsystem;
+		protected final NetworkTable table;
+
+		final NetworkTableEntry output;
+		final NetworkTableEntry position;
+		final NetworkTableEntry velocity;
+
+
+
+		BasicTelemetry(TalonSubsystem subsystem){
+			this.subsystem = subsystem;
+			table = NetworkTableInstance.getDefault().getTable(subsystem.getName()+"Telemetry");
+			output = table.getEntry("output");
+			position = table.getEntry("position");
+			velocity = table.getEntry("velocity");
+
+		}
+
+
+		@Override
+		public void run() {
+			output.setDouble(subsystem.talon.getMotorOutputPercent());
+			position.setDouble(subsystem.talon.getSelectedSensorPosition());
+			velocity.setDouble(subsystem.talon.getSelectedSensorVelocity());
+		}
+
+	}
+
+	/*
+	SmartDashboard.putNumber("ClosedLoopTarget", tal.getClosedLoopTarget(Constants.kPIDLoopIdx));
+    		SmartDashboard.putNumber("ActTrajVelocity", tal.getActiveTrajectoryVelocity());
+    		SmartDashboard.putNumber("ActTrajPosition", tal.getActiveTrajectoryPosition());
+    		SmartDashboard.putNumber("ActTrajHeading", tal.getActiveTrajectoryHeading());
+	 */
+	public static class MotionMagicTelemetry extends  BasicTelemetry {
+
+		final NetworkTableEntry target;
+		final NetworkTableEntry error;
+		final NetworkTableEntry iAccum;
+		final NetworkTableEntry trajPosition;
+		final NetworkTableEntry trajVelocity;
+		final NetworkTableEntry trajFF;
+
+		public MotionMagicTelemetry(TalonSubsystem subsystem) {
+			super(subsystem);
+
+			target = table.getEntry("target");
+			error = table.getEntry("error");
+			iAccum = table.getEntry("iAccum");
+			trajPosition = table.getEntry("trajPosition");
+			trajVelocity = table.getEntry("trajVelocity");
+			trajFF = table.getEntry("trajFF");
+
+		}
+
+		@Override
+		public void run() {
+			super.run();
+			target.setDouble(subsystem.talon.getClosedLoopTarget());
+			error.setDouble(subsystem.talon.getClosedLoopError());
+			iAccum.setDouble(subsystem.talon.getIntegralAccumulator());
+			trajPosition.setDouble(subsystem.talon.getActiveTrajectoryPosition());
+			trajVelocity.setDouble(subsystem.talon.getActiveTrajectoryVelocity());
+			trajFF.setDouble(subsystem.talon.getActiveTrajectoryArbFeedFwd());
+		}
+	}
 }
