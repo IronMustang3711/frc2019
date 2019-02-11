@@ -1,11 +1,10 @@
 package org.usfirst.frc3711.FRC2019.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.SendableImpl;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
+
+import edu.wpi.first.wpilibj.command.Command;
 
 public class MotionMagicSetpoint extends Command {
 

@@ -1,18 +1,16 @@
 package org.usfirst.frc3711.FRC2019.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import org.usfirst.frc3711.FRC2019.Robot;
+import org.usfirst.frc3711.FRC2019.RobotPose;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.usfirst.frc3711.FRC2019.Robot;
-import org.usfirst.frc3711.FRC2019.RobotPose;
-import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 public class CommandSequences {
 
-	public static Command elevatorToHome(){
-		return new MotionMagicSetpoint("Home",Robot.elevator,2000,1.5);
+	public static Command elevatorToHome() {
+		return new MotionMagicSetpoint("Home", Robot.elevator, 2000, 1.5);
 	}
 
 	public static class PingPong extends Command{

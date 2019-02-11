@@ -1,11 +1,8 @@
 package org.usfirst.frc3711.FRC2019.commands;
 
-import edu.wpi.first.wpilibj.command.Scheduler;
-import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.*;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class CommandsTest {
 

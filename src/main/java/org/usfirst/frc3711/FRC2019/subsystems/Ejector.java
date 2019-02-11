@@ -11,8 +11,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
-
 /**
  * Add your docs here.
  */

@@ -1,37 +1,32 @@
 package org.usfirst.frc3711.FRC2019.talon;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
-import edu.wpi.first.networktables.NetworkTable;
+
+import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SendableImpl;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
-
-import java.util.EnumSet;
-import java.util.Set;
 
 public abstract class TalonTelemetry {
 
-public static void installMototIOTelemetry(TalonSubsystem subsystem){
+	public static void installMototIOTelemetry(TalonSubsystem subsystem) {
 
-	subsystem.tab.add(
-					subsystem.addChildItem("Motor IO",new MotorIOSendable(subsystem.talon))
-	).withSize(2,2);
-}
+		subsystem.tab.add(subsystem.addChildItem("Motor IO", new MotorIOSendable(subsystem.talon))).withSize(2, 2);
+	}
 
-public static void installSensorCollectionTelemetry(TalonSubsystem subsystem){
-	subsystem.tab.add(
-					subsystem.addChildItem("sensor collection",
-									new SensorCollectionSendable(subsystem.talon.getSensorCollection())))
-					.withSize(2,2);
+	public static void installSensorCollectionTelemetry(TalonSubsystem subsystem) {
+		subsystem.tab.add(subsystem.addChildItem("sensor collection",
+				new SensorCollectionSendable(subsystem.talon.getSensorCollection()))).withSize(2, 2);
 }
 
 public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
