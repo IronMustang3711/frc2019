@@ -10,6 +10,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SendableImpl;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
@@ -175,7 +177,8 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 	*/
 	static class BasicTelemetry implements Runnable{
 		protected final TalonSubsystem subsystem;
-		protected final NetworkTable table;
+		//protected final NetworkTable table;
+		final ShuffleboardLayout container;
 
 		final NetworkTableEntry outputPercent;
 		final NetworkTableEntry outputVoltage;
@@ -183,14 +186,12 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 
 		BasicTelemetry(TalonSubsystem subsystem){
 			this.subsystem = subsystem;
-			table = NetworkTableInstance.getDefault().getTable(subsystem.getName()+"Telemetry");
+			//table = NetworkTableInstance.getDefault().getTable(subsystem.getName()+"Telemetry");
+			container = subsystem.tab.getLayout("talon telemetry", BuiltInLayouts.kList);
 			
-			outputPercent = table.getEntry("outputPercent");
-			outputVoltage = table.getEntry("outputVoltage");
-			outputCurrent = table.getEntry("outputCurrent");
-
-
-
+			outputPercent = container.add("outputPercent", 0.0).getEntry(); //table.getEntry("outputPercent");
+			outputVoltage = container.add("outputVoltage",0.0).getEntry();//table.getEntry("outputVoltage");
+			outputCurrent = container.add("outputPercent",0.0).getEntry();//table.getEntry("outputCurrent");
 		}
 
 
@@ -214,22 +215,22 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 		final NetworkTableEntry iAccum;
 		final NetworkTableEntry trajPosition;
 		final NetworkTableEntry trajVelocity;
-		final NetworkTableEntry trajHeading;
+		//final NetworkTableEntry trajHeading;
 		final NetworkTableEntry trajFF;
 
 		public MotionMagicTelemetry(TalonSubsystem subsystem) {
 			super(subsystem);
 
-			target = table.getEntry("target");
-			error = table.getEntry("error");
-			iAccum = table.getEntry("iAccum");
-			trajPosition = table.getEntry("trajPosition");
-			trajVelocity = table.getEntry("trajVelocity");
-			trajHeading = table.getEntry("trajHeading");
-			trajFF = table.getEntry("trajFF");
+			target = container.add("target",0.0).getEntry();//table.getEntry("target");
+			error = container.add("error",0.0).getEntry();
+			iAccum = container.add("iAccum",0.0).getEntry();//table.getEntry("iAccum");
+			trajPosition = container.add("trajPosition",0.0).getEntry();//table.getEntry("trajPosition");
+			trajVelocity = container.add("trajVelocity",0.0).getEntry();//table.getEntry("trajVelocity");
+			//trajHeading = table.getEntry("trajHeading");
+			trajFF = container.add("trajFF",0.0).getEntry();//table.getEntry("trajFF");
 
-			position = table.getEntry("position");
-			velocity = table.getEntry("velocity");
+			position = container.add("position",0.0).getEntry();//table.getEntry("position");
+			velocity = container.add("velocity",0.0).getEntry();//table.getEntry("velocity");
 
 		}
 
@@ -247,7 +248,7 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 			if(!MOTION_PROFILE_MODES.contains(subsystem.talon.getControlMode())) return;
 			trajPosition.setDouble(subsystem.talon.getActiveTrajectoryPosition());
 			trajVelocity.setDouble(subsystem.talon.getActiveTrajectoryVelocity());
-			trajHeading.setDouble(subsystem.talon.getActiveTrajectoryHeading());
+			//trajHeading.setDouble(subsystem.talon.getActiveTrajectoryHeading());
 			trajFF.setDouble(subsystem.talon.getActiveTrajectoryArbFeedFwd());
 		}
 	}

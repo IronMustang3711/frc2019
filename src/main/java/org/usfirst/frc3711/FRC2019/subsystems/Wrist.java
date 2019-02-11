@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
+import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry.MotionMagicTelemetry;
 
 public class Wrist extends TalonSubsystem {
     @SuppressWarnings("WeakerAccess")
@@ -156,19 +157,18 @@ what voltage represents 100% output.
         }
     }
 
-   // ShuffleboardTab tab;
 
-//     NetworkTableEntry ntSetpoint;
-// NetworkTableEntry ntClosedLoopEnabled;
 
 NetworkTableEntry fullPowerMode;
-
+MotionMagicTelemetry mmTelemetry;
     public Wrist() {
         super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());
-      TalonTelemetry.installClosedLoopTelemetry(this);
+      //TalonTelemetry.installClosedLoopTelemetry(this);
 
 
     fullPowerMode = tab.add("full power", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
+   
 
    
    
@@ -271,9 +271,7 @@ NetworkTableEntry fullPowerMode;
     @Override
     public void periodic() {
         super.periodic();
-
-//        SmartDashboard.putNumber("Wrist position", talon.getSensorCollection().getQuadraturePosition());
-//        SmartDashboard.putNumber("Wrist position2", talon.getSelectedSensorPosition());
+        mmTelemetry.run();
 
     }
 
