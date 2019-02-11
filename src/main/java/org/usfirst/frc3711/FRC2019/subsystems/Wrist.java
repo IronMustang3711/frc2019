@@ -85,7 +85,7 @@ public class Wrist extends TalonSubsystem {
             config.reverseSoftLimitEnable = true;
 
 
-            // config.openloopRamp = 1.023000; //TODO: configure this / or dont?
+             config.openloopRamp = 1.0;
             // config.closedloopRamp = 1.705000;
 
             config.motionCruiseVelocity = 100;
@@ -135,18 +135,6 @@ what voltage represents 100% output.
 
 
 
-        /*
-	 things not handled with config:
-	[x]Current Limit Enable (though the thresholds are configs)
-	[x]Voltage Compensation Enable (though the nominal voltage is a config)
-	Control Mode and Target/Output demand (percent, position, velocity, etc.)
-	[x]Invert direction and sensor phase
-	[x]Closed-loop slot selection [0,3] for primary and aux PID loops.
-	Neutral mode override (convenient to temporarily override configs)
-	Limit switch override (convenient to temporarily override configs)
-	Soft Limit override (convenient to temporarily override configs)
-	Status Frame Periods
-	  */
         public static void configure(TalonSRX talon){
             talon.configFactoryDefault();
 
