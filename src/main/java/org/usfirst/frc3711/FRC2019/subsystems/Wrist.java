@@ -189,7 +189,7 @@ NetworkTableEntry fullPowerMode;
    
            @Override
            protected void execute() {
-              if(!ntClosedLoopEnabled.getBoolean(false)) return;
+             // if(!ntClosedLoopEnabled.getBoolean(false)) return;
 
                 if( Math.abs(talon.getErrorDerivative()) < 1.0  &&  Math.abs(talon.getClosedLoopError()) < 100){
                    

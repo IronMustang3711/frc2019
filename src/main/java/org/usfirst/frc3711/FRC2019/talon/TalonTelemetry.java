@@ -160,37 +160,54 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 	private static final Set<ControlMode> MOTION_PROFILE_MODES 
 	= EnumSet.of(ControlMode.MotionMagic,ControlMode.MotionProfile,ControlMode.MotionProfileArc);
 
+
+
+	/*
+			builder.addDoubleProperty("busVoltage",motor::getBusVoltage,null);
+			builder.addDoubleProperty("outputPercent",motor::getMotorOutputPercent,null);
+			builder.addDoubleProperty("outputVoltage",motor::getMotorOutputVoltage,null);
+			builder.addDoubleProperty("outputCurrent",motor::getOutputCurrent,null);
+			builder.addDoubleProperty("selectedSensorPosition",()->(double)motor.getSelectedSensorPosition(0),null);
+			builder.addDoubleProperty("selectedSensorVelocity",()->(double)motor.getSelectedSensorVelocity(0),null);
+
+
+
+	*/
 	static class BasicTelemetry implements Runnable{
 		protected final TalonSubsystem subsystem;
 		protected final NetworkTable table;
 
-		final NetworkTableEntry output;
-		final NetworkTableEntry position;
-		final NetworkTableEntry velocity;
-
-
+		final NetworkTableEntry outputPercent;
+		final NetworkTableEntry outputVoltage;
+		final NetworkTableEntry outputCurrent;
 
 		BasicTelemetry(TalonSubsystem subsystem){
 			this.subsystem = subsystem;
 			table = NetworkTableInstance.getDefault().getTable(subsystem.getName()+"Telemetry");
-			output = table.getEntry("output");
-			position = table.getEntry("position");
-			velocity = table.getEntry("velocity");
+			
+			outputPercent = table.getEntry("outputPercent");
+			outputVoltage = table.getEntry("outputVoltage");
+			outputCurrent = table.getEntry("outputCurrent");
+
+
 
 		}
 
 
 		@Override
 		public void run() {
-			output.setDouble(subsystem.talon.getMotorOutputPercent());
-			position.setDouble(subsystem.talon.getSelectedSensorPosition());
-			velocity.setDouble(subsystem.talon.getSelectedSensorVelocity());
+			outputPercent.setDouble(subsystem.talon.getMotorOutputPercent());
+			outputVoltage.setDouble(subsystem.talon.getMotorOutputVoltage());
+			outputCurrent.setDouble(subsystem.talon.getOutputCurrent());
 		}
 
 	}
 
 
 	public static class MotionMagicTelemetry extends  BasicTelemetry {
+
+		final NetworkTableEntry position;
+		final NetworkTableEntry velocity;
 
 		final NetworkTableEntry target;
 		final NetworkTableEntry error;
@@ -211,11 +228,18 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 			trajHeading = table.getEntry("trajHeading");
 			trajFF = table.getEntry("trajFF");
 
+			position = table.getEntry("position");
+			velocity = table.getEntry("velocity");
+
 		}
 
 		@Override
 		public void run() {
 			super.run();
+			position.setDouble(subsystem.talon.getSelectedSensorPosition());
+			velocity.setDouble(subsystem.talon.getSelectedSensorVelocity());
+
+
 			if(!CLOSED_LOOP_MODES.contains(subsystem.talon.getControlMode())) return;
 			target.setDouble(subsystem.talon.getClosedLoopTarget());
 			error.setDouble(subsystem.talon.getClosedLoopError());

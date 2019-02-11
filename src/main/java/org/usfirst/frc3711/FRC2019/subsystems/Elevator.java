@@ -185,9 +185,9 @@ Status Frame Periods
 
       @Override
       protected void execute() {
-        if (ntClosedLoopEnabled.getBoolean(false)) {
+       // if (ntClosedLoopEnabled.getBoolean(false)) {
           talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
-        }
+        //}
       }
 
 

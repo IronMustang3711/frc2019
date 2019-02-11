@@ -11,14 +11,14 @@ import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 public abstract class TalonSubsystem extends RobotSubsystem {
 
   final NetworkTableEntry ntSetpoint;
-  final NetworkTableEntry ntClosedLoopEnabled;
+  //final NetworkTableEntry ntClosedLoopEnabled;
 
 
 
   public final WPI_TalonSRX talon;
 
 
-  private double setpoint;
+  //private double setpoint;
 
   public TalonSubsystem(String name, int talonID){
     super(name);
@@ -31,26 +31,26 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     }, EntryListenerFlags.kUpdate);
 
 
-    ntClosedLoopEnabled = tab.add("setpoint enabled",false)
-                              .withWidget(BuiltInWidgets.kToggleSwitch)
-                              .getEntry();
+    // ntClosedLoopEnabled = tab.add("setpoint enabled",false)
+    //                           .withWidget(BuiltInWidgets.kToggleSwitch)
+    //                           .getEntry();
 
-    ntClosedLoopEnabled.addListener(entryNotification -> {
-      if(entryNotification.value.getBoolean())
-        onEnableClosedLoop();
-      else
-        onDisableClosedLoop();
-    },EntryListenerFlags.kUpdate);
+    // ntClosedLoopEnabled.addListener(entryNotification -> {
+    //   if(entryNotification.value.getBoolean())
+    //     onEnableClosedLoop();
+    //   else
+    //     onDisableClosedLoop();
+    // },EntryListenerFlags.kUpdate);
 
     TalonTelemetry.installMototIOTelemetry(this);
-    TalonTelemetry.installSensorCollectionTelemetry(this);
+   // TalonTelemetry.installSensorCollectionTelemetry(this);
 
 
     configureTalon();
   }
 
   protected void onSetpointChange(double newSetpoint){
-    this.setpoint = newSetpoint;
+   // this.setpoint = newSetpoint;
     System.out.println(getName() + ": new setpoint("+newSetpoint+")");
 
   }
@@ -82,6 +82,14 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     talon.configFactoryDefault();
     talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     talon.selectProfileSlot(0,0);
+  }
+
+  public void enableCurrentLimiting(){
+    talon.enableCurrentLimit(true);
+  }
+
+  public void disableCurrentLimiting(){
+    talon.enableCurrentLimit(false);
   }
 
 
