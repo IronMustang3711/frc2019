@@ -12,23 +12,21 @@
 package org.usfirst.frc3711.FRC2019.subsystems;
 
 
-import java.util.Map;
-
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-
 import org.usfirst.frc3711.FRC2019.TalonID;
-import org.usfirst.frc3711.FRC2019.commands.ConstantOutput;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
+
+import java.util.Map;
 
 
 
@@ -191,14 +189,11 @@ what voltage represents 100% output.
     private final TalonTelemetry.MotionMagicTelemetry mmTelemetry;
     private final SendableChooser<ControlMode> modeChooser;
     private final NetworkTableEntry percentOutput;
-
-
+    private final NetworkTableEntry lowPowerMode;
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
       mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
-
-      //TalonTelemetry.installClosedLoopTelemetry(this);
       modeChooser = new SendableChooser<>();
       addChild("mode chooser",modeChooser);
       modeChooser.setDefaultOption("MotionMagic", ControlMode.MotionMagic);
@@ -208,41 +203,63 @@ what voltage represents 100% output.
 
       tab.add(this);
 
-    percentOutput =  tab.add("output%", 0.0)
-     .withWidget(BuiltInWidgets.kNumberSlider)
-     .withProperties(Map.of("min",-4,"max",0.4))
-     .getEntry();
+        percentOutput = tab.add("output%", 0.0)
+                .withWidget(BuiltInWidgets.kNumberSlider)
+                .withProperties(Map.of("min", -4, "max", 0.4))
+                .getEntry();
+
+        lowPowerMode = tab.add("low power mode", false)
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .getEntry();
 
 
-      tab.add(new Command("closed loop control"){
+        tab.add(new Command("closed loop control") {
 
-       {requires(Arm.this);}
-
-
-        @Override
-        protected void execute() {
-          ControlMode mode = modeChooser.getSelected();
-          SlotConfiguration configuration = TalonSettings.PIDSlots.configurationForMode(mode);
-          int slot = TalonSettings.PIDSlots.slotForMode(mode);
-          double sp = ntSetpoint.getDouble(talon.getSelectedSensorPosition());
-          talon.configureSlot(configuration, slot,50);
-          talon.set(mode,sp);
-        //   if(mode == ControlMode.MotionMagic){
-        //     talon.set(mode,sp,DemandType.ArbitraryFeedForward,1.0);
-        //   }
-        //   else {
-        //     talon.set(mode,sp);
-        //   }
-
-           
-        }
-
-        @Override
-            protected void end() {
-                disable();
+            {
+                requires(Arm.this);
             }
 
+            boolean lowPower;
+            Timer timer = new Timer();
 
+            @Override
+            protected void initialize() {
+                lowPowerMode.setBoolean(lowPower = true);
+                timer.reset();
+                timer.start();
+            }
+
+          @Override
+          protected void execute() {
+            ControlMode mode = modeChooser.getSelected();
+            SlotConfiguration configuration = TalonSettings.PIDSlots.configurationForMode(mode);
+            int slot = TalonSettings.PIDSlots.slotForMode(mode);
+            talon.configureSlot(configuration, slot, 50);
+            double sp = ntSetpoint.getDouble(talon.getSelectedSensorPosition());
+
+            if (Math.abs(talon.getErrorDerivative()) < 2.0
+                    && timer.hasPeriodPassed(1.0)) {
+              if (!lowPower) {
+                lowPowerMode.setBoolean(lowPower = true);
+                talon.configVoltageCompSaturation(5.0);
+                enableCurrentLimiting();
+              }
+            } else {
+              if (lowPower) {
+                lowPowerMode.setBoolean(lowPower = false);
+                talon.configVoltageCompSaturation(9.0);
+                disableCurrentLimiting();
+              }
+            }
+            talon.set(mode, sp);
+          }
+
+            @Override
+            protected void end() {
+                disable();
+                talon.configVoltageCompSaturation(9.0);
+                enableCurrentLimiting();
+            }
 
           @Override
           protected boolean isFinished() {
@@ -262,26 +279,26 @@ what voltage represents 100% output.
  
        });
 
-       tab.add(new Command("Constant Output"){
-        
-        {requires(Arm.this);}
+      tab.add(new Command("Constant Output") {
+
+        {
+          requires(Arm.this);
+        }
 
         @Override
         protected void execute() {
-           talon.set(ControlMode.PercentOutput,percentOutput.getDouble(0.0));
+          talon.set(ControlMode.PercentOutput, percentOutput.getDouble(0.0));
         }
 
         protected void end() {
-            disable();
+          disable();
         }
 
-            @Override
-            protected boolean isFinished() {
-                return false;
-            }
-
-
-       });
+        @Override
+        protected boolean isFinished() {
+          return false;
+        }
+      });
 
     }
 
@@ -289,6 +306,8 @@ what voltage represents 100% output.
     protected void onSetpointChange(double newSetpoint) {
         super.onSetpointChange(newSetpoint);
         talon.setIntegralAccumulator(0);
+        disableCurrentLimiting();
+        enableCurrentLimiting();
     }
 
 
