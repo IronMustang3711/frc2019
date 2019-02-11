@@ -123,6 +123,8 @@ public class OI {
        tab.add(new CommandSequences.Hatch0());
        tab.add(new CommandSequences.Hatch1());
 
+       tab.add(new CommandSequences.PingPong());
+
 
        stow.whenPressed(new RobotPoser(RobotPose.STOW));
 
