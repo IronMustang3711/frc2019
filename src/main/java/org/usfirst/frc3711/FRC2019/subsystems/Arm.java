@@ -12,15 +12,21 @@
 package org.usfirst.frc3711.FRC2019.subsystems;
 
 
+import java.util.Map;
+
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.commands.ConstantOutput;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
@@ -41,11 +47,11 @@ public class Arm extends TalonSubsystem {
 
             public static final SlotConfiguration MM_SLOT =
                     SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-                            .withKP(1.5)
-                            .withKI(1e-9)
+                            .withKP(2.5)
+                           // .withKI(1e-9)
                             .withKF(1.0)
                             .withMaxIntegralAccumulator(10000)
-                            .withClosedLoopPeakOutput(0.9)
+                           // .withClosedLoopPeakOutput(0.9)
                             .build();
 
             public static SlotConfiguration configurationForSlot(int slot){
@@ -102,7 +108,7 @@ public class Arm extends TalonSubsystem {
             config.motionCruiseVelocity = 70;
             config.motionAcceleration = 40;
 
-            config.peakOutputForward = 0.8;
+            config.peakOutputForward = 0.9;
             config.peakOutputReverse = -0.5;
 
 
@@ -184,13 +190,15 @@ what voltage represents 100% output.
 
     private final TalonTelemetry.MotionMagicTelemetry mmTelemetry;
     private final SendableChooser<ControlMode> modeChooser;
+    private final NetworkTableEntry percentOutput;
+
 
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
       mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
 
-      TalonTelemetry.installClosedLoopTelemetry(this);
+      //TalonTelemetry.installClosedLoopTelemetry(this);
       modeChooser = new SendableChooser<>();
       addChild("mode chooser",modeChooser);
       modeChooser.setDefaultOption("MotionMagic", ControlMode.MotionMagic);
@@ -199,6 +207,11 @@ what voltage represents 100% output.
       tab.add(modeChooser);
 
       tab.add(this);
+
+    percentOutput =  tab.add("output%", 0.0)
+     .withWidget(BuiltInWidgets.kNumberSlider)
+     .withProperties(Map.of("min",-4,"max",0.4))
+     .getEntry();
 
 
       tab.add(new Command("closed loop control"){
@@ -249,15 +262,26 @@ what voltage represents 100% output.
  
        });
 
-//       MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,2000);
-//       top.setSetpoint(2000);
-//       addChild("top", top);
-//       tab.add(top);
-//
-//       MotionMagicSetpoint home = new MotionMagicSetpoint("home",this,1000);
-//       home.setSetpoint(1000);
-//       addChild("home",home);
-//       tab.add(home);
+       tab.add(new Command("Constant Output"){
+        
+        {requires(Arm.this);}
+
+        @Override
+        protected void execute() {
+           talon.set(ControlMode.PercentOutput,percentOutput.getDouble(0.0));
+        }
+
+        protected void end() {
+            disable();
+        }
+
+            @Override
+            protected boolean isFinished() {
+                return false;
+            }
+
+
+       });
 
     }
 
