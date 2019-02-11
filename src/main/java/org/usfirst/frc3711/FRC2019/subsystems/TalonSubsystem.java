@@ -2,11 +2,10 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 public abstract class TalonSubsystem extends RobotSubsystem {
 
@@ -42,7 +41,7 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     //     onDisableClosedLoop();
     // },EntryListenerFlags.kUpdate);
 
-    TalonTelemetry.installMototIOTelemetry(this);
+    //TalonTelemetry.installMototIOTelemetry(this);
    // TalonTelemetry.installSensorCollectionTelemetry(this);
 
 

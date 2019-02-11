@@ -27,7 +27,6 @@ public abstract class RobotSubsystem extends Subsystem {
 	public RobotSubsystem() {
 		super();
 		this.tab = Shuffleboard.getTab(this.getClass().getSimpleName());
-
 		tab.add(new InstantCommand("Disable "+getName(),this::disable));
 	}
 
