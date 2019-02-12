@@ -179,7 +179,7 @@ Status Frame Periods
 
     mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
 
-      TalonTelemetry.installClosedLoopTelemetry(this);
+     // TalonTelemetry.installClosedLoopTelemetry(this);
 
      // tab.add(addChildItem("motion magic thing",new MotionMagicSetpoint.Wrapper(this)));
 

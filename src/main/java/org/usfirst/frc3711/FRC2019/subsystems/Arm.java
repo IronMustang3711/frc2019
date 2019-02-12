@@ -224,20 +224,22 @@ what voltage represents 100% output.
 
             @Override
             protected void initialize() {
-                lowPowerMode.setBoolean(lowPower = true);
+                ControlMode mode = modeChooser.getSelected();
+                SlotConfiguration configuration = TalonSettings.PIDSlots.configurationForMode(mode);
+                int slot = TalonSettings.PIDSlots.slotForMode(mode);
+                talon.configureSlot(configuration, slot, 50);
+
+                lowPowerMode.setBoolean(lowPower = false);
                 timer.reset();
                 timer.start();
             }
 
           @Override
           protected void execute() {
-            ControlMode mode = modeChooser.getSelected();
-            SlotConfiguration configuration = TalonSettings.PIDSlots.configurationForMode(mode);
-            int slot = TalonSettings.PIDSlots.slotForMode(mode);
-            talon.configureSlot(configuration, slot, 50);
+           
             double sp = ntSetpoint.getDouble(talon.getSelectedSensorPosition());
 
-            if (Math.abs(talon.getErrorDerivative()) < 2.0
+            if (Math.abs(talon.getErrorDerivative()) < 4.0
                     && timer.hasPeriodPassed(1.0)) {
               if (!lowPower) {
                 lowPowerMode.setBoolean(lowPower = true);
@@ -251,7 +253,7 @@ what voltage represents 100% output.
                 disableCurrentLimiting();
               }
             }
-            talon.set(mode, sp);
+            talon.set(modeChooser.getSelected(), sp);
           }
 
             @Override
