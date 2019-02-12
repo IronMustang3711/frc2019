@@ -38,6 +38,11 @@ public class Commands {
       super(name, timeout, subsystem);
     }
 
+    public Command withTimeout(double timeout){
+      super.setTimeout(timeout);
+      return this;
+    }
+
     @Override
     protected boolean isFinished() {
       return isTimedOut() || isCanceled();

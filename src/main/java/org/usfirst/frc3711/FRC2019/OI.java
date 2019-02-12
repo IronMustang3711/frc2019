@@ -102,8 +102,8 @@ public class OI {
         arm.whileHeld(new ManualLinkageControl(Robot.arm));
         wrist.whileHeld(new ManualLinkageControl(Robot.wrist));
        
-        intake.whileHeld(new RunIntake());
-        ejector.whileHeld(new RunEjector());
+        intake.whileHeld(IntakeCommands.eject());
+        ejector.whileHeld(new EjectorCommands.RunEjector());
 
 
 

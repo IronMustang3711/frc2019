@@ -45,8 +45,9 @@ public class Intake extends TalonSubsystem {
         return talon.getOutputCurrent() != 0;
     }
 
-    public void run(){
-        talon.set(ControlMode.PercentOutput, 1.0);
+    public void run(boolean forward){
+        double out = forward ? 1.0 : -1.0;
+        talon.set(ControlMode.PercentOutput, out);
     }
 
     public void inhale(){
