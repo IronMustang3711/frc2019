@@ -186,7 +186,7 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 			
 			outputPercent = container.add("outputPercent", 0.0).getEntry(); //table.getEntry("outputPercent");
 			outputVoltage = container.add("outputVoltage",0.0).getEntry();//table.getEntry("outputVoltage");
-			outputCurrent = container.add("outputPercent",0.0).getEntry();//table.getEntry("outputCurrent");
+			outputCurrent = container.add("outputCurrent",0.0).getEntry();//table.getEntry("outputCurrent");
 		}
 
 
