@@ -240,7 +240,7 @@ what voltage represents 100% output.
             double sp = ntSetpoint.getDouble(talon.getSelectedSensorPosition());
 
             if (Math.abs(talon.getErrorDerivative()) < 4.0
-                    && timer.hasPeriodPassed(1.0)) {
+                    && timer.hasPeriodPassed(0.5)) {
               if (!lowPower) {
                 lowPowerMode.setBoolean(lowPower = true);
                 talon.configVoltageCompSaturation(5.0);
