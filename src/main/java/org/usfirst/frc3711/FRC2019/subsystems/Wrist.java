@@ -157,8 +157,8 @@ what voltage represents 100% output.
 
 
 
-NetworkTableEntry lowPowerMode;
-Runnable mmTelemetry;
+private final NetworkTableEntry lowPowerMode;
+private final Runnable talonTelemetry;
 
 
     public Wrist() {
@@ -169,7 +169,7 @@ Runnable mmTelemetry;
             .withWidget(BuiltInWidgets.kBooleanBox)
             .getEntry();
 
-    mmTelemetry = TalonUtil.motionMagicTelemetry(this);
+    talonTelemetry = TalonUtil.motionMagicTelemetry(this);
    
 
    
@@ -246,7 +246,7 @@ Runnable mmTelemetry;
     @Override
     public void periodic() {
         super.periodic();
-        mmTelemetry.run();
+        talonTelemetry.run();
 
     }
 

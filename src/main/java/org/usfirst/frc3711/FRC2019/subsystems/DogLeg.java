@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
 
 import java.util.Map;
 
@@ -19,10 +20,14 @@ import java.util.Map;
  * Add your docs here.
  */
 public class DogLeg extends TalonSubsystem {
-  private NetworkTableEntry motorOutput;
+  private final NetworkTableEntry motorOutput;
+
+  private final Runnable talonTelemetry;
 
   public DogLeg(){
     super(DogLeg.class.getSimpleName(), TalonID.DOG_LEG.getId());
+
+    talonTelemetry = TalonUtil.basicTelemetry(this);
 
     motorOutput = tab.add("Output", 0.0)
             .withWidget(BuiltInWidgets.kNumberSlider)
@@ -49,6 +54,9 @@ public class DogLeg extends TalonSubsystem {
   }
 
 
-
-
+  @Override
+  public void periodic() {
+    super.periodic();
+    talonTelemetry.run();
+  }
 }

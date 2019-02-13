@@ -132,7 +132,7 @@ public class TalonUtil {
 		final NetworkTableEntry trajVelocity;
 		final NetworkTableEntry trajFF;
 
-		public MotionMagicTelemetry(TalonSubsystem subsystem) {
+		MotionMagicTelemetry(TalonSubsystem subsystem) {
 			super(subsystem);
 			trajPosition = container.add("trajPosition",0.0).getEntry();//table.getEntry("trajPosition");
 			trajVelocity = container.add("trajVelocity",0.0).getEntry();//table.getEntry("trajVelocity");

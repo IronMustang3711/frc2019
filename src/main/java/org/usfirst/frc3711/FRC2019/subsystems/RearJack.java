@@ -5,17 +5,18 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
 
 import java.util.Map;
 
 public class RearJack extends TalonSubsystem {
 
     private final NetworkTableEntry motorOutput;
-   // private final MotionMagicTelemetry telemetry;
+    private final Runnable talonTelemetry;
 
     public RearJack() {
         super(RearJack.class.getSimpleName(), TalonID.REAR_JACK.getId());
-        //telemetry = new TalonTelemetry.MotionMagicTelemetry(this);
+        talonTelemetry = TalonUtil.closedLoopTelemetry(this);
 
         motorOutput = tab.add("Output", 0.0)
                 .withWidget(BuiltInWidgets.kNumberSlider)
@@ -43,7 +44,7 @@ public class RearJack extends TalonSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-       // telemetry.run();
+        talonTelemetry.run();
     }
 
 

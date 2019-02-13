@@ -170,14 +170,14 @@ Status Frame Periods
 
 
 
-  private final Runnable mmTelemetry;
+  private final Runnable talonTelemetry;
 
   public Elevator() {
 
 
     super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
 
-    mmTelemetry =  TalonUtil.motionMagicTelemetry(this);
+    talonTelemetry =  TalonUtil.motionMagicTelemetry(this);
 
      // TalonTelemetry.installClosedLoopTelemetry(this);
 
@@ -263,7 +263,7 @@ Status Frame Periods
   @Override
   public void periodic() {
     super.periodic();
-    mmTelemetry.run();
+    talonTelemetry.run();
   }
 
 }

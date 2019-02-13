@@ -186,7 +186,7 @@ what voltage represents 100% output.
 
     
 
-    private final Runnable mmTelemetry;
+    private final Runnable talonTelemetry;
     private final SendableChooser<ControlMode> modeChooser;
     private final NetworkTableEntry percentOutput;
     private final NetworkTableEntry lowPowerMode;
@@ -195,7 +195,7 @@ what voltage represents 100% output.
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
-      mmTelemetry =  TalonUtil.motionMagicTelemetry(this);
+      talonTelemetry =  TalonUtil.motionMagicTelemetry(this);
       modeChooser = new SendableChooser<>();
       addChild("mode chooser",modeChooser);
       modeChooser.setDefaultOption("MotionMagic", ControlMode.MotionMagic);
@@ -338,7 +338,7 @@ what voltage represents 100% output.
     @Override
     public void periodic() {
         super.periodic();
-        mmTelemetry.run();
+        talonTelemetry.run();
     }
 
 }

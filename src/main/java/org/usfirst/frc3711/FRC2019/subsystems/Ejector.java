@@ -10,20 +10,20 @@ package org.usfirst.frc3711.FRC2019.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
 
 /**
  * Add your docs here.
  */
 public class Ejector extends TalonSubsystem {
+  private final Runnable talonTelemetry;
  public Ejector(){
    super(Ejector.class.getSimpleName(),TalonID.EJECTOR.getId());
+
+   talonTelemetry = TalonUtil.basicTelemetry(this);
  }
 
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-  }
+
 
   public boolean isRunning(){
     return talon.getOutputCurrent() != 0;
