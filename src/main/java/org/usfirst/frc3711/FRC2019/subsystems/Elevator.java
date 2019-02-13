@@ -79,7 +79,7 @@ public class Elevator extends TalonSubsystem {
       config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
       config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
-      config.forwardSoftLimitThreshold = 9223;
+      config.forwardSoftLimitThreshold = 13112;
       config.reverseSoftLimitThreshold = -6707;
       config.forwardSoftLimitEnable = true;
       config.reverseSoftLimitEnable = true;
@@ -192,7 +192,7 @@ Status Frame Periods
       @Override
       protected void execute() {
        // if (ntClosedLoopEnabled.getBoolean(false)) {
-          talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
+          talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(0.0));
         //}
       }
 

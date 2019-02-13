@@ -191,6 +191,8 @@ what voltage represents 100% output.
     private final NetworkTableEntry percentOutput;
     private final NetworkTableEntry lowPowerMode;
 
+    Timer timer;
+
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
       mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
@@ -212,7 +214,7 @@ what voltage represents 100% output.
                 .withWidget(BuiltInWidgets.kBooleanBox)
                 .getEntry();
 
-
+                 timer = new Timer();
         tab.add(new Command("closed loop control") {
 
             {
@@ -220,7 +222,7 @@ what voltage represents 100% output.
             }
 
             boolean lowPower;
-            Timer timer = new Timer();
+           
 
             @Override
             protected void initialize() {
@@ -256,7 +258,7 @@ what voltage represents 100% output.
                 +" dE="+talon.getErrorDerivative());
                 lowPowerMode.setBoolean(lowPower = false);
                 talon.configVoltageCompSaturation(9.0);
-                disableCurrentLimiting();
+               // disableCurrentLimiting();
               }
             }
             talon.set(modeChooser.getSelected(), sp);
@@ -316,6 +318,7 @@ what voltage represents 100% output.
         talon.setIntegralAccumulator(0);
         disableCurrentLimiting();
         enableCurrentLimiting();
+        timer.reset();
     }
 
 
