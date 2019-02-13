@@ -28,19 +28,6 @@ public class TalonUtil {
 			default: throw new IllegalArgumentException("Invalid Slot:"+slotID);
 		}
 	}
-
-	/*
-        builder.addDoubleProperty("busVoltage",motor::getBusVoltage,null);
-        builder.addDoubleProperty("outputPercent",motor::getMotorOutputPercent,null);
-        builder.addDoubleProperty("outputVoltage",motor::getMotorOutputVoltage,null);
-        builder.addDoubleProperty("outputCurrent",motor::getOutputCurrent,null);
-        builder.addDoubleProperty("selectedSensorPosition",()->(double)motor.getSelectedSensorPosition(0),null);
-        builder.addDoubleProperty("selectedSensorVelocity",()->(double)motor.getSelectedSensorVelocity(0),null);
-
-
-
-    */
-
 	public static Runnable basicTelemetry(TalonSubsystem subsystem){
 		return new BasicTelemetry(subsystem);
 	}
