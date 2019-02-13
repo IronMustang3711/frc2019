@@ -2,6 +2,7 @@ package org.usfirst.frc3711.FRC2019.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
@@ -94,6 +95,51 @@ public class Commands {
          subsystem.talon.set(mode, setpoint);
       }
 
+
+  }
+
+  public static Command enableCurrentLimitCommand(TalonSubsystem subsystem){
+    return new CurrentLimit(subsystem,true);
+  }
+  public static Command disableCurrentLimitCommand(final TalonSubsystem subsystem){
+    return new CurrentLimit(subsystem,false);
+  }
+ private static class CurrentLimit extends InstantCommand {
+    final TalonSubsystem subsystem;
+    final boolean enable;
+    CurrentLimit(TalonSubsystem subsystem, boolean enable) {
+      super(subsystem.getName()+"CurrentLimit"+enable);
+      requires(subsystem);
+      this.subsystem= subsystem;
+      this.enable = enable;
+    }
+
+    // Called once when the command executes
+    @Override
+    protected void initialize() {
+      if(enable) subsystem.enableCurrentLimiting();
+      else subsystem.disableCurrentLimiting();
+
+    }
+
+  }
+
+  public static Command disableCommand(final TalonSubsystem subsystem){
+    return new DisableTalon(subsystem);
+  }
+  public static class DisableTalon extends InstantCommand {
+  final TalonSubsystem subsystem;
+
+  DisableTalon(TalonSubsystem subsystem) {
+      super(subsystem.getName()+"Disable");
+      this.subsystem = subsystem;
+      requires(subsystem);
+    }
+
+    @Override
+    protected void initialize() {
+      subsystem.disable();
+    }
 
   }
 }
