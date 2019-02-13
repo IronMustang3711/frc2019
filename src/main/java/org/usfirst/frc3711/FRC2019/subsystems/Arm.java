@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
-import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
+import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
 
 import java.util.Map;
 
@@ -186,14 +186,14 @@ what voltage represents 100% output.
 
     
 
-    private final TalonTelemetry.MotionMagicTelemetry mmTelemetry;
+    private final TalonUtil.MotionMagicTelemetry mmTelemetry;
     private final SendableChooser<ControlMode> modeChooser;
     private final NetworkTableEntry percentOutput;
     private final NetworkTableEntry lowPowerMode;
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
-      mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
+      mmTelemetry = new TalonUtil.MotionMagicTelemetry(this);
       modeChooser = new SendableChooser<>();
       addChild("mode chooser",modeChooser);
       modeChooser.setDefaultOption("MotionMagic", ControlMode.MotionMagic);

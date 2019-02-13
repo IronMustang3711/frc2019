@@ -21,8 +21,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
-import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
-import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry.MotionMagicTelemetry;
+import org.usfirst.frc3711.FRC2019.talon.TalonUtil.MotionMagicTelemetry;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
@@ -170,7 +169,7 @@ MotionMagicTelemetry mmTelemetry;
             .withWidget(BuiltInWidgets.kBooleanBox)
             .getEntry();
 
-    mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
+    mmTelemetry = new MotionMagicTelemetry(this);
    
 
    
