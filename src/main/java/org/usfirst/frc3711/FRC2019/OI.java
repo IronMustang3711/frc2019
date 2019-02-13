@@ -14,9 +14,6 @@ package org.usfirst.frc3711.FRC2019;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
 import java.util.Arrays;
-import java.util.stream.Stream;
-
-import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 
 import org.usfirst.frc3711.FRC2019.commands.*;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
@@ -105,9 +102,9 @@ public class OI {
 //        elevatorDown.whenPressed(home);
 
 
-        elevator.whileHeld(new ManualLinkageControl(Robot.elevator));
-        arm.whileHeld(new ManualLinkageControl(Robot.arm));
-        wrist.whileHeld(new ManualLinkageControl(Robot.wrist));
+        elevator.whileHeld(new ManualTalonControl(Robot.elevator));
+        arm.whileHeld(new ManualTalonControl(Robot.arm));
+        wrist.whileHeld(new ManualTalonControl(Robot.wrist));
        
         intake.whileHeld(IntakeCommands.eject());
         ejector.whileHeld(new EjectorCommands.RunEjector());
