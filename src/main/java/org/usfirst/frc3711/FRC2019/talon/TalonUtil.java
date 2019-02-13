@@ -41,7 +41,20 @@ public class TalonUtil {
 
     */
 
-	static class BasicTelemetry implements Runnable{
+	public static Runnable basicTelemetry(TalonSubsystem subsystem){
+		return new BasicTelemetry(subsystem);
+	}
+	public static Runnable basicTelemetryWithEncoder(TalonSubsystem subsystem){
+		return new BasicEncoderTelemetry(subsystem);
+	}
+	public static Runnable closedLoopTelemetry(TalonSubsystem subsystem){
+		return new ClosedLoopTelemetry(subsystem);
+	}
+	public static Runnable motionMagicTelemetry(TalonSubsystem subsystem){
+		return new MotionMagicTelemetry(subsystem);
+	}
+
+	private static class BasicTelemetry implements Runnable{
 		protected final TalonSubsystem subsystem;
 		//protected final NetworkTable table;
 		final ShuffleboardLayout container;
@@ -72,51 +85,67 @@ public class TalonUtil {
 		}
 
 	}
-
-	public static class MotionMagicTelemetry extends  BasicTelemetry {
-
+	private static class BasicEncoderTelemetry extends BasicTelemetry {
 		final NetworkTableEntry position;
 		final NetworkTableEntry velocity;
 
-		final NetworkTableEntry target;
-		final NetworkTableEntry error;
-		final NetworkTableEntry iAccum;
-		final NetworkTableEntry trajPosition;
-		final NetworkTableEntry trajVelocity;
-		//final NetworkTableEntry trajHeading;
-		final NetworkTableEntry trajFF;
 
-		public MotionMagicTelemetry(TalonSubsystem subsystem) {
+		BasicEncoderTelemetry(TalonSubsystem subsystem) {
 			super(subsystem);
-
-			target = container.add("target",0.0).getEntry();//table.getEntry("target");
-			error = container.add("error",0.0).getEntry();
-			iAccum = container.add("iAccum",0.0).getEntry();//table.getEntry("iAccum");
-			trajPosition = container.add("trajPosition",0.0).getEntry();//table.getEntry("trajPosition");
-			trajVelocity = container.add("trajVelocity",0.0).getEntry();//table.getEntry("trajVelocity");
-			//trajHeading = table.getEntry("trajHeading");
-			trajFF = container.add("trajFF",0.0).getEntry();//table.getEntry("trajFF");
-
 			position = container.add("position",0.0).getEntry();//table.getEntry("position");
 			velocity = container.add("velocity",0.0).getEntry();//table.getEntry("velocity");
+		}
+	}
+
+	private static class ClosedLoopTelemetry extends BasicEncoderTelemetry {
+
+		final NetworkTableEntry target;
+		final NetworkTableEntry error;
+		final NetworkTableEntry errorDerivative;
+		final NetworkTableEntry iAccum;
+
+		ClosedLoopTelemetry(TalonSubsystem subsystem) {
+			super(subsystem);
+			target = container.add("target",0.0).getEntry();//table.getEntry("target");
+			error = container.add("error",0.0).getEntry();
+			errorDerivative = container.add("errorDeriv",0.0).getEntry();
+			iAccum = container.add("iAccum",0.0).getEntry();//table.getEntry("iAccum");
 
 		}
 
 		@Override
 		public void run() {
 			super.run();
-			position.setDouble(subsystem.talon.getSelectedSensorPosition());
-			velocity.setDouble(subsystem.talon.getSelectedSensorVelocity());
-
-
 			if(!CLOSED_LOOP_MODES.contains(subsystem.talon.getControlMode())) return;
+
 			target.setDouble(subsystem.talon.getClosedLoopTarget());
 			error.setDouble(subsystem.talon.getClosedLoopError());
+			errorDerivative.setDouble(subsystem.talon.getErrorDerivative());
 			iAccum.setDouble(subsystem.talon.getIntegralAccumulator());
+
+		}
+	}
+
+	private static class MotionMagicTelemetry extends  ClosedLoopTelemetry {
+
+		final NetworkTableEntry trajPosition;
+		final NetworkTableEntry trajVelocity;
+		final NetworkTableEntry trajFF;
+
+		public MotionMagicTelemetry(TalonSubsystem subsystem) {
+			super(subsystem);
+			trajPosition = container.add("trajPosition",0.0).getEntry();//table.getEntry("trajPosition");
+			trajVelocity = container.add("trajVelocity",0.0).getEntry();//table.getEntry("trajVelocity");
+			trajFF = container.add("trajFF",0.0).getEntry();//table.getEntry("trajFF");
+		}
+
+		@Override
+		public void run() {
+			super.run();
 			if(!MOTION_PROFILE_MODES.contains(subsystem.talon.getControlMode())) return;
+
 			trajPosition.setDouble(subsystem.talon.getActiveTrajectoryPosition());
 			trajVelocity.setDouble(subsystem.talon.getActiveTrajectoryVelocity());
-			//trajHeading.setDouble(subsystem.talon.getActiveTrajectoryHeading());
 			trajFF.setDouble(subsystem.talon.getActiveTrajectoryArbFeedFwd());
 		}
 	}

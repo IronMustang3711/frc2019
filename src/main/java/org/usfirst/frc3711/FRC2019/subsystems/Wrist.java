@@ -21,12 +21,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
-import org.usfirst.frc3711.FRC2019.talon.TalonUtil.MotionMagicTelemetry;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
 
 public class Wrist extends TalonSubsystem {
     @SuppressWarnings("WeakerAccess")
@@ -158,7 +158,7 @@ what voltage represents 100% output.
 
 
 NetworkTableEntry lowPowerMode;
-MotionMagicTelemetry mmTelemetry;
+Runnable mmTelemetry;
 
 
     public Wrist() {
@@ -169,7 +169,7 @@ MotionMagicTelemetry mmTelemetry;
             .withWidget(BuiltInWidgets.kBooleanBox)
             .getEntry();
 
-    mmTelemetry = new MotionMagicTelemetry(this);
+    mmTelemetry = TalonUtil.motionMagicTelemetry(this);
    
 
    
