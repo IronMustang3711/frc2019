@@ -242,12 +242,18 @@ what voltage represents 100% output.
             if (Math.abs(talon.getErrorDerivative()) < 4.0
                     && timer.hasPeriodPassed(0.5)) {
               if (!lowPower) {
+                  System.out.println("low power @ "+timer.get()
+                   +" E="+talon.getClosedLoopError()
+                   +" dE="+talon.getErrorDerivative());
                 lowPowerMode.setBoolean(lowPower = true);
                 talon.configVoltageCompSaturation(5.0);
                 enableCurrentLimiting();
               }
             } else {
               if (lowPower) {
+                System.out.println("full power @ "+timer.get()
+                +" E="+talon.getClosedLoopError()
+                +" dE="+talon.getErrorDerivative());
                 lowPowerMode.setBoolean(lowPower = false);
                 talon.configVoltageCompSaturation(9.0);
                 disableCurrentLimiting();
