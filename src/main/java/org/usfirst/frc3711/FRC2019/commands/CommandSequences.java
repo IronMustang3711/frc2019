@@ -3,11 +3,12 @@ package org.usfirst.frc3711.FRC2019.commands;
 import org.usfirst.frc3711.FRC2019.Robot;
 import org.usfirst.frc3711.FRC2019.RobotPose;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class CommandSequences {
+
+	
 
 	public static Command elevatorToHome() {
 		return new MotionMagicSetpoint("Home", Robot.elevator, 2000, 1.5);
@@ -71,9 +72,9 @@ public class CommandSequences {
 		}
 	}
 
-	public static class Hatch0 extends CommandGroup {
-		public Hatch0(){
-		super(Hatch0.class.getSimpleName());
+	public static class HatchPanel0 extends CommandGroup {
+		public HatchPanel0(){
+		super(HatchPanel0.class.getSimpleName());
 		requires(Robot.arm);
 		requires(Robot.wrist);
 		requires(Robot.elevator);
@@ -107,23 +108,18 @@ public class CommandSequences {
 			new RobotPoser(RobotPose.STOW).start();
 		}
 
-		@Override
-		protected void interrupted() {
-			super.interrupted();
-			end();
-		}
 	}
 
-	public static class Hatch1 extends CommandGroup {
-		public Hatch1(){
-			super(Hatch1.class.getSimpleName());
+	public static class HatchFuel0 extends CommandGroup {
+		public HatchFuel0(){
+			super(HatchFuel0.class.getSimpleName());
 			requires(Robot.arm);
 			requires(Robot.wrist);
 			requires(Robot.elevator);
 	
 	
-			double elevatorUpTimeout = 1.4;
-			double elevatorPosition = 7000;
+			double elevatorUpTimeout = 1.7;
+			double elevatorPosition = 13000;
 			
 			addParallel(new MotionMagicSetpoint("Wrist Vertical",Robot.wrist,100),elevatorUpTimeout);
 			addParallel(new MotionMagicSetpoint("Arm Vertical",Robot.arm,40),elevatorUpTimeout);
@@ -131,28 +127,68 @@ public class CommandSequences {
 			new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition,0.5){
 				@Override
 				protected boolean isFinished() {
-					return isTimedOut() && subsystem.talon.getSelectedSensorVelocity() == 0 ;
+					return isTimedOut() && Math.abs(subsystem.talon.getSelectedSensorVelocity()) <  2 ;
 				}
 			}
 		);
 	
 			addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator, elevatorPosition));
-			addParallel(new MotionMagicSetpoint("Hold Wrist",Robot.wrist,-10));
-			addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
+			addParallel(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-600));
+			addParallel(new MotionMagicSetpoint("Bring  Out", Robot.arm, 200));
 	
 			}
 	
 			@Override
 			protected void end() {
 				super.end();
-				DriverStation.reportError("END", true);
 				new RobotPoser(RobotPose.STOW).start();
 			}
+	}
 
+	public static class HatchFuel1 extends CommandGroup {
+		public HatchFuel1(){
+			super(HatchFuel1.class.getSimpleName());
+			requires(Robot.arm);
+			requires(Robot.wrist);
+			requires(Robot.elevator);
+	
+	
+			double elevatorUpTimeout = 1.7;
+			double elevatorPosition = 2000;
+			
+
+			//elevator up:
+			addParallel(new MotionMagicSetpoint("Wrist Vertical",Robot.wrist,100),elevatorUpTimeout);
+			addParallel(new MotionMagicSetpoint("Arm Vertical",Robot.arm,40),elevatorUpTimeout);
+			addSequential(
+			new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition,0.5){
+				@Override
+				protected boolean isFinished() {
+					return isTimedOut() && Math.abs(subsystem.talon.getSelectedSensorVelocity()) <  2 ;
+				}
+			}
+		);
+
+		double armOutTimeout = 3.0;
+		//Arm out, Wrist down
+		addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator,elevatorPosition, armOutTimeout));
+		addParallel(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-1200),armOutTimeout);
+		addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3133.0, 1.0){
 			@Override
-			protected void interrupted() {
-				super.interrupted();
-				end();
+			protected boolean isFinished() {
+				return isTimedOut() && Math.abs(subsystem.talon.getSelectedSensorVelocity()) <  2 ;
+			}
+		});
+		addParallel(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-600),armOutTimeout);
+
+		addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator,-4000));
+		
+	}
+	
+			@Override
+			protected void end() {
+				super.end();
+				new RobotPoser(RobotPose.STOW).start();
 			}
 	}
 
@@ -201,23 +237,4 @@ public class CommandSequences {
 		}
 	}
 
-//	public static class RestPosition extends Command {
-//		TalonSubsystem subsystem;
-//		public RestPosition(TalonSubsystem sub){this(sub,1.0);}
-//		public RestPosition(TalonSubsystem subsystem, double timeout) {
-//			super(subsystem.getName()+"Rest",timeout,subsystem);
-//			requires(subsystem);
-//			this.subsystem = subsystem;
-//		}
-//
-//		@Override
-//		protected void execute() {
-//			subsystem.talon.set(ControlMode.MotionMagic,)
-//		}
-//
-//		@Override
-//		protected boolean isFinished() {
-//			return isTimedOut();
-//		}
-//	}
 }

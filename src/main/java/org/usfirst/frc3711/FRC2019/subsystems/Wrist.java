@@ -48,10 +48,10 @@ public class Wrist extends TalonSubsystem {
 
             public static final SlotConfiguration MM_SLOT =
                     SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-                            .withKP(4.0)
+                            .withKP(4.5)
 //                            .withKI(0.01)
 //                            .withIntegralZone(100)
-                            .withKF(1.0)
+                            .withKF(2.0)
                             .build();
 
             public static SlotConfiguration configurationForSlot(int slot){
