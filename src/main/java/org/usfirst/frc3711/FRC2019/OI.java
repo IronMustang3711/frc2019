@@ -120,7 +120,6 @@ public class OI {
 
 
         // SmartDashboard Buttons
-        SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
         SmartDashboard.putData("Drive with Joystick", new DrivewithJoystick());
 
        var tab = Shuffleboard.getTab("Poses");
