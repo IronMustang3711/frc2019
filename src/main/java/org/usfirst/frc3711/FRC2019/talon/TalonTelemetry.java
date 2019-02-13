@@ -1,6 +1,7 @@
 package org.usfirst.frc3711.FRC2019.talon;
 
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -182,7 +183,10 @@ public static void installClosedLoopTelemetry(TalonSubsystem subsystem){
 		BasicTelemetry(TalonSubsystem subsystem){
 			this.subsystem = subsystem;
 			//table = NetworkTableInstance.getDefault().getTable(subsystem.getName()+"Telemetry");
-			container = subsystem.tab.getLayout("talon telemetry", BuiltInLayouts.kList);
+			container = subsystem.tab.getLayout("talon telemetry", BuiltInLayouts.kList)
+			.withSize(2, 3)
+			.withPosition(8, 1)
+			.withProperties(Map.of("Label Position","LEFT"));
 			
 			outputPercent = container.add("outputPercent", 0.0).getEntry(); //table.getEntry("outputPercent");
 			outputVoltage = container.add("outputVoltage",0.0).getEntry();//table.getEntry("outputVoltage");
