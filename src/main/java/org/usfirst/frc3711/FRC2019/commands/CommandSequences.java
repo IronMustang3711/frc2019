@@ -3,7 +3,6 @@ package org.usfirst.frc3711.FRC2019.commands;
 import org.usfirst.frc3711.FRC2019.Robot;
 import org.usfirst.frc3711.FRC2019.RobotPose;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -107,11 +106,6 @@ public class CommandSequences {
 			new RobotPoser(RobotPose.STOW).start();
 		}
 
-		@Override
-		protected void interrupted() {
-			super.interrupted();
-			end();
-		}
 	}
 
 	public static class Hatch1 extends CommandGroup {
@@ -131,7 +125,7 @@ public class CommandSequences {
 			new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition,0.5){
 				@Override
 				protected boolean isFinished() {
-					return isTimedOut() && subsystem.talon.getSelectedSensorVelocity() == 0 ;
+					return isTimedOut() && Math.abs(subsystem.talon.getSelectedSensorVelocity()) <  2 ;
 				}
 			}
 		);
@@ -145,15 +139,10 @@ public class CommandSequences {
 			@Override
 			protected void end() {
 				super.end();
-				DriverStation.reportError("END", true);
 				new RobotPoser(RobotPose.STOW).start();
 			}
 
-			@Override
-			protected void interrupted() {
-				super.interrupted();
-				end();
-			}
+
 	}
 
 	public static class RestingPose extends CommandGroup {
@@ -201,23 +190,4 @@ public class CommandSequences {
 		}
 	}
 
-//	public static class RestPosition extends Command {
-//		TalonSubsystem subsystem;
-//		public RestPosition(TalonSubsystem sub){this(sub,1.0);}
-//		public RestPosition(TalonSubsystem subsystem, double timeout) {
-//			super(subsystem.getName()+"Rest",timeout,subsystem);
-//			requires(subsystem);
-//			this.subsystem = subsystem;
-//		}
-//
-//		@Override
-//		protected void execute() {
-//			subsystem.talon.set(ControlMode.MotionMagic,)
-//		}
-//
-//		@Override
-//		protected boolean isFinished() {
-//			return isTimedOut();
-//		}
-//	}
 }
