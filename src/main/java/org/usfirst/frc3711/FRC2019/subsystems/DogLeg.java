@@ -24,21 +24,21 @@ public class DogLeg extends TalonSubsystem {
 
   private final Runnable talonTelemetry;
 
-  public DogLeg(){
+  public DogLeg() {
     super(DogLeg.class.getSimpleName(), TalonID.DOG_LEG.getId());
 
     talonTelemetry = TalonUtil.basicTelemetry(this);
 
     motorOutput = tab.add("Output", 0.0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", -1.0, "max", 1.0))
-            .getEntry();
+                      .withWidget(BuiltInWidgets.kNumberSlider)
+                      .withProperties(Map.of("min", -1.0, "max", 1.0))
+                      .getEntry();
 
     tab.add(new Command("Run Motor") {
 
       @Override
       protected void execute() {
-        talon.set(ControlMode.PercentOutput,motorOutput.getDouble(0.0));
+        talon.set(ControlMode.PercentOutput, motorOutput.getDouble(0.0));
       }
 
       @Override

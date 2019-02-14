@@ -12,13 +12,15 @@ public class CommandThing extends Command {
   private List<Command> children;
   private Command next;
 
-  public CommandThing(Command next,Command...children) {
+  public CommandThing(Command next, Command... children) {
     this.next = next;
     this.children = Arrays.asList(children);
   }
-  private boolean childrenFinished(){
+
+  private boolean childrenFinished() {
     return children == null || children.stream().allMatch(Command::isFinished);
   }
+
   /**
    * This method specifies that the given {@link Subsystem} is used by this command. This method is
    * crucial to the functioning of the Command System in general.
@@ -43,7 +45,7 @@ public class CommandThing extends Command {
   @Override
   public void removed() {
     super.removed();
-    assert childrenFinished(): "children not finished";
+    assert childrenFinished() : "children not finished";
   }
 
   /**
@@ -124,7 +126,7 @@ public class CommandThing extends Command {
   @Override
   public void _end() {
     super._end();
-    if(next!=null){
+    if (next != null) {
       assert !next.isRunning() : "next already running!";
       next.start();
     }
@@ -162,8 +164,8 @@ public class CommandThing extends Command {
    */
   @Override
   public boolean isTimedOut() {
-   return children == null ? super.isTimedOut()
-              : super.isTimedOut() || children.stream().allMatch(Command::isTimedOut);
+    return children == null ? super.isTimedOut()
+               : super.isTimedOut() || children.stream().allMatch(Command::isTimedOut);
   }
 
   /**
@@ -185,7 +187,6 @@ public class CommandThing extends Command {
   public void lockChanges() {
     super.lockChanges();
   }
-
 
 
   /**
@@ -229,7 +230,7 @@ public class CommandThing extends Command {
   @Override
   public void start() {
     super.start();
-    if(children != null) {
+    if (children != null) {
       assert children.stream().noneMatch(Command::isRunning)
           : "children already running";
       children.forEach(Command::start);
@@ -327,7 +328,7 @@ public class CommandThing extends Command {
   @Override
   public void setInterruptible(boolean interruptible) {
     super.setInterruptible(interruptible);
-    if(children != null)
+    if (children != null)
       children.forEach(command -> command.setInterruptible(interruptible));
   }
 
@@ -363,8 +364,8 @@ public class CommandThing extends Command {
   @Override
   public void setRunWhenDisabled(boolean run) {
     super.setRunWhenDisabled(run);
-    if(children != null)
-      children.forEach(c->c.setRunWhenDisabled(run));
+    if (children != null)
+      children.forEach(c -> c.setRunWhenDisabled(run));
   }
 
   /**
@@ -375,7 +376,7 @@ public class CommandThing extends Command {
    */
   @Override
   public boolean willRunWhenDisabled() {
-    assert children==null || super.willRunWhenDisabled() == children.stream().allMatch(Command::willRunWhenDisabled)
+    assert children == null || super.willRunWhenDisabled() == children.stream().allMatch(Command::willRunWhenDisabled)
         : "WillRunWhenDisabled Parent/Child mismatch";
     return super.willRunWhenDisabled();//delegate.willRunWhenDisabled();
   }
@@ -387,14 +388,13 @@ public class CommandThing extends Command {
    */
   @Override
   public String toString() {
-    return super.toString() + "->" + (children == null ? "[]" :  children.toString());
+    return super.toString() + "->" + (children == null ? "[]" : children.toString());
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
   }
-
 
 
   @Override

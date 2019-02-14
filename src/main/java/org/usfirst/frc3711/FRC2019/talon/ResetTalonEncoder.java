@@ -7,26 +7,25 @@
 
 package org.usfirst.frc3711.FRC2019.talon;
 
-import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
-
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 public class ResetTalonEncoder extends InstantCommand {
 
- final TalonSubsystem subsystem;
+  final TalonSubsystem subsystem;
 
- public ResetTalonEncoder(TalonSubsystem subsystem){
-   super("reset encoder("+subsystem.getName()+")");
-   this.subsystem = subsystem;
-   requires(subsystem);
- }
+  public ResetTalonEncoder(TalonSubsystem subsystem) {
+    super("reset encoder(" + subsystem.getName() + ")");
+    this.subsystem = subsystem;
+    requires(subsystem);
+  }
 
 
- @Override
- protected void execute() {
-  subsystem.talon.setSelectedSensorPosition(0,0,50);
-  subsystem.talon.getSensorCollection().setQuadraturePosition(0, 50);
- }
+  @Override
+  protected void execute() {
+    subsystem.talon.setSelectedSensorPosition(0, 0, 50);
+    subsystem.talon.getSensorCollection().setQuadraturePosition(0, 50);
+  }
 
 
 }

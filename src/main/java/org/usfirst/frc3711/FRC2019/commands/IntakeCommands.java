@@ -4,14 +4,17 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc3711.FRC2019.Robot;
 
 public class IntakeCommands {
-  public static Command intake(){
+  public static Command intake() {
     return new RunIntake(true);
   }
-  public static Command eject(){
+
+  public static Command eject() {
     return new RunIntake(false);
   }
-   static class RunIntake extends Command {
+
+  static class RunIntake extends Command {
     final boolean forward;
+
     public RunIntake(boolean forward) {
       requires(Robot.intake);
       this.forward = forward;

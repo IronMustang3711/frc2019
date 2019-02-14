@@ -3,7 +3,6 @@ package org.usfirst.frc3711.FRC2019.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc3711.FRC2019.Robot;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
@@ -26,9 +25,9 @@ public class ManualTalonControl extends Command {
   @Override
   protected void execute() {
     double output = Robot.oi.joystick1.getY();
-    subsystem.talon.set(ControlMode.PercentOutput,output);
+    subsystem.talon.set(ControlMode.PercentOutput, output);
 
-    Robot.chassis.drive(0,0); // just in case
+    Robot.chassis.drive(0, 0); // just in case
   }
 
   @Override

@@ -10,31 +10,25 @@
 
 package org.usfirst.frc3711.FRC2019.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
-
-import org.usfirst.frc3711.FRC2019.TalonID;
-import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import org.usfirst.frc3711.FRC2019.TalonID;
+import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
 
 public class Wrist extends TalonSubsystem {
-    @SuppressWarnings("WeakerAccess")
-    static class TalonSettings {
-        static class PIDSlots {
-            public static final SlotConfiguration POSITION_SLOT = SlotConfigBuilder.newBuilder().withKP(4.0).build();
+  @SuppressWarnings("WeakerAccess")
+  static class TalonSettings {
+    static class PIDSlots {
+      public static final SlotConfiguration POSITION_SLOT = SlotConfigBuilder.newBuilder().withKP(4.0).build();
 
-            //    public void configMotionMagicClosedLoop(){
+      //    public void configMotionMagicClosedLoop(){
 //         talon.config_kP(0,4.0,50);
 //         talon.config_kI(0,0.01,50);
 //         talon.config_IntegralZone(0,100,50);
@@ -46,53 +40,56 @@ public class Wrist extends TalonSubsystem {
 //         talon.configMotionAcceleration(700);
 //    }
 
-            public static final SlotConfiguration MM_SLOT =
-                    SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-                            .withKP(4.5)
+      public static final SlotConfiguration MM_SLOT =
+          SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
+              .withKP(4.5)
 //                            .withKI(0.01)
 //                            .withIntegralZone(100)
-                            .withKF(2.0)
-                            .build();
+              .withKF(2.0)
+              .build();
 
-            public static SlotConfiguration configurationForSlot(int slot){
-                switch (slot){
-                    case 0: return MM_SLOT;
-                    case 1: return POSITION_SLOT;
-                    default: throw new IllegalArgumentException("invalid slot: "+slot);
-                }
-            }
+      public static SlotConfiguration configurationForSlot(int slot) {
+        switch (slot) {
+          case 0:
+            return MM_SLOT;
+          case 1:
+            return POSITION_SLOT;
+          default:
+            throw new IllegalArgumentException("invalid slot: " + slot);
         }
+      }
+    }
 
 
-        public static final TalonSRXConfiguration CONFIGURATION = new TalonSRXConfiguration();
+    public static final TalonSRXConfiguration CONFIGURATION = new TalonSRXConfiguration();
 
-        @SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
-        static TalonSRXConfiguration applyConfig(TalonSRXConfiguration config){
-            config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
+    @SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
+    static TalonSRXConfiguration applyConfig(TalonSRXConfiguration config) {
+      config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
 
-            config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
-            config.remoteFilter1.remoteSensorSource = RemoteSensorSource.Off;
+      config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
+      config.remoteFilter1.remoteSensorSource = RemoteSensorSource.Off;
 
-            config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
-            config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
+      config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
+      config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
 
-            config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
-            config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
+      config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
+      config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
-            config.forwardSoftLimitThreshold = 100;
-            config.reverseSoftLimitThreshold = -3100; //TODO:
-            config.forwardSoftLimitEnable = true;
-            config.reverseSoftLimitEnable = true;
+      config.forwardSoftLimitThreshold = 100;
+      config.reverseSoftLimitThreshold = -3100; //TODO:
+      config.forwardSoftLimitEnable = true;
+      config.reverseSoftLimitEnable = true;
 
 
-             config.openloopRamp = 0.5;
-            // config.closedloopRamp = 1.705000;
+      config.openloopRamp = 0.5;
+      // config.closedloopRamp = 1.705000;
 
-            config.motionCruiseVelocity = 100;
-            config.motionAcceleration = 100;
+      config.motionCruiseVelocity = 100;
+      config.motionAcceleration = 100;
 
-            config.peakOutputForward = 1.0;
-            config.peakOutputReverse = -0.8;
+      config.peakOutputForward = 1.0;
+      config.peakOutputReverse = -0.8;
 
 
 
@@ -104,11 +101,11 @@ public class Wrist extends TalonSubsystem {
        This is useful for mechanisms that require a minimum output for movement,
        and can be used as a simpler alternative to the kI (integral) component of closed-looping in some circumstances.
          */
-            config.nominalOutputForward = 0;
-            config.nominalOutputReverse = 0;
+      config.nominalOutputForward = 0;
+      config.nominalOutputReverse = 0;
 
 
-            // config.neutralDeadband = 0.199413; //TODO: configure
+      // config.neutralDeadband = 0.199413; //TODO: configure
 
 
 
@@ -117,138 +114,140 @@ Talon SRX and Victor SPX can be configured to adjust their outputs in response t
 voltage measurement (in all control modes). Use the voltage compensation saturation config to determine
 what voltage represents 100% output.
  */
-            config.voltageCompSaturation = 9.0;
+      config.voltageCompSaturation = 9.0;
 
 
               /*
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
-            config.peakCurrentLimit = 20;
-            config.peakCurrentDuration = 1000;
-            config.continuousCurrentLimit = 1;
+      config.peakCurrentLimit = 20;
+      config.peakCurrentDuration = 1000;
+      config.continuousCurrentLimit = 1;
 
-            config.slot0 = PIDSlots.configurationForSlot(0);
-            config.slot1 = PIDSlots.configurationForSlot(1);
+      config.slot0 = PIDSlots.configurationForSlot(0);
+      config.slot1 = PIDSlots.configurationForSlot(1);
 
-            return config;
-        }
-
-
-
-        public static void configure(TalonSRX talon){
-            talon.configFactoryDefault();
-
-            talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-            talon.selectProfileSlot(0,0); //motion magic slot & primary pid
-
-
-            talon.setInverted(false);
-            talon.setSensorPhase(true);
-
-            talon.enableVoltageCompensation(true);
-            talon.enableCurrentLimit(true);
-
-            talon.getAllConfigs(CONFIGURATION);
-            applyConfig(CONFIGURATION);
-            talon.configAllSettings(CONFIGURATION);
-
-        }
+      return config;
     }
 
 
+    public static void configure(TalonSRX talon) {
+      talon.configFactoryDefault();
 
-private final NetworkTableEntry lowPowerMode;
-private final Runnable talonTelemetry;
+      talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+      talon.selectProfileSlot(0, 0); //motion magic slot & primary pid
 
 
-    public Wrist() {
-        super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());
+      talon.setInverted(false);
+      talon.setSensorPhase(true);
+
+      talon.enableVoltageCompensation(true);
+      talon.enableCurrentLimit(true);
+
+      talon.getAllConfigs(CONFIGURATION);
+      applyConfig(CONFIGURATION);
+      talon.configAllSettings(CONFIGURATION);
+
+    }
+  }
+
+
+  private final NetworkTableEntry lowPowerMode;
+  private final Runnable talonTelemetry;
+
+
+  public Wrist() {
+    super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());
 
 
     lowPowerMode = tab.add("low power mode", false)
-            .withWidget(BuiltInWidgets.kBooleanBox)
-            .getEntry();
+                       .withWidget(BuiltInWidgets.kBooleanBox)
+                       .getEntry();
 
     talonTelemetry = TalonUtil.motionMagicTelemetry(this);
-   
+
 
     tab.add(this);
-   
-         tab.add(new Command("closed loop control"){
-            
-            {requires(Wrist.this);}
 
-            boolean lowPower;
+    tab.add(new Command("closed loop control") {
 
+      {
+        requires(Wrist.this);
+      }
 
-            @Override
-            protected void initialize() {
-               lowPowerMode.setBoolean(lowPower = true);
-               // talon.selectProfileSlot(1, 0);
-            }
-   
-   
-           @Override
-           protected void execute() {
-                //relatively low error & not much motion:
-                if( Math.abs(talon.getErrorDerivative()) < 1.0  &&  Math.abs(talon.getClosedLoopError()) < 200){
-                   //enable 'low-power' mode
-                    if(!lowPower){
-                        talon.configVoltageCompSaturation(5.0);
-                        lowPower = true;
-                    }
-                }
-                //high error and/or movement
-                else {
-                    if(lowPower){
-                        lowPowerMode.setBoolean(lowPower = false);
-                        talon.configVoltageCompSaturation(9.0);
-                    }
-                }
-                  talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
-           }
-
-           @Override
-           protected void end() {
-              talon.configVoltageCompSaturation(9.0);
-              talon.selectProfileSlot(0, 0);
-              disable();
-           }
-
-             @Override
-             protected boolean isFinished() {
-                 return false;
-             }
-         });
-   
-         tab.add(new InstantCommand("Reset Encoder"){
-   
-            {requires(Wrist.this);}
-
-           @Override
-           protected void execute() {
-              talon.setSelectedSensorPosition(0);
-              talon.getSensorCollection().setQuadraturePosition(0, 50);
-   
-           }
-   
-         });
-    }
+      boolean lowPower;
 
 
-    @Override
-    void configureTalon() {
-        super.configureTalon();
-        TalonSettings.configure(talon);
-    }
+      @Override
+      protected void initialize() {
+        lowPowerMode.setBoolean(lowPower = true);
+        // talon.selectProfileSlot(1, 0);
+      }
 
 
-    @Override
-    public void periodic() {
-        super.periodic();
-        talonTelemetry.run();
+      @Override
+      protected void execute() {
+        //relatively low error & not much motion:
+        if (Math.abs(talon.getErrorDerivative()) < 1.0 && Math.abs(talon.getClosedLoopError()) < 200) {
+          //enable 'low-power' mode
+          if (!lowPower) {
+            talon.configVoltageCompSaturation(5.0);
+            lowPower = true;
+          }
+        }
+        //high error and/or movement
+        else {
+          if (lowPower) {
+            lowPowerMode.setBoolean(lowPower = false);
+            talon.configVoltageCompSaturation(9.0);
+          }
+        }
+        talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
+      }
 
-    }
+      @Override
+      protected void end() {
+        talon.configVoltageCompSaturation(9.0);
+        talon.selectProfileSlot(0, 0);
+        disable();
+      }
+
+      @Override
+      protected boolean isFinished() {
+        return false;
+      }
+    });
+
+    tab.add(new InstantCommand("Reset Encoder") {
+
+      {
+        requires(Wrist.this);
+      }
+
+      @Override
+      protected void execute() {
+        talon.setSelectedSensorPosition(0);
+        talon.getSensorCollection().setQuadraturePosition(0, 50);
+
+      }
+
+    });
+  }
+
+
+  @Override
+  void configureTalon() {
+    super.configureTalon();
+    TalonSettings.configure(talon);
+  }
+
+
+  @Override
+  public void periodic() {
+    super.periodic();
+    talonTelemetry.run();
+
+  }
 
 
 }

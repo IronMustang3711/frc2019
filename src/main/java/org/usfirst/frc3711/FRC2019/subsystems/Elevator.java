@@ -1,21 +1,15 @@
 package org.usfirst.frc3711.FRC2019.subsystems;
 
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
-
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.commands.MotionMagicSetpoint;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
-
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
 
 public class Elevator extends TalonSubsystem {
@@ -23,9 +17,9 @@ public class Elevator extends TalonSubsystem {
   static class TalonSettings {
     static class PIDSlots {
       public static final SlotConfiguration POSITION_SLOT =
-              SlotConfigBuilder.newBuilder()
-                      .withKP(1.0)
-                      .build();
+          SlotConfigBuilder.newBuilder()
+              .withKP(1.0)
+              .build();
 
 
       /*
@@ -37,15 +31,18 @@ public class Elevator extends TalonSubsystem {
       todo: reapply integral?
        */
       public static final SlotConfiguration MM_SLOT =
-              SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-                      .withKF(1.0)
-                      .build();
+          SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
+              .withKF(1.0)
+              .build();
 
-      public static SlotConfiguration configurationForSlot(int slot){
-        switch (slot){
-          case 0: return MM_SLOT;
-          case 1: return POSITION_SLOT;
-          default: throw new IllegalArgumentException("invalid slot: "+slot);
+      public static SlotConfiguration configurationForSlot(int slot) {
+        switch (slot) {
+          case 0:
+            return MM_SLOT;
+          case 1:
+            return POSITION_SLOT;
+          default:
+            throw new IllegalArgumentException("invalid slot: " + slot);
         }
       }
 
@@ -67,7 +64,7 @@ public class Elevator extends TalonSubsystem {
 
 
     @SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
-    static TalonSRXConfiguration applyConfig(TalonSRXConfiguration config){
+    static TalonSRXConfiguration applyConfig(TalonSRXConfiguration config) {
       config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
 
       config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
@@ -85,7 +82,7 @@ public class Elevator extends TalonSubsystem {
       config.reverseSoftLimitEnable = true;
 
 
-       config.openloopRamp = 1.0; 
+      config.openloopRamp = 1.0;
       // config.closedloopRamp = 1.705000;
 
       config.motionCruiseVelocity = 800;
@@ -134,7 +131,6 @@ what voltage represents 100% output.
     }
 
 
-
     /*
  things not handled with config:
 [x]Current Limit Enable (though the thresholds are configs)
@@ -147,11 +143,11 @@ Limit switch override (convenient to temporarily override configs)
 Soft Limit override (convenient to temporarily override configs)
 Status Frame Periods
   */
-    public static void configure(TalonSRX talon){
+    public static void configure(TalonSRX talon) {
       talon.configFactoryDefault();
 
       talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-      talon.selectProfileSlot(0,0); //motion magic slot & primary pid
+      talon.selectProfileSlot(0, 0); //motion magic slot & primary pid
 
 
       talon.setInverted(true);
@@ -169,7 +165,6 @@ Status Frame Periods
   }
 
 
-
   private final Runnable talonTelemetry;
 
   public Elevator() {
@@ -177,12 +172,12 @@ Status Frame Periods
 
     super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
 
-    talonTelemetry =  TalonUtil.motionMagicTelemetry(this);
+    talonTelemetry = TalonUtil.motionMagicTelemetry(this);
     tab.add(this);
 
-     // TalonTelemetry.installClosedLoopTelemetry(this);
+    // TalonTelemetry.installClosedLoopTelemetry(this);
 
-     // tab.add(addChildItem("motion magic thing",new MotionMagicSetpoint.Wrapper(this)));
+    // tab.add(addChildItem("motion magic thing",new MotionMagicSetpoint.Wrapper(this)));
 
     tab.add(new Command("closed loop control(Position)") {
 
@@ -192,8 +187,8 @@ Status Frame Periods
 
       @Override
       protected void execute() {
-       // if (ntClosedLoopEnabled.getBoolean(false)) {
-          talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(0.0));
+        // if (ntClosedLoopEnabled.getBoolean(false)) {
+        talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(0.0));
         //}
       }
 
@@ -223,12 +218,12 @@ Status Frame Periods
 //      motionMagicSetpoint.setSetpoint(entryNotification.value.getDouble());
 //    }, EntryListenerFlags.kUpdate);
 
-    MotionMagicSetpoint top = new MotionMagicSetpoint("top",this,7000);
+    MotionMagicSetpoint top = new MotionMagicSetpoint("top", this, 7000);
     top.setSetpoint(7000);
     addChild("top", top);
     tab.add(top);
 
-    MotionMagicSetpoint home = new MotionMagicSetpoint("bottom",this,1000);
+    MotionMagicSetpoint home = new MotionMagicSetpoint("bottom", this, 1000);
     home.setSetpoint(1000);
     addChild("home", home);
     tab.add(home);
@@ -241,13 +236,12 @@ Status Frame Periods
   }
 
 
-  void setSetpoint(double position, boolean mm){
-    if(mm)
-      talon.set(ControlMode.MotionMagic,position);
+  void setSetpoint(double position, boolean mm) {
+    if (mm)
+      talon.set(ControlMode.MotionMagic, position);
     else
-      talon.set(ControlMode.Position,position);
+      talon.set(ControlMode.Position, position);
   }
-
 
 
   @Override

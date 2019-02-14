@@ -25,91 +25,90 @@ import java.util.List;
 
 public class Robot extends TimedRobot {
 
+  public static OI oi;
+  public static Chassis chassis;
+  public static Elevator elevator;
+  public static Arm arm;
+  public static Wrist wrist;
+  public static Intake intake;
+  // public static Misc misc;
+  public static Ejector ejector;
+  public static DogLeg dogLeg;
+  public static RearJack rearJack;
+
+  public static List<RobotSubsystem> subsystems;
 
 
-    public static OI oi;
-    public static Chassis chassis;
-    public static Elevator elevator;
-    public static Arm arm;
-    public static Wrist wrist;
-    public static Intake intake;
-   // public static Misc misc;
-    public static Ejector ejector;
-    public static DogLeg dogLeg;
-    public static RearJack rearJack;
-
-    public static List<RobotSubsystem> subsystems;
-
-
-
-     private void disableWatchdog() {
-         try {
-             Field watchdogField = IterativeRobotBase.class.getDeclaredField("m_watchdog");
-             watchdogField.setAccessible(true);
-             Watchdog watchdog = (Watchdog) watchdogField.get(this);
-             watchdog.setTimeout(1e8);
-             watchdog.close();
-         } catch (IllegalAccessException | NoSuchFieldException e) {
-             System.err.println("Watchdog disable failed :(");
-         }
-     }
-
-    public Robot(){
-        super(0.02);
-        disableWatchdog();
-
-
+  private void disableWatchdog() {
+    try {
+      Field watchdogField = IterativeRobotBase.class.getDeclaredField("m_watchdog");
+      watchdogField.setAccessible(true);
+      Watchdog watchdog = (Watchdog) watchdogField.get(this);
+      watchdog.setTimeout(1e8);
+      watchdog.close();
+    } catch (IllegalAccessException | NoSuchFieldException e) {
+      System.err.println("Watchdog disable failed :(");
     }
+  }
 
-    @Override
-    public void robotInit() {
-
-        chassis = new Chassis();
-        elevator = new Elevator();
-        arm = new Arm();
-        wrist = new Wrist();
-        intake = new Intake();
-       // misc = new Misc();
-        ejector = new Ejector();
-        dogLeg = new DogLeg();
-        rearJack = new RearJack();
-
-        subsystems = Arrays.asList(chassis,elevator,arm,wrist,intake/*,misc*/,ejector,dogLeg,rearJack);
+  public Robot() {
+    super(0.02);
+    disableWatchdog();
 
 
-        oi = new OI();
+  }
 
-    }
+  @Override
+  public void robotInit() {
 
-    @Override
-    public void disabledInit(){
-      Shuffleboard.stopRecording();
-      disableWatchdog();
-    }
+    chassis = new Chassis();
+    elevator = new Elevator();
+    arm = new Arm();
+    wrist = new Wrist();
+    intake = new Intake();
+    // misc = new Misc();
+    ejector = new Ejector();
+    dogLeg = new DogLeg();
+    rearJack = new RearJack();
 
-    public static void disableAll(){
-      Robot.subsystems.forEach(RobotSubsystem::disable);
-    }
-    @Override
-    public void disabledPeriodic() {
-        Scheduler.getInstance().run();
-    }
+    subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake/*,misc*/, ejector, dogLeg, rearJack);
 
-    @Override
-    public void autonomousInit() {
-    }
 
-    @Override
-    public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
-    }
+    oi = new OI();
 
-    @Override
-    public void teleopInit() {
-      Shuffleboard.startRecording();
-    }
-    @Override
-    public void teleopPeriodic() {
-        Scheduler.getInstance().run();
-    }
+  }
+
+  @Override
+  public void disabledInit() {
+    Shuffleboard.stopRecording();
+    disableWatchdog();
+  }
+
+  public static void disableAll() {
+    Robot.subsystems.forEach(RobotSubsystem::disable);
+  }
+
+  @Override
+  public void disabledPeriodic() {
+    Scheduler.getInstance().run();
+  }
+
+  @Override
+  public void autonomousInit() {
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    Scheduler.getInstance().run();
+  }
+
+  @Override
+  public void teleopInit() {
+    Shuffleboard.startRecording();
+  }
+
+  @Override
+  public void teleopPeriodic() {
+    Scheduler.getInstance().run();
+  }
 }

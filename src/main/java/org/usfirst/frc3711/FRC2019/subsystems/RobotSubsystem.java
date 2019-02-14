@@ -7,28 +7,29 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public abstract class RobotSubsystem extends Subsystem {
 
-	public final ShuffleboardTab tab;
+  public final ShuffleboardTab tab;
 
-	/**
-	 * Creates a subsystem with the given name.
-	 *
-	 * @param name the name of the subsystem
-	 */
-	public RobotSubsystem(String name) {
-		super(name);
-		this.tab = Shuffleboard.getTab(name);
-		tab.add(new InstantCommand("Disable "+getName(),this::disable));
+  /**
+   * Creates a subsystem with the given name.
+   *
+   * @param name the name of the subsystem
+   */
+  public RobotSubsystem(String name) {
+    super(name);
+    this.tab = Shuffleboard.getTab(name);
+    tab.add(new InstantCommand("Disable " + getName(), this::disable));
 
-	}
+  }
 
-	/**
-	 * Creates a subsystem. This will set the name to the name of the class.
-	 */
-	public RobotSubsystem() {
-		super();
-		this.tab = Shuffleboard.getTab(this.getClass().getSimpleName());
-		tab.add(new InstantCommand("Disable "+getName(),this::disable));
-	}
+  /**
+   * Creates a subsystem. This will set the name to the name of the class.
+   */
+  public RobotSubsystem() {
+    super();
+    this.tab = Shuffleboard.getTab(this.getClass().getSimpleName());
+    tab.add(new InstantCommand("Disable " + getName(), this::disable));
+  }
 
-	public void disable(){}
+  public void disable() {
+  }
 }

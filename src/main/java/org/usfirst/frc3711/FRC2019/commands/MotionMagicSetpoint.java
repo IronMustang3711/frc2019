@@ -1,12 +1,10 @@
 package org.usfirst.frc3711.FRC2019.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
-
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 
 public class MotionMagicSetpoint extends Command {
@@ -29,21 +27,21 @@ public class MotionMagicSetpoint extends Command {
   protected final TalonSubsystem subsystem;
   private double setpoint;
 
-  public MotionMagicSetpoint(String name, TalonSubsystem subsystem,double setpoint){
-    super(subsystem.getName()+":"+name,subsystem);
+  public MotionMagicSetpoint(String name, TalonSubsystem subsystem, double setpoint) {
+    super(subsystem.getName() + ":" + name, subsystem);
     this.subsystem = subsystem;
     this.setpoint = setpoint;
     requires(subsystem);
   }
 
-  public MotionMagicSetpoint(String name,TalonSubsystem subsystem, double setpoint,double timeout) {
-    super(subsystem.getName()+":"+name,timeout,subsystem);
+  public MotionMagicSetpoint(String name, TalonSubsystem subsystem, double setpoint, double timeout) {
+    super(subsystem.getName() + ":" + name, timeout, subsystem);
     this.subsystem = subsystem;
     this.setpoint = setpoint;
     requires(subsystem);
 
 
-   // this.setpoint = subsystem.talon.getSelectedSensorPosition();
+    // this.setpoint = subsystem.talon.getSelectedSensorPosition();
 
   }
 
@@ -52,34 +50,34 @@ public class MotionMagicSetpoint extends Command {
 //      subsystem.configMotionMagicClosedLoop();
 //  }
 
-  public void setSetpoint(double setpoint){
+  public void setSetpoint(double setpoint) {
     this.setpoint = setpoint;
     execute();
   }
 
-  public double getSetpoint(){
+  public double getSetpoint() {
     return setpoint;
   }
 
-@Override
-protected void initialize() {
-  super.initialize();
-  subsystem.talon.selectProfileSlot(0, 0);
-  Shuffleboard.addEventMarker(getName()+"_Init",EventImportance.kNormal);
+  @Override
+  protected void initialize() {
+    super.initialize();
+    subsystem.talon.selectProfileSlot(0, 0);
+    Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
 
-}
+  }
 
   @Override
   protected void execute() {
-    subsystem.talon.selectProfileSlot(0,0);
-    subsystem.talon.set(ControlMode.MotionMagic,setpoint);
+    subsystem.talon.selectProfileSlot(0, 0);
+    subsystem.talon.set(ControlMode.MotionMagic, setpoint);
   }
 
   @Override
   protected void end() {
-    Shuffleboard.addEventMarker(getName()+"_End",EventImportance.kNormal);
+    Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
 
-   // subsystem.talon.neutralOutput();
+    // subsystem.talon.neutralOutput();
   }
 
   @Override
