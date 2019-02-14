@@ -97,11 +97,12 @@ public class CommandSequences {
       addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10), elevatorUpTimeout);
       addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10), elevatorUpTimeout);
       addSequential(
-          new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 0.5) {
+          new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.0) {
             @Override
             protected boolean isFinished() {
-              return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-                         || Math.abs(subsystem.talon.getClosedLoopError()) < 150;
+              double motionProgress = getMotionProgress();
+              System.out.println("Motion progress: "+motionProgress);
+              return motionProgress >= 0.8 || super.isFinished();
             }
           }
       );
@@ -109,7 +110,7 @@ public class CommandSequences {
 
       //addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator, elevatorPosition));
       addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
-      addSequential(new MotionMagicSetpoint("Hold Wrist", Robot.wrist, -10));
+      addSequential(new MotionMagicSetpoint("Hold Wrist", Robot.wrist, 10));
 
 
     }
@@ -145,11 +146,12 @@ public class CommandSequences {
       addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
       addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
       addSequential(
-          new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 0.5) {
+          new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 2.5) {
             @Override
             protected boolean isFinished() {
-              return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-                         || Math.abs(subsystem.talon.getClosedLoopError()) < 150;
+              return super.isFinished()
+                         || getElapsedTime() > 0.5 && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+                         || Math.abs(subsystem.talon.getClosedLoopError()) < 100;
             }
           }
       );
@@ -192,7 +194,7 @@ public class CommandSequences {
       addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
         @Override
         protected boolean isFinished() {
-          return super.isFinished();
+          return super.isFinished() || getMotionProgress() >= 0.5;
           // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
           // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
         }
