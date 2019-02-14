@@ -13,11 +13,13 @@ public class DelegatingCommand extends Command {
   public DelegatingCommand(Command delegate) {
     super("->" + delegate.getName());
     this.delegate = delegate;
+    setRunWhenDisabled(delegate.willRunWhenDisabled());
   }
 
   public DelegatingCommand(Command delegate, double timeout) {
     super("->" + delegate.getName(), timeout);
     this.delegate = delegate;
+    setRunWhenDisabled(delegate.willRunWhenDisabled());
   }
 
   /**

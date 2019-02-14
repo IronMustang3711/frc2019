@@ -10,12 +10,27 @@ import java.util.List;
 public class CommandThing extends Command {
 
   private List<Command> children;
-  private Command next;
+  private CommandThing next;
 
-  public CommandThing(Command next, Command... children) {
+  public CommandThing(CommandThing next, Command... children) {
     this.next = next;
     this.children = Arrays.asList(children);
+    setRunWhenDisabled(true); //TODO?
   }
+
+  private CommandThing getLast() {
+    CommandThing it = this;
+    while (it.next != null) {
+      it = it.next;
+    }
+    return it;
+  }
+
+  public CommandThing then(CommandThing next) {
+    getLast().next = next;
+    return this;
+  }
+
 
   private boolean childrenFinished() {
     return children == null || children.stream().allMatch(Command::isFinished);
@@ -259,7 +274,7 @@ public class CommandThing extends Command {
    */
   @Override
   public boolean isRunning() {
-    assert children == null || children.stream().anyMatch(Command::isRunning)
+    assert children == null || children.stream().anyMatch(Command::isRunning) == super.isRunning()
         : "No children running";
     return super.isRunning();
   }

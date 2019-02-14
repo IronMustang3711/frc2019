@@ -17,7 +17,7 @@ public class DelegatingCommandTest {
 
 	@Before
 	public void setUp() throws Exception {
-		mockCommand = new MockCommand();
+		mockCommand = new MockCommand("mock");
 	}
 
 
@@ -111,6 +111,12 @@ public class DelegatingCommandTest {
 
 	@Test
 	public void testTimeout() throws InterruptedException {
+		mockCommand = new MockCommand("mock"){
+			@Override
+			protected boolean isFinished() {
+				return isTimedOut();
+			}
+		};
 		mockCommand.setTimeout(0.0001);
 
 		DelegatingCommandFixture delegatingCommand = new DelegatingCommandFixture(mockCommand);

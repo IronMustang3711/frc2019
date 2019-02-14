@@ -6,6 +6,13 @@ class MockCommand extends Command {
     int endCalls;
     int removedCalls;
 
+    boolean finished = false;
+
+    MockCommand(String name){
+        super(name);
+        setRunWhenDisabled(true);
+    }
+
     @Override
     protected void initialize() {
         initCalls++;
@@ -26,7 +33,7 @@ class MockCommand extends Command {
 
     @Override
     protected boolean isFinished() {
-        return isTimedOut();
+        return finished;
     }
 
     @Override
