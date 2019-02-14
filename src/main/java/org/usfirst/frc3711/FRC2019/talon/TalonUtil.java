@@ -55,7 +55,7 @@ public class TalonUtil {
 			//table = NetworkTableInstance.getDefault().getTable(subsystem.getName()+"Telemetry");
 			container = subsystem.tab.getLayout("talon telemetry", BuiltInLayouts.kList)
 											.withPosition(8,0)
-											.withSize(2,3)
+											.withSize(2,4)
 											.withProperties(Map.of("Label position", "LEFT"));
 
 			outputPercent = container.add("outputPercent", 0.0).getEntry(); //table.getEntry("outputPercent");
@@ -81,6 +81,13 @@ public class TalonUtil {
 			super(subsystem);
 			position = container.add("position",0.0).getEntry();//table.getEntry("position");
 			velocity = container.add("velocity",0.0).getEntry();//table.getEntry("velocity");
+		}
+
+		@Override
+		public void run() {
+			super.run();
+			position.setDouble(subsystem.talon.getSelectedSensorPosition());
+			velocity.setDouble(subsystem.talon.getSelectedSensorVelocity());
 		}
 	}
 
