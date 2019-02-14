@@ -5,6 +5,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 
 public class MotionMagicSetpoint extends Command {
 
@@ -62,6 +65,8 @@ public class MotionMagicSetpoint extends Command {
 protected void initialize() {
   super.initialize();
   subsystem.talon.selectProfileSlot(0, 0);
+  Shuffleboard.addEventMarker(getName()+"_Init",EventImportance.kNormal);
+
 }
 
   @Override
@@ -72,6 +77,8 @@ protected void initialize() {
 
   @Override
   protected void end() {
+    Shuffleboard.addEventMarker(getName()+"_End",EventImportance.kNormal);
+
    // subsystem.talon.neutralOutput();
   }
 

@@ -178,6 +178,7 @@ Status Frame Periods
     super(Elevator.class.getSimpleName(), TalonID.ELEVATOR.getId());
 
     talonTelemetry =  TalonUtil.motionMagicTelemetry(this);
+    tab.add(this);
 
      // TalonTelemetry.installClosedLoopTelemetry(this);
 

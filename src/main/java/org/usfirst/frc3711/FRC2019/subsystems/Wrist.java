@@ -172,7 +172,7 @@ private final Runnable talonTelemetry;
     talonTelemetry = TalonUtil.motionMagicTelemetry(this);
    
 
-   
+    tab.add(this);
    
          tab.add(new Command("closed loop control"){
             

@@ -20,6 +20,7 @@ import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -120,6 +121,11 @@ public class OI {
         SmartDashboard.putData("Drive with Joystick", new DrivewithJoystick());
 
        var tab = Shuffleboard.getTab("Poses");
+       var subsys = tab.getLayout("Subsystems",BuiltInLayouts.kList);
+       subsys.add(Robot.arm);
+       subsys.add(Robot.wrist);
+       subsys.add(Robot.elevator);
+
        tab.add(new RobotPoser(RobotPose.STOW));
        tab.add(new CommandSequences.RestingPose());
        tab.add(new CommandSequences.StagingPose());
