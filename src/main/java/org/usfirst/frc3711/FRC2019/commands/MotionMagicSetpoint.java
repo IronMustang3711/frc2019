@@ -84,7 +84,7 @@ protected void initialize() {
 
   @Override
   protected boolean isFinished() {
-    return isTimedOut();
+    return isTimedOut() || isCanceled();
   }
 
 

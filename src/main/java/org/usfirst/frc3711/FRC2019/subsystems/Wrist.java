@@ -80,19 +80,19 @@ public class Wrist extends TalonSubsystem {
             config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
             config.forwardSoftLimitThreshold = 100;
-            config.reverseSoftLimitThreshold = -2600;
+            config.reverseSoftLimitThreshold = -3100; //TODO:
             config.forwardSoftLimitEnable = true;
             config.reverseSoftLimitEnable = true;
 
 
-             config.openloopRamp = 1.0;
+             config.openloopRamp = 0.5;
             // config.closedloopRamp = 1.705000;
 
             config.motionCruiseVelocity = 100;
             config.motionAcceleration = 100;
 
-            config.peakOutputForward = 0.70;
-            config.peakOutputReverse = -0.6;
+            config.peakOutputForward = 1.0;
+            config.peakOutputReverse = -0.8;
 
 
 

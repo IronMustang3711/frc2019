@@ -10,6 +10,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class CommandSequences {
 
+	/*
+	hatch 0 fuel: 13000, 200, -600
+	cargo station fuel: -4000, 3133, -2949
+	hatch 1 fuel : 4000, 3133,-2949
+	hatch 1 panel : -7688,3071,-1996
+
+	*/
+
 	
 
 	public static Command elevatorToHome() {
@@ -164,48 +172,49 @@ public class CommandSequences {
 			}
 	}
 
-	public static class HatchFuel1 extends CommandGroup {
-		
-		public HatchFuel1(){
-			super(HatchFuel1.class.getSimpleName());
+	
+
+	public static class LoadingStationFuel extends CommandGroup {
+
+		public LoadingStationFuel() {
+			super(LoadingStationFuel.class.getSimpleName());
 			requires(Robot.arm);
 			requires(Robot.wrist);
 			requires(Robot.elevator);
-	
-	
+
 			double elevatorUpTimeout = 1.7;
 			double elevatorPosition = 3000;
-			
 
-			//elevator up:
-			addParallel(new MotionMagicSetpoint("Wrist Vertical",Robot.wrist,90),elevatorUpTimeout);
-			addParallel(new MotionMagicSetpoint("Arm Vertical",Robot.arm,40),elevatorUpTimeout);
-			addSequential(
-			new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition,0.5){
+			// elevator up:
+			addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
+			addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
+			addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
 				@Override
 				protected boolean isFinished() {
-					return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) <  1.0 
-					|| Math.abs(subsystem.talon.getClosedLoopError()) < 100 ;
+					return super.isFinished();
+					// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+					// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
 				}
-			}
-		);
+			});
 
-		double armOutTimeout = 3.0;
-		//Arm out, Wrist down
-		//addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator,elevatorPosition, armOutTimeout));
-		//addParallel(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
-		addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3133.0, 1.0){
-			@Override
-			protected boolean isFinished() {
-				return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) <  1.0 
-				|| Math.abs(subsystem.talon.getClosedLoopError()) < 150 ;
-			}
-		});
-		addParallel(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
+			double armOutTimeout = 3.0;
+			// Arm out, Wrist down
+			 addParallel(new MotionMagicSetpoint("Hold Elevator Position",
+			 Robot.elevator,elevatorPosition, armOutTimeout));
+		//	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
+			addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3133.0, 3.0) {
+				@Override
+				protected boolean isFinished() {
+					return super.isFinished();
+					// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+					// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
+				}
+			});
+			addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949), armOutTimeout);
 
-		addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator,-4000));
-		
-	}
+			addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4000));
+
+		}
 
 		@Override
 		protected void initialize() {
@@ -220,8 +229,203 @@ public class CommandSequences {
 			Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
 
 			RestingPose.run();
-			
+
 		}
+	}
+
+	public static class HatchFuel1 extends CommandGroup {
+
+		public HatchFuel1() {
+			super(HatchFuel1.class.getSimpleName());
+			requires(Robot.arm);
+			requires(Robot.wrist);
+			requires(Robot.elevator);
+
+			double elevatorUpTimeout = 1.7;
+			double elevatorPosition = 4000;
+
+			// elevator up:
+			addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
+			addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
+			addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
+				@Override
+				protected boolean isFinished() {
+					return super.isFinished();
+					// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+					// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
+				}
+			});
+
+			double armOutTimeout = 3.0;
+			// Arm out, Wrist down
+			 addParallel(new MotionMagicSetpoint("Hold Elevator Position",
+			 Robot.elevator,elevatorPosition, armOutTimeout));
+		//	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
+			addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3133.0, 3.0) {
+				@Override
+				protected boolean isFinished() {
+					return super.isFinished();
+					// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+					// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
+				}
+			});
+			addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949), armOutTimeout);
+
+			//addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4000));
+
+		}
+
+		@Override
+		protected void initialize() {
+			super.initialize();
+			Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+
+		}
+
+		@Override
+		protected void end() {
+			super.end();
+			Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
+
+			RestingPose.run();
+
+		}
+	}
+
+	
+	public static class HatchPanel1 extends CommandGroup {
+
+		public HatchPanel1() {
+			super(HatchPanel1.class.getSimpleName());
+			requires(Robot.arm);
+			requires(Robot.wrist);
+			requires(Robot.elevator);
+
+			double elevatorUpTimeout = 1.7;
+			double elevatorPosition = 3000;
+
+			// elevator up:
+			addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
+			addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
+			addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
+				@Override
+				protected boolean isFinished() {
+					return super.isFinished();
+					// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+					// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
+				}
+			});
+
+			double armOutTimeout = 3.0;
+			// Arm out, Wrist down
+			 addParallel(new MotionMagicSetpoint("Hold Elevator Position",
+			 Robot.elevator,elevatorPosition, armOutTimeout));
+		//	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
+			addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3017.0, 3.0) {
+				@Override
+				protected boolean isFinished() {
+					return super.isFinished();
+					// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+					// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
+				}
+			});
+			addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1996), armOutTimeout);
+
+			addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -7688));
+
+		}
+
+		@Override
+		protected void initialize() {
+			super.initialize();
+			Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+
+		}
+
+		@Override
+		protected void end() {
+			super.end();
+			Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
+
+			RestingPose.run();
+
+		}
+	}
+
+	// public static class LoadingStationFuel extends CommandGroup {
+
+	// 	public LoadingStationFuel() {
+	// 		super(LoadingStationFuel.class.getSimpleName());
+	// 		requires(Robot.arm);
+	// 		requires(Robot.wrist);
+	// 		requires(Robot.elevator);
+
+	// 		double elevatorUpTimeout = 1.7;
+	// 		double elevatorPosition = 3000;
+
+	// 		// elevator up:
+	// 		addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
+	// 		addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
+	// 		addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
+	// 			@Override
+	// 			protected boolean isFinished() {
+	// 				return super.isFinished();
+	// 				// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+	// 				// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
+	// 			}
+	// 		});
+
+	// 		double armOutTimeout = 3.0;
+	// 		// Arm out, Wrist down
+	// 		 addParallel(new MotionMagicSetpoint("Hold Elevator Position",
+	// 		 Robot.elevator,elevatorPosition, armOutTimeout));
+	// 	//	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
+	// 		addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3133.0, 3.0) {
+	// 			@Override
+	// 			protected boolean isFinished() {
+	// 				return super.isFinished();
+	// 				// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+	// 				// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
+	// 			}
+	// 		});
+	// 		addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949), armOutTimeout);
+
+	// 		addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4000));
+
+	// 	}
+
+	// 	@Override
+	// 	protected void initialize() {
+	// 		super.initialize();
+	// 		Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+
+	// 	}
+
+	// 	@Override
+	// 	protected void end() {
+	// 		super.end();
+	// 		Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
+
+	// 		RestingPose.run();
+
+	// 	}
+	// }
+
+
+	public static class Resting2 extends CommandGroup {
+		public Resting2(){
+			super(Resting2.class.getSimpleName());
+			requires(Robot.arm);
+			requires(Robot.wrist);
+			requires(Robot.elevator);
+
+
+		addSequential(new MotionMagicSetpoint("Arm->Rest",Robot.arm,0),2.0);
+		addSequential(new MotionMagicSetpoint("Wrist->Rest",Robot.wrist,0),2.0);
+		addSequential(new MotionMagicSetpoint("Elevator->Rest",Robot.elevator,0));
+
+		}
+
 	}
 
 	public static class RestingPose extends CommandGroup {

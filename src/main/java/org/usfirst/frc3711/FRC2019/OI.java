@@ -128,12 +128,16 @@ public class OI {
 
        tab.add(new RobotPoser(RobotPose.STOW));
        tab.add(new CommandSequences.RestingPose());
+       tab.add(new CommandSequences.Resting2());
        tab.add(new CommandSequences.StagingPose());
        tab.add(new CommandSequences.HatchFuel0());
-       tab.add(new CommandSequences.HatchFuel1());
        tab.add(new CommandSequences.HatchPanel0());
+       tab.add(new CommandSequences.LoadingStationFuel());
+       tab.add(new CommandSequences.HatchFuel1());
+       tab.add(new CommandSequences.HatchPanel1());
 
-       tab.add(new CommandSequences.PingPong());
+
+      // tab.add(new CommandSequences.PingPong());
 
        tab.add(new InstantCommand("Zero Encoders", ()->{
         
@@ -143,6 +147,8 @@ public class OI {
                t.getSensorCollection().setQuadraturePosition(0, 50);
            }
        }));
+    tab.add(Commands.disableAll());
+
 
 
        stow.whenPressed(new RobotPoser(RobotPose.STOW));

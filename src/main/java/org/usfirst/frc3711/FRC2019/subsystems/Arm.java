@@ -94,8 +94,8 @@ public class Arm extends TalonSubsystem {
             config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
             config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
-            config.forwardSoftLimitThreshold = 3000;
-            config.reverseSoftLimitThreshold = -3000;
+            config.forwardSoftLimitThreshold = 3200; //TODO: This is just a guess;
+            config.reverseSoftLimitThreshold = -10;
             config.forwardSoftLimitEnable = true;
             config.reverseSoftLimitEnable = true;
 

@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
+import org.usfirst.frc3711.FRC2019.Robot;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 public class Commands {
@@ -121,6 +123,15 @@ public class Commands {
       else subsystem.disableCurrentLimiting();
 
     }
+
+  }
+  public static Command disableAll(){
+    return new InstantCommand("Disable All"){
+      @Override
+      protected void execute() {
+        Robot.disableAll();
+      }
+    };
 
   }
 
