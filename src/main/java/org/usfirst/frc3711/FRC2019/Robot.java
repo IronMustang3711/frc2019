@@ -140,7 +140,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+      Shuffleboard.startRecording();
     }
+
 
     /**
      * This function is called periodically during operator control
