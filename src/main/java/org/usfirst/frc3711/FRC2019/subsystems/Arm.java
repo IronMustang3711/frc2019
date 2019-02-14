@@ -195,7 +195,7 @@ Status Frame Periods
   private final NetworkTableEntry percentOutput;
   private final NetworkTableEntry lowPowerMode;
 
-  Timer timer;
+  private long lowPowerStartTime;
 
   public Arm() {
     super(Arm.class.getSimpleName(), TalonID.ARM.getId());
@@ -218,7 +218,6 @@ Status Frame Periods
                        .withWidget(BuiltInWidgets.kBooleanBox)
                        .getEntry();
 
-    timer = new Timer();
     tab.add(new Command("closed loop control") {
 
       {
@@ -236,8 +235,8 @@ Status Frame Periods
         talon.configureSlot(configuration, slot, 50);
 
         lowPowerMode.setBoolean(lowPower = false);
-        timer.reset();
-        timer.start();
+        lowPowerStartTime = System.currentTimeMillis();
+
       }
 
       @Override
@@ -245,19 +244,21 @@ Status Frame Periods
 
         double sp = ntSetpoint.getDouble(talon.getSelectedSensorPosition());
 
+        long elapsed = System.currentTimeMillis() - lowPowerStartTime;
+
         if (Math.abs(talon.getErrorDerivative()) < 4.0
-                && timer.hasPeriodPassed(0.5)) {
+                &&  elapsed > 500) {
           if (!lowPower) {
-            System.out.println("low power @ " + timer.get()
+            System.out.println("low power @ " + elapsed
                                    + " E=" + talon.getClosedLoopError()
                                    + " dE=" + talon.getErrorDerivative());
             lowPowerMode.setBoolean(lowPower = true);
             talon.configVoltageCompSaturation(5.0);
-            enableCurrentLimiting();
+           // enableCurrentLimiting();
           }
         } else {
           if (lowPower) {
-            System.out.println("full power @ " + timer.get()
+            System.out.println("full power @ " + elapsed
                                    + " E=" + talon.getClosedLoopError()
                                    + " dE=" + talon.getErrorDerivative());
             lowPowerMode.setBoolean(lowPower = false);
@@ -324,7 +325,7 @@ Status Frame Periods
     talon.setIntegralAccumulator(0);
     disableCurrentLimiting();
     enableCurrentLimiting();
-    timer.reset();
+    lowPowerStartTime = System.currentTimeMillis();
   }
 
 
