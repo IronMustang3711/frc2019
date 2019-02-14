@@ -9,23 +9,11 @@ import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 public class MotionMagicSetpoint extends Command {
 
-//  public static class Wrapper extends SendableImpl {
-//    public final MotionMagicSetpoint command;
-//
-//    public Wrapper(TalonSubsystem subsystem){
-//
-//      this.command = new MotionMagicSetpoint(subsystem);
-//    }
-//
-//    @Override
-//    public void initSendable(SendableBuilder builder) {
-//     command.initSendable(builder); //TODO????
-//      builder.addDoubleProperty("setpoint", command::getSetpoint,command::setSetpoint);
-//    }
-//  }
-
   protected final TalonSubsystem subsystem;
   private double setpoint;
+
+  private long startTime;
+  private double initialPosition;
 
   public MotionMagicSetpoint(String name, TalonSubsystem subsystem, double setpoint) {
     super(subsystem.getName() + ":" + name, subsystem);
@@ -39,31 +27,37 @@ public class MotionMagicSetpoint extends Command {
     this.subsystem = subsystem;
     this.setpoint = setpoint;
     requires(subsystem);
-
-
-    // this.setpoint = subsystem.talon.getSelectedSensorPosition();
-
   }
-
-//  @Override
-//  protected void initialize() {
-//      subsystem.configMotionMagicClosedLoop();
-//  }
 
   public void setSetpoint(double setpoint) {
     this.setpoint = setpoint;
-    execute();
+    //execute();
   }
 
   public double getSetpoint() {
     return setpoint;
   }
 
+  public double getElapsedTime(){
+    long now = System.currentTimeMillis();
+    return (now - startTime) / 1000.0;
+  }
+
+  public double getMotionProgress(){
+    double totalDistance = setpoint - initialPosition;
+    double trajPos = subsystem.talon.getActiveTrajectoryPosition();
+    return (trajPos - initialPosition) / totalDistance;
+
+  }
+
+
   @Override
   protected void initialize() {
     super.initialize();
+    initialPosition = subsystem.talon.getSelectedSensorPosition();
+    startTime = System.currentTimeMillis();
     subsystem.talon.selectProfileSlot(0, 0);
-    Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+    Shuffleboard.addEventMarker("MM_"+getName() + "_Init", EventImportance.kNormal);
 
   }
 
@@ -75,9 +69,7 @@ public class MotionMagicSetpoint extends Command {
 
   @Override
   protected void end() {
-    Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
-
-    // subsystem.talon.neutralOutput();
+    Shuffleboard.addEventMarker("MM_"+getName() + "_End", EventImportance.kNormal);
   }
 
   @Override
