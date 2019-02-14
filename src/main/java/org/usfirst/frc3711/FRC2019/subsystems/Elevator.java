@@ -123,9 +123,9 @@ what voltage represents 100% output.
               /*
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
-      config.peakCurrentLimit = 8;
+      config.peakCurrentLimit = 820;
       config.peakCurrentDuration = 1000;
-      config.continuousCurrentLimit = 3;
+      config.continuousCurrentLimit = 1;
 
       config.slot0 = PIDSlots.configurationForSlot(0);
       config.slot1 = PIDSlots.configurationForSlot(1);

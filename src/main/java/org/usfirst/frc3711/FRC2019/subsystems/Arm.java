@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import org.usfirst.frc3711.FRC2019.TalonID;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
-import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
+import org.usfirst.frc3711.FRC2019.talon.TalonTelemetry;
 
 import java.util.Map;
 
@@ -138,8 +138,8 @@ what voltage represents 100% output.
               /*
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
-            config.peakCurrentLimit = 4;
-            config.peakCurrentDuration = 5000;
+            config.peakCurrentLimit = 20;
+            config.peakCurrentDuration = 1000;
             config.continuousCurrentLimit = 1;
 
             config.slot0 = PIDSlots.configurationForSlot(0);
@@ -186,7 +186,7 @@ what voltage represents 100% output.
 
     
 
-    private final Runnable talonTelemetry;
+    private final TalonTelemetry.MotionMagicTelemetry mmTelemetry;
     private final SendableChooser<ControlMode> modeChooser;
     private final NetworkTableEntry percentOutput;
     private final NetworkTableEntry lowPowerMode;
@@ -195,7 +195,7 @@ what voltage represents 100% output.
 
     public Arm() {
       super(Arm.class.getSimpleName(), TalonID.ARM.getId());
-      talonTelemetry =  TalonUtil.motionMagicTelemetry(this);
+      mmTelemetry = new TalonTelemetry.MotionMagicTelemetry(this);
       modeChooser = new SendableChooser<>();
       addChild("mode chooser",modeChooser);
       modeChooser.setDefaultOption("MotionMagic", ControlMode.MotionMagic);
@@ -338,7 +338,7 @@ what voltage represents 100% output.
     @Override
     public void periodic() {
         super.periodic();
-        talonTelemetry.run();
+        mmTelemetry.run();
     }
 
 }
