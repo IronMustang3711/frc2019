@@ -1,71 +1,14 @@
-package org.usfirst.frc3711.FRC2019.commands;
+package org.usfirst.frc3711.FRC2019.commands.util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc3711.FRC2019.Robot;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 import java.util.function.BooleanSupplier;
 
 public class Commands {
-  public abstract static class AbstractCommand extends Command {
-    public AbstractCommand() {
-    }
-
-    public AbstractCommand(String name) {
-      super(name);
-    }
-
-    public AbstractCommand(double timeout) {
-      super(timeout);
-    }
-
-    public AbstractCommand(Subsystem subsystem) {
-      super(subsystem);
-    }
-
-    public AbstractCommand(String name, Subsystem subsystem) {
-      super(name, subsystem);
-    }
-
-    public AbstractCommand(double timeout, Subsystem subsystem) {
-      super(timeout, subsystem);
-    }
-
-    public AbstractCommand(String name, double timeout) {
-      super(name, timeout);
-    }
-
-    public AbstractCommand(String name, double timeout, Subsystem subsystem) {
-      super(name, timeout, subsystem);
-    }
-
-    public Command withTimeout(double timeout) {
-      super.setTimeout(timeout);
-      return this;
-    }
-
-    @Override
-    protected boolean isFinished() {
-      return isTimedOut() || isCanceled();
-    }
-  }
-
-  public static class TalonSubsystemCommand extends AbstractCommand {
-    protected final TalonSubsystem subsystem;
-
-    public TalonSubsystemCommand(String name, TalonSubsystem subsystem, double timeout) {
-      super(subsystem.getName() + ":" + name, timeout, subsystem);
-      this.subsystem = subsystem;
-    }
-
-    TalonSubsystemCommand(String name, TalonSubsystem subsystem) {
-      super(subsystem.getName() + ":" + name, subsystem);
-      this.subsystem = subsystem;
-    }
-  }
 
   public static Command setpointCommand(final String name, final TalonSubsystem subsystem, final double setpoint, final ControlMode mode) {
     return new SetpointCommand(name, subsystem, setpoint, mode);
@@ -75,9 +18,9 @@ public class Commands {
     return new SetpointCommand(name, subsystem, setpoint, ControlMode.Position);
   }
 
-  public static Command motionMagicSetpointSetpointCommand(String name, TalonSubsystem subsystem, double setpoint) {
-    return new SetpointCommand(name, subsystem, setpoint, ControlMode.MotionMagic);
-  }
+//  public static Command motionMagicSetpointSetpointCommand(String name, TalonSubsystem subsystem, double setpoint) {
+//    return new SetpointCommand(name, subsystem, setpoint, ControlMode.MotionMagic);
+//  }
 
   static class SetpointCommand extends TalonSubsystemCommand {
     final double setpoint;
@@ -102,8 +45,6 @@ public class Commands {
     protected void execute() {
       subsystem.talon.set(mode, setpoint);
     }
-
-
   }
 
   public static Command enableCurrentLimitCommand(TalonSubsystem subsystem) {
@@ -125,7 +66,6 @@ public class Commands {
       this.enable = enable;
     }
 
-    // Called once when the command executes
     @Override
     protected void initialize() {
       if (enable) subsystem.enableCurrentLimiting();
@@ -167,22 +107,6 @@ public class Commands {
 
   public static Command runWhenTrue(Command c, BooleanSupplier guard){
     return new Command(){
-
-      /**
-       * Returns whether this command is finished. If it is, then the command will be removed and {@link
-       * Command#end() end()} will be called.
-       *
-       * <p>It may be useful for a team to reference the {@link Command#isTimedOut() isTimedOut()}
-       * method for time-sensitive commands.
-       *
-       * <p>Returning false will result in the command never ending automatically. It may still be
-       * cancelled manually or interrupted by another command. Returning true will result in the
-       * command executing once and finishing immediately. We recommend using {@link InstantCommand}
-       * for this.
-       *
-       * @return whether this command is finished.
-       * @see Command#isTimedOut() isTimedOut()
-       */
       @Override
       protected boolean isFinished() {
         return guard.getAsBoolean();

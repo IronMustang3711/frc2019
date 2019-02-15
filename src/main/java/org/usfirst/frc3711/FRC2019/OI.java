@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc3711.FRC2019.commands.*;
+import org.usfirst.frc3711.FRC2019.commands.sequences.*;
+import org.usfirst.frc3711.FRC2019.commands.util.Commands;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 import java.util.Arrays;
@@ -122,16 +124,16 @@ public class OI {
     subsys.add(Robot.elevator);
 
     tab.add(new RobotPoser(RobotPose.STOW));
-    tab.add(new CommandSequences.RestingPose());
-    tab.add(new CommandSequences.Resting2());
-    tab.add(new CommandSequences.StagingPose());
-    tab.add(new CommandSequences.HatchFuel0());
-    tab.add(new CommandSequences.HatchPanel0());
-    tab.add(new CommandSequences.LoadingStationFuel());
-    tab.add(new CommandSequences.LoadingStationFuelToHome());
-    tab.add(new CommandSequences.HatchFuel1());
-    tab.add(new CommandSequences.HatchPanel1ToHome());
-    tab.add(new CommandSequences.HatchPanel1());
+    tab.add(new RestingPose());
+    tab.add(new Resting2());
+    tab.add(new StagingPose());
+    tab.add(new HatchFuel0());
+    tab.add(new HatchPanel0());
+    tab.add(new LoadingStationFuel());
+    tab.add(new LoadingStationFuelToHome());
+    tab.add(new HatchFuel1());
+    tab.add(new HatchPanel1ToHome());
+    tab.add(new HatchPanel1());
 
 
     // tab.add(new CommandSequences.PingPong());

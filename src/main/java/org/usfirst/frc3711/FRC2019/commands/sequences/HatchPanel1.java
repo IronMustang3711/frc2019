@@ -1,0 +1,66 @@
+package org.usfirst.frc3711.FRC2019.commands.sequences;
+
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import org.usfirst.frc3711.FRC2019.Robot;
+import org.usfirst.frc3711.FRC2019.commands.util.MotionMagicSetpoint;
+
+public class HatchPanel1 extends CommandGroup {
+
+  public HatchPanel1() {
+    super(HatchPanel1.class.getSimpleName());
+    requires(Robot.arm);
+    requires(Robot.wrist);
+    requires(Robot.elevator);
+
+    double elevatorUpTimeout = 1.7;
+    double elevatorPosition = 3000;
+
+    // elevator up:
+    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
+    addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
+    addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
+      @Override
+      protected boolean isFinished() {
+        return super.isFinished();
+        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
+      }
+    });
+
+    double armOutTimeout = 3.0;
+    // Arm out, Wrist down
+    addParallel(new MotionMagicSetpoint("Hold Elevator Position",
+        Robot.elevator, elevatorPosition, armOutTimeout));
+    //	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
+    addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3017.0, 3.0) {
+      @Override
+      protected boolean isFinished() {
+        return super.isFinished();
+        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
+      }
+    });
+    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1996), armOutTimeout);
+
+    addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -7688));
+
+  }
+
+  @Override
+  protected void initialize() {
+    super.initialize();
+    Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+
+  }
+
+  @Override
+  protected void end() {
+    super.end();
+    Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
+
+   // RestingPose.run();
+
+  }
+}

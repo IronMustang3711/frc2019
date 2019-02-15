@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import org.usfirst.frc3711.FRC2019.commands.Commands;
+import org.usfirst.frc3711.FRC2019.commands.util.Commands;
 
 public abstract class TalonSubsystem extends RobotSubsystem {
 
