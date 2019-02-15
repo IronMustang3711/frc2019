@@ -81,7 +81,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     Shuffleboard.stopRecording();
-    disableWatchdog();
+    disableAll();
   }
 
   public static void disableAll() {

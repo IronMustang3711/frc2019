@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc3711.FRC2019.Robot;
 
 public class CommandSequences {
@@ -84,7 +85,7 @@ public class CommandSequences {
     }
   }
 
-  public static class HatchPanel0 extends CommandGroup {
+  public static class HatchPanel0 extends Command {
     Command wristVertical = new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10,1.0);
     Command armVertical = new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,1.0);
     MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 2000, 1.0){
@@ -92,15 +93,16 @@ public class CommandSequences {
       @Override
       protected void execute() {
         super.execute();
-        double motionProgress = getMotionProgress();
-        System.out.println("Motion progress: "+motionProgress);
-        DriverStation.reportWarning("Motion progress: "+motionProgress,false);
+//        double motionProgress = getMotionProgress();
+//        System.out.println("Motion progress: "+motionProgress);
+//        DriverStation.reportWarning("Motion progress: "+motionProgress,false);
+//        SmartDashboard.putNumber("motion progress",motionProgress);
       }
 
       @Override
       protected boolean isFinished() {
         double motionProgress = getMotionProgress();
-        System.out.println("Motion progress: "+motionProgress);
+        //System.out.println("Motion progress: "+motionProgress);
         return motionProgress >= 0.99 || super.isFinished();
       }
     };
@@ -127,20 +129,40 @@ public class CommandSequences {
       armVertical.start();
       elevatorUp.start();
       elevatorHold.start();
-      armOut.start();;
+      armOut.start();
 
+    }
+
+    /**
+     * Returns whether this command is finished. If it is, then the command will be removed and {@link
+     * Command#end() end()} will be called.
+     *
+     * <p>It may be useful for a team to reference the {@link Command#isTimedOut() isTimedOut()}
+     * method for time-sensitive commands.
+     *
+     * <p>Returning false will result in the command never ending automatically. It may still be
+     * cancelled manually or interrupted by another command. Returning true will result in the
+     * command executing once and finishing immediately. We recommend using {@link InstantCommand}
+     * for this.
+     *
+     * @return whether this command is finished.
+     * @see Command#isTimedOut() isTimedOut()
+     */
+    @Override
+    protected boolean isFinished() {
+      return false;
     }
 
     @Override
     protected void end() {
       super.end();
       Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
-      RestingPose.run();
+     // RestingPose.run();
     }
 
   }
 
-  public static class HatchFuel0 extends CommandGroup {
+  public static class HatchFuel0 extends Command {
 
     Command wristVertical =  new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90);
     Command armVertical = new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40);
@@ -196,6 +218,26 @@ public class CommandSequences {
       wristDown.start();
       armOut.start();
 
+    }
+
+    /**
+     * Returns whether this command is finished. If it is, then the command will be removed and {@link
+     * Command#end() end()} will be called.
+     *
+     * <p>It may be useful for a team to reference the {@link Command#isTimedOut() isTimedOut()}
+     * method for time-sensitive commands.
+     *
+     * <p>Returning false will result in the command never ending automatically. It may still be
+     * cancelled manually or interrupted by another command. Returning true will result in the
+     * command executing once and finishing immediately. We recommend using {@link InstantCommand}
+     * for this.
+     *
+     * @return whether this command is finished.
+     * @see Command#isTimedOut() isTimedOut()
+     */
+    @Override
+    protected boolean isFinished() {
+      return false;
     }
 
     @Override
@@ -265,7 +307,14 @@ public class CommandSequences {
 
     }
   }
-
+  public static class LoadingStationFuelToHome extends CommandGroup {
+    public LoadingStationFuelToHome(){
+      super(LoadingStationFuelToHome.class.getSimpleName());
+      addSequential(new MotionMagicSetpoint("Elevator up",Robot.elevator,4000,2.5));
+      addParallel(new MotionMagicSetpoint("Wrist Home",Robot.wrist,10,2.5));
+      addParallel(new MotionMagicSetpoint("Arm Home",Robot.arm,10,2.5));
+    }
+  }
   public static class HatchFuel1 extends CommandGroup {
 
     public HatchFuel1() {
@@ -320,7 +369,7 @@ public class CommandSequences {
       super.end();
       Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
 
-      RestingPose.run();
+     // RestingPose.run();
 
     }
   }
@@ -380,7 +429,7 @@ public class CommandSequences {
       super.end();
       Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
 
-      RestingPose.run();
+     // RestingPose.run();
 
     }
   }
