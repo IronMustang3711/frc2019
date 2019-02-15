@@ -1,5 +1,6 @@
 package org.usfirst.frc3711.FRC2019.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
@@ -84,34 +85,36 @@ public class CommandSequences {
   }
 
   public static class HatchPanel0 extends CommandGroup {
+    Command wristVertical = new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10,1.0);
+    Command armVertical = new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,1.0);
+    MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 2000, 1.0){
+
+      @Override
+      protected void execute() {
+        super.execute();
+        double motionProgress = getMotionProgress();
+        System.out.println("Motion progress: "+motionProgress);
+        DriverStation.reportWarning("Motion progress: "+motionProgress,false);
+      }
+
+      @Override
+      protected boolean isFinished() {
+        double motionProgress = getMotionProgress();
+        System.out.println("Motion progress: "+motionProgress);
+        return motionProgress >= 0.99 || super.isFinished();
+      }
+    };
+
+    Command elevatorHold = Commands.runWhenTrue(Commands.constantOutput(Robot.elevator,0.1),
+        ()-> elevatorUp.isCompleted());
+
+    Command armOut = Commands.runWhenTrue(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600),
+        () -> elevatorUp.getMotionProgress() >= 0.5);
+
+
+
     public HatchPanel0() {
       super(HatchPanel0.class.getSimpleName());
-      requires(Robot.arm);
-      requires(Robot.wrist);
-      requires(Robot.elevator);
-
-
-      double elevatorUpTimeout = 1.0;
-      double elevatorPosition = 2000;
-
-      addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10), elevatorUpTimeout);
-      addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10), elevatorUpTimeout);
-      addSequential(
-          new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.0) {
-            @Override
-            protected boolean isFinished() {
-              double motionProgress = getMotionProgress();
-              System.out.println("Motion progress: "+motionProgress);
-              return motionProgress >= 0.8 || super.isFinished();
-            }
-          }
-      );
-
-
-      //addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator, elevatorPosition));
-      addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
-      addSequential(new MotionMagicSetpoint("Hold Wrist", Robot.wrist, 10));
-
 
     }
 
@@ -119,6 +122,12 @@ public class CommandSequences {
     protected void initialize() {
       super.initialize();
       Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+
+      wristVertical.start();
+      armVertical.start();
+      elevatorUp.start();
+      elevatorHold.start();
+      armOut.start();;
 
     }
 
@@ -133,32 +142,47 @@ public class CommandSequences {
 
   public static class HatchFuel0 extends CommandGroup {
 
+    Command wristVertical =  new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90);
+    Command armVertical = new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40);
+    MotionMagicSetpoint elevatorUp =  new MotionMagicSetpoint("bring elevator up", Robot.elevator, 13000, 2.5) {
+      @Override
+      protected boolean isFinished() {
+        return getMotionProgress() >= .99 || super.isFinished();
+      }
+    };
+
+    Command wristDown = Commands.runWhenTrue(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -600),
+        ()-> elevatorUp.getMotionProgress() > 0.7);
+
+    Command armOut = Commands.runWhenTrue(new MotionMagicSetpoint("Bring  Out", Robot.arm, 200),
+        ()->elevatorUp.getMotionProgress() >= 0.7);
+
     public HatchFuel0() {
       super(HatchFuel0.class.getSimpleName());
-      requires(Robot.arm);
-      requires(Robot.wrist);
-      requires(Robot.elevator);
+//      requires(Robot.arm);
+//      requires(Robot.wrist);
+//      requires(Robot.elevator);
 
+//
+//      double elevatorUpTimeout = 1.7;
+//      double elevatorPosition = 13000;
+//
+//      addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
+//      addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
+//      addSequential(
+//          new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 2.5) {
+//            @Override
+//            protected boolean isFinished() {
+//              return super.isFinished()
+//                         || getElapsedTime() > 0.5 && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+//                         || Math.abs(subsystem.talon.getClosedLoopError()) < 100;
+//            }
+//          }
+//      );
 
-      double elevatorUpTimeout = 1.7;
-      double elevatorPosition = 13000;
-
-      addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
-      addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
-      addSequential(
-          new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 2.5) {
-            @Override
-            protected boolean isFinished() {
-              return super.isFinished()
-                         || getElapsedTime() > 0.5 && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-                         || Math.abs(subsystem.talon.getClosedLoopError()) < 100;
-            }
-          }
-      );
-
-      //addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator, elevatorPosition));
-      addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -600));
-      addParallel(new MotionMagicSetpoint("Bring  Out", Robot.arm, 200));
+//      //addParallel(new MotionMagicSetpoint("Hold Elevator Position", Robot.elevator, elevatorPosition));
+//      addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -600));
+//      addParallel(new MotionMagicSetpoint("Bring  Out", Robot.arm, 200));
 
     }
 
@@ -166,6 +190,12 @@ public class CommandSequences {
     protected void initialize() {
       super.initialize();
       Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+      wristVertical.start();
+      armVertical.start();
+      elevatorUp.start();
+      wristDown.start();
+      armOut.start();
+
     }
 
     @Override
@@ -422,10 +452,9 @@ public class CommandSequences {
       requires(Robot.wrist);
       requires(Robot.elevator);
 
-
-      addSequential(new MotionMagicSetpoint("Arm->Rest", Robot.arm, 0), 2.0);
+      addSequential(new MotionMagicSetpoint("Elevator->Rest", Robot.elevator, 100,1.5));
       addSequential(new MotionMagicSetpoint("Wrist->Rest", Robot.wrist, 0), 2.0);
-      addSequential(new MotionMagicSetpoint("Elevator->Rest", Robot.elevator, 0));
+      addSequential(new MotionMagicSetpoint("Arm->Rest", Robot.arm, 0), 2.0);
 
     }
 
