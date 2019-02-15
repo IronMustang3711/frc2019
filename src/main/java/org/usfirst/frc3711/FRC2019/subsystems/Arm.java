@@ -106,7 +106,7 @@ public class Arm extends TalonSubsystem {
       config.reverseSoftLimitEnable = true;
 
 
-      config.openloopRamp = 1.023000; //TODO: configure this / or dont?
+      config.openloopRamp = 1.0;
       // config.closedloopRamp = 1.705000;
 
       config.motionCruiseVelocity = 70;

@@ -77,7 +77,7 @@ public class Wrist extends TalonSubsystem {
       config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
       config.forwardSoftLimitThreshold = 100;
-      config.reverseSoftLimitThreshold = -3100; //TODO:
+      config.reverseSoftLimitThreshold = -3100; //TODO: verify correctness
       config.forwardSoftLimitEnable = true;
       config.reverseSoftLimitEnable = true;
 
@@ -105,7 +105,7 @@ public class Wrist extends TalonSubsystem {
       config.nominalOutputReverse = 0;
 
 
-      // config.neutralDeadband = 0.199413; //TODO: configure
+      // config.neutralDeadband = 0.199413;
 
 
 

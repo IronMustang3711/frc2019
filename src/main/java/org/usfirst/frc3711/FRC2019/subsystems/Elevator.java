@@ -105,7 +105,7 @@ public class Elevator extends TalonSubsystem {
       config.nominalOutputReverse = 0;
 
 
-      // config.neutralDeadband = 0.199413; //TODO: configure
+
 
 
 
