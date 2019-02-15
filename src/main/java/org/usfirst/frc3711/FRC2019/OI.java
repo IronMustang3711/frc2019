@@ -132,7 +132,7 @@ public class OI {
     tab.add(new LoadingStationFuel());
     tab.add(new LoadingStationFuelToHome());
     tab.add(new HatchFuel1());
-    tab.add(new HatchPanel1ToHome());
+    tab.add(new Level1ToHome());
     tab.add(new HatchPanel1());
 
 
