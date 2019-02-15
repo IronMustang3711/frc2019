@@ -224,6 +224,7 @@ Status Frame Periods
       boolean lowPower;
 
 
+      @SuppressWarnings("deprecation") //for talon.configureSlot
       @Override
       protected void initialize() {
         ControlMode mode = modeChooser.getSelected();
