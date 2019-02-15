@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommandThing extends Command {
 
-  private List<Command> children;
+  private final List<Command> children;
   private CommandThing next;
 
   public CommandThing(CommandThing next, Command... children) {

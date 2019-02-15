@@ -7,8 +7,8 @@ import org.usfirst.frc3711.FRC2019.commands.util.MotionMagicSetpoint;
 public class CommandSequences {
 
   public static class PingPong extends Command {
-    Ping ping;
-    Pong pong;
+    final Ping ping;
+    final Pong pong;
 
     public PingPong() {
       super("PingPong");
@@ -40,7 +40,7 @@ public class CommandSequences {
   public static class Ping extends MotionMagicSetpoint {
     Command pong;
 
-    public Ping() {
+    Ping() {
       super("Ping", Robot.arm, 2000, 5.0);
     }
 
@@ -56,7 +56,7 @@ public class CommandSequences {
   public static class Pong extends MotionMagicSetpoint {
     Command ping;
 
-    public Pong() {
+    Pong() {
       super("Pong", Robot.arm, 0, 5.0);
     }
 

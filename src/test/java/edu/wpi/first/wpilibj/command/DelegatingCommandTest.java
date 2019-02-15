@@ -7,16 +7,15 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 
-@SuppressWarnings("UnusedLabel")
 public class DelegatingCommandTest {
 
-	MockCommand mockCommand;
+	private MockCommand mockCommand;
 
 
 
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		mockCommand = new MockCommand("mock");
 	}
 
@@ -151,7 +150,7 @@ public class DelegatingCommandTest {
 		int endCalls;
 		int removedCalls;
 
-		public DelegatingCommandFixture(Command delegate) {
+		DelegatingCommandFixture(Command delegate) {
 			super(delegate);
 		}
 

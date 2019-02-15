@@ -48,4 +48,9 @@ public class Ejector extends TalonSubsystem {
   public void stop() {
     talon.neutralOutput();
   }
+
+  @Override
+  public void periodic() {
+    talonTelemetry.run();
+  }
 }

@@ -9,7 +9,7 @@ import org.usfirst.frc3711.FRC2019.commands.util.MotionMagicSetpoint;
 
 public class RestingPose extends CommandGroup {
 
-  static final RestingPose INSTANCE = new RestingPose();
+  private static final RestingPose INSTANCE = new RestingPose();
 
   static Command run() {
     INSTANCE.cancel();

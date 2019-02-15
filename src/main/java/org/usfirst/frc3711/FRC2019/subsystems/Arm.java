@@ -17,7 +17,6 @@ import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -75,12 +74,10 @@ public class Arm extends TalonSubsystem {
       }
 
       public static int slotForMode(ControlMode mode) {
-        switch (mode) {
-          case MotionMagic:
-            return 1;
-          default:
-            return 0;
+        if (mode == ControlMode.MotionMagic) {
+          return 1;
         }
+        return 0;
       }
     }
 

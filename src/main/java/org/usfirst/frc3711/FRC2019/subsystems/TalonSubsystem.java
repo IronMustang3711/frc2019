@@ -23,9 +23,8 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     ntSetpoint = tab.add("setpoint", 0.0).getEntry();
     currentLimitingEnabled = tab.add("Current Limiting", true).getEntry();
 
-    ntSetpoint.addListener(entryNotification -> {
-      onSetpointChange(entryNotification.value.getDouble());
-    }, EntryListenerFlags.kUpdate);
+    ntSetpoint.addListener(entryNotification -> onSetpointChange(entryNotification.value.getDouble()),
+        EntryListenerFlags.kUpdate);
     configureTalon();
 
   }

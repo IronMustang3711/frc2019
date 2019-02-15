@@ -8,7 +8,7 @@ import java.util.Enumeration;
 public class DelegatingCommand extends Command {
 
   @SuppressWarnings("WeakerAccess")
-  protected Command delegate;
+  protected final Command delegate;
 
   public DelegatingCommand(Command delegate) {
     super("->" + delegate.getName());

@@ -1,9 +1,7 @@
 package org.usfirst.frc3711.FRC2019.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc3711.FRC2019.Robot;
-import org.usfirst.frc3711.FRC2019.commands.util.Commands;
 
 public class EjectorCommands {
 

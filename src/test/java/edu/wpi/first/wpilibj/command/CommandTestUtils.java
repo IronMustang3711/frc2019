@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class CommandTestUtils {
+class CommandTestUtils {
 
     static void checkEq(Command a, Command b){
         assertEquals("finished",a.isFinished(),b.isFinished());

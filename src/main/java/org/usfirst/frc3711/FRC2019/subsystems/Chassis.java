@@ -20,18 +20,18 @@ import java.util.List;
 public class Chassis extends RobotSubsystem {
 
 
-  private WPI_TalonSRX leftFront;
-  private WPI_TalonSRX leftRear;
+  private final WPI_TalonSRX leftFront;
+  private final WPI_TalonSRX leftRear;
 
-  private WPI_TalonSRX rightFront;
-  private WPI_TalonSRX rightRear;
+  private final WPI_TalonSRX rightFront;
+  private final WPI_TalonSRX rightRear;
 
-  private DifferentialDrive drive;
-  public ShuffleboardTab tab;
+  private final DifferentialDrive drive;
+  public final ShuffleboardTab tab;
   //private NetworkTableEntry leftOutput, leftRearOutput, rightOutput,rightRearOutput;
 
 
-  private List<WPI_TalonSRX> talons;
+  private final List<WPI_TalonSRX> talons;
 
 
   public Chassis() {

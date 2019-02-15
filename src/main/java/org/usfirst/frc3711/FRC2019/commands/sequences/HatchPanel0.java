@@ -8,9 +8,9 @@ import org.usfirst.frc3711.FRC2019.commands.util.Commands;
 import org.usfirst.frc3711.FRC2019.commands.util.MotionMagicSetpoint;
 
 public class HatchPanel0 extends Command {
-  Command wristVertical = new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10,1.0);
-  Command armVertical = new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,1.0);
-  MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 2000, 1.0){
+  private final Command wristVertical = new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10,1.0);
+  private final Command armVertical = new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,1.0);
+  private final MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 2000, 1.0){
 
     @Override
     protected void execute() {
@@ -27,12 +27,12 @@ public class HatchPanel0 extends Command {
     }
   };
 
-  Command armOut = Commands.runWhenTrue(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600),
+  private final Command armOut = Commands.runWhenTrue(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600),
       () -> elevatorUp.getMotionProgress() >= 0.3);
 
   //TODO may be too low
-  Command elevatorDown = Commands.runWhenTrue(new MotionMagicSetpoint("bring elevator up", Robot.elevator, -800, 1.0),
-      ()->armOut.isCompleted());
+  private final Command elevatorDown = Commands.runWhenTrue(new MotionMagicSetpoint("bring elevator up", Robot.elevator, -800, 1.0),
+      armOut::isCompleted);
 
 //    Command elevatorHold = Commands.runWhenTrue(Commands.constantOutput(Robot.elevator,0.2),
 //        ()-> elevatorUp.isCompleted() && elevatorDown.isCompleted());

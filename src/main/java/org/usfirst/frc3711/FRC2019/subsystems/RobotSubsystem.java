@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class RobotSubsystem extends Subsystem {
 
   public final ShuffleboardTab tab;

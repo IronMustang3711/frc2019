@@ -12,7 +12,7 @@ import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
 public class ResetTalonEncoder extends InstantCommand {
 
-  final TalonSubsystem subsystem;
+  private final TalonSubsystem subsystem;
 
   public ResetTalonEncoder(TalonSubsystem subsystem) {
     super("reset encoder(" + subsystem.getName() + ")");
