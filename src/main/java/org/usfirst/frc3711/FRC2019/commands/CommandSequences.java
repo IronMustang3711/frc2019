@@ -106,7 +106,7 @@ public class CommandSequences {
     };
 
     Command elevatorHold = Commands.runWhenTrue(Commands.constantOutput(Robot.elevator,0.1),
-        ()-> elevatorUp.isCompleted());
+        ()-> !elevatorUp.isRunning());
 
     Command armOut = Commands.runWhenTrue(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600),
         () -> elevatorUp.getMotionProgress() >= 0.5);
