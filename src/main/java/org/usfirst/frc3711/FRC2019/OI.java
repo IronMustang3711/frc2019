@@ -130,6 +130,7 @@ public class OI {
     tab.add(new CommandSequences.LoadingStationFuel());
     tab.add(new CommandSequences.LoadingStationFuelToHome());
     tab.add(new CommandSequences.HatchFuel1());
+    tab.add(new CommandSequences.HatchPanel1ToHome());
     tab.add(new CommandSequences.HatchPanel1());
 
 

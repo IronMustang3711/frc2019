@@ -101,17 +101,21 @@ public class CommandSequences {
 
       @Override
       protected boolean isFinished() {
-        double motionProgress = getMotionProgress();
-        //System.out.println("Motion progress: "+motionProgress);
-        return motionProgress >= 0.99 || super.isFinished();
+      return isMotionFinished() || super.isFinished();
       }
     };
 
-    Command elevatorHold = Commands.runWhenTrue(Commands.constantOutput(Robot.elevator,0.1),
-        ()-> !elevatorUp.isRunning());
-
     Command armOut = Commands.runWhenTrue(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600),
-        () -> elevatorUp.getMotionProgress() >= 0.5);
+        () -> elevatorUp.getMotionProgress() >= 0.3);
+
+    //TODO may be too low
+    Command elevatorDown = Commands.runWhenTrue(new MotionMagicSetpoint("bring elevator up", Robot.elevator, -800, 1.0),
+        ()->armOut.isCompleted());
+
+//    Command elevatorHold = Commands.runWhenTrue(Commands.constantOutput(Robot.elevator,0.2),
+//        ()-> elevatorUp.isCompleted() && elevatorDown.isCompleted());
+
+
 
 
 
@@ -128,29 +132,16 @@ public class CommandSequences {
       wristVertical.start();
       armVertical.start();
       elevatorUp.start();
-      elevatorHold.start();
+      elevatorDown.start();
+    //  elevatorHold.start();
       armOut.start();
 
     }
 
-    /**
-     * Returns whether this command is finished. If it is, then the command will be removed and {@link
-     * Command#end() end()} will be called.
-     *
-     * <p>It may be useful for a team to reference the {@link Command#isTimedOut() isTimedOut()}
-     * method for time-sensitive commands.
-     *
-     * <p>Returning false will result in the command never ending automatically. It may still be
-     * cancelled manually or interrupted by another command. Returning true will result in the
-     * command executing once and finishing immediately. We recommend using {@link InstantCommand}
-     * for this.
-     *
-     * @return whether this command is finished.
-     * @see Command#isTimedOut() isTimedOut()
-     */
+
     @Override
     protected boolean isFinished() {
-      return false;
+      return armOut.isRunning();
     }
 
     @Override
@@ -169,7 +160,7 @@ public class CommandSequences {
     MotionMagicSetpoint elevatorUp =  new MotionMagicSetpoint("bring elevator up", Robot.elevator, 13000, 2.5) {
       @Override
       protected boolean isFinished() {
-        return getMotionProgress() >= .99 || super.isFinished();
+        return isMotionFinished() || super.isFinished();
       }
     };
 
@@ -177,7 +168,7 @@ public class CommandSequences {
         ()-> elevatorUp.getMotionProgress() > 0.7);
 
     Command armOut = Commands.runWhenTrue(new MotionMagicSetpoint("Bring  Out", Robot.arm, 200),
-        ()->elevatorUp.getMotionProgress() >= 0.7);
+        ()->elevatorUp.getMotionProgress() >= 0.5);
 
     public HatchFuel0() {
       super(HatchFuel0.class.getSimpleName());
@@ -220,21 +211,7 @@ public class CommandSequences {
 
     }
 
-    /**
-     * Returns whether this command is finished. If it is, then the command will be removed and {@link
-     * Command#end() end()} will be called.
-     *
-     * <p>It may be useful for a team to reference the {@link Command#isTimedOut() isTimedOut()}
-     * method for time-sensitive commands.
-     *
-     * <p>Returning false will result in the command never ending automatically. It may still be
-     * cancelled manually or interrupted by another command. Returning true will result in the
-     * command executing once and finishing immediately. We recommend using {@link InstantCommand}
-     * for this.
-     *
-     * @return whether this command is finished.
-     * @see Command#isTimedOut() isTimedOut()
-     */
+
     @Override
     protected boolean isFinished() {
       return false;
@@ -244,7 +221,7 @@ public class CommandSequences {
     protected void end() {
       super.end();
       Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
-      RestingPose.run();
+     // RestingPose.run();
     }
   }
 
@@ -303,7 +280,7 @@ public class CommandSequences {
       super.end();
       Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
 
-      RestingPose.run();
+     // RestingPose.run();
 
     }
   }
@@ -434,64 +411,19 @@ public class CommandSequences {
     }
   }
 
-  // public static class LoadingStationFuel extends CommandGroup {
+  public static class HatchPanel1ToHome extends CommandGroup {
+    public HatchPanel1ToHome(){
+      super(HatchPanel1ToHome.class.getSimpleName());
 
-  // 	public LoadingStationFuel() {
-  // 		super(LoadingStationFuel.class.getSimpleName());
-  // 		requires(Robot.arm);
-  // 		requires(Robot.wrist);
-  // 		requires(Robot.elevator);
+      addSequential(new MotionMagicSetpoint("Elevator Up",Robot.elevator,4000,2.5));
+      addParallel(new MotionMagicSetpoint("Wrist Home",Robot.wrist,10,2.5));
+      addParallel(new MotionMagicSetpoint("Arm Home",Robot.arm,10,2.5));
+      addSequential(new MotionMagicSetpoint("Elevator Home",Robot.arm,10,2.5));
+    }
 
-  // 		double elevatorUpTimeout = 1.7;
-  // 		double elevatorPosition = 3000;
+  }
 
-  // 		// elevator up:
-  // 		addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
-  // 		addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
-  // 		addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
-  // 			@Override
-  // 			protected boolean isFinished() {
-  // 				return super.isFinished();
-  // 				// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-  // 				// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
-  // 			}
-  // 		});
 
-  // 		double armOutTimeout = 3.0;
-  // 		// Arm out, Wrist down
-  // 		 addParallel(new MotionMagicSetpoint("Hold Elevator Position",
-  // 		 Robot.elevator,elevatorPosition, armOutTimeout));
-  // 	//	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
-  // 		addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3133.0, 3.0) {
-  // 			@Override
-  // 			protected boolean isFinished() {
-  // 				return super.isFinished();
-  // 				// return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-  // 				// 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
-  // 			}
-  // 		});
-  // 		addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949), armOutTimeout);
-
-  // 		addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4000));
-
-  // 	}
-
-  // 	@Override
-  // 	protected void initialize() {
-  // 		super.initialize();
-  // 		Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
-
-  // 	}
-
-  // 	@Override
-  // 	protected void end() {
-  // 		super.end();
-  // 		Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
-
-  // 		RestingPose.run();
-
-  // 	}
-  // }
 
 
   public static class Resting2 extends CommandGroup {

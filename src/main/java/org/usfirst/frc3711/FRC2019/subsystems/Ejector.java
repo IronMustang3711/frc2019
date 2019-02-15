@@ -20,12 +20,12 @@ public class Ejector extends TalonSubsystem {
   public Ejector() {
     super(Ejector.class.getSimpleName(), TalonID.EJECTOR.getId());
 
-    talonTelemetry = TalonUtil.basicTelemetry(this);
+    talonTelemetry = TalonUtil.closedLoopTelemetry(this);
   }
 
 
   public boolean isRunning() {
-    return talon.getOutputCurrent() != 0;
+    return talon.getMotorOutputPercent() != 0;
   }
 
   public void run() {

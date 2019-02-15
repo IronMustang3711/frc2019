@@ -47,7 +47,9 @@ public class MotionMagicSetpoint extends Command {
     double totalDistance = setpoint - initialPosition;
     double trajPos = subsystem.talon.getActiveTrajectoryPosition();
     return (trajPos - initialPosition) / totalDistance;
-
+  }
+  public boolean isMotionFinished(){
+    return (setpoint - subsystem.talon.getActiveTrajectoryPosition()) == 0;
   }
 
 
