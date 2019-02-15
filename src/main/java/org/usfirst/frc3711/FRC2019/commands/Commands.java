@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc3711.FRC2019.Robot;
 import org.usfirst.frc3711.FRC2019.subsystems.TalonSubsystem;
 
+import java.util.function.BooleanSupplier;
+
 public class Commands {
   public abstract static class AbstractCommand extends Command {
     public AbstractCommand() {
@@ -59,7 +61,7 @@ public class Commands {
       this.subsystem = subsystem;
     }
 
-    public TalonSubsystemCommand(String name, TalonSubsystem subsystem) {
+    TalonSubsystemCommand(String name, TalonSubsystem subsystem) {
       super(subsystem.getName() + ":" + name, subsystem);
       this.subsystem = subsystem;
     }
@@ -81,7 +83,7 @@ public class Commands {
     final double setpoint;
     final ControlMode mode;
 
-    public SetpointCommand(String name, TalonSubsystem subsystem, double setpoint, ControlMode mode) {
+    SetpointCommand(String name, TalonSubsystem subsystem, double setpoint, ControlMode mode) {
       super(name, subsystem);
       this.setpoint = setpoint;
       this.mode = mode;
@@ -147,7 +149,7 @@ public class Commands {
     return new DisableTalon(subsystem);
   }
 
-  public static class DisableTalon extends InstantCommand {
+   static class DisableTalon extends InstantCommand {
     final TalonSubsystem subsystem;
 
     DisableTalon(TalonSubsystem subsystem) {
@@ -159,6 +161,74 @@ public class Commands {
     @Override
     protected void initialize() {
       subsystem.disable();
+    }
+
+  }
+
+  public static Command runWhenTrue(Command c, BooleanSupplier guard){
+    return new Command(){
+
+      /**
+       * Returns whether this command is finished. If it is, then the command will be removed and {@link
+       * Command#end() end()} will be called.
+       *
+       * <p>It may be useful for a team to reference the {@link Command#isTimedOut() isTimedOut()}
+       * method for time-sensitive commands.
+       *
+       * <p>Returning false will result in the command never ending automatically. It may still be
+       * cancelled manually or interrupted by another command. Returning true will result in the
+       * command executing once and finishing immediately. We recommend using {@link InstantCommand}
+       * for this.
+       *
+       * @return whether this command is finished.
+       * @see Command#isTimedOut() isTimedOut()
+       */
+      @Override
+      protected boolean isFinished() {
+        return guard.getAsBoolean();
+      }
+
+      @Override
+      protected void end() {
+       c.start();
+      }
+    };
+  }
+
+  public static Command constantOutput(TalonSubsystem subsystem, double output){
+    return new ConstantOutput(subsystem, output);
+  }
+
+   static class ConstantOutput extends Command {
+    final TalonSubsystem subsystem;
+    final double output;
+
+     ConstantOutput(TalonSubsystem subsystem, double output) {
+      super(subsystem.getName() + "Hold");
+      this.subsystem = subsystem;
+      this.output = output;
+    }
+
+    // Called just before this Command runs the first time
+    @Override
+    protected void initialize() {
+    }
+
+    // Called repeatedly when this Command is scheduled to run
+    @Override
+    protected void execute() {
+      subsystem.talon.set(ControlMode.PercentOutput, output);
+    }
+
+    // Make this return true when this Command no longer needs to run execute()
+    @Override
+    protected boolean isFinished() {
+      return false;
+    }
+
+    // Called once after isFinished returns true
+    @Override
+    protected void end() {
     }
 
   }
