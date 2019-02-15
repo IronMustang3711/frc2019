@@ -12,7 +12,6 @@ import org.usfirst.frc3711.FRC2019.commands.util.MotionMagicSetpoint;
 import org.usfirst.frc3711.FRC2019.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.FRC2019.talon.TalonUtil;
 
-//TODO set brake mode to neutral when disabled
 public class Elevator extends TalonSubsystem {
   @SuppressWarnings("WeakerAccess")
   static class TalonSettings {

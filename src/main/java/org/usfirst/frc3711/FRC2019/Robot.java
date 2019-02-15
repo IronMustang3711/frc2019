@@ -11,6 +11,7 @@
 
 package org.usfirst.frc3711.FRC2019;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Watchdog;
@@ -82,6 +83,11 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     Shuffleboard.stopRecording();
     disableAll();
+    subsystems.stream()
+        .filter(TalonSubsystem.class::isInstance)
+        .map(TalonSubsystem.class::cast)
+        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Coast));
+
   }
 
   public static void disableAll() {
@@ -95,6 +101,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    subsystems.stream()
+        .filter(TalonSubsystem.class::isInstance)
+        .map(TalonSubsystem.class::cast)
+        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
   }
 
   @Override
@@ -105,6 +115,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     Shuffleboard.startRecording();
+    subsystems.stream()
+        .filter(TalonSubsystem.class::isInstance)
+        .map(TalonSubsystem.class::cast)
+        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
   }
 
   @Override
