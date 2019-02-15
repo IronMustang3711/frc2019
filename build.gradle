@@ -1,9 +1,14 @@
+import edu.wpi.first.gradlerio.GradleRIOPlugin
+
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2019.2.1"
 }
 
 def ROBOT_MAIN_CLASS = "org.usfirst.frc3711.FRC2019.Main"
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
@@ -22,20 +27,24 @@ deploy {
             targets << "roborio"
             // Debug can be overridden by command line, for use with VSCode
             debug = frc.getDebugOrDefault(false)
+            
+            jvmArgs += ['-ea']
         }
         // Built in artifact to deploy arbitrary files to the roboRIO.
-        fileTreeArtifact('frcStaticFileDeploy') {
-            // The directory below is the local directory to deploy
-            files = fileTree(dir: 'src/main/deploy')
-            // Deploy to RoboRIO target, into /home/lvuser/deploy
-            targets << "roborio"
-            directory = '/home/lvuser/deploy'
-        }
+//        fileTreeArtifact('frcStaticFileDeploy') {
+//            // The directory below is the local directory to deploy
+//            files = fileTree(dir: 'src/main/deploy')
+//            // Deploy to RoboRIO target, into /home/lvuser/deploy
+//            targets << "roborio"
+//            directory = '/home/lvuser/deploy'
+//        }
     }
 }
 
+test.onlyIf { ! Boolean.getBoolean('run.tests') }
+
 // Set this to true to enable desktop support.
-def includeDesktopSupport = true
+def includeDesktopSupport = false
 
 // Maven central needed for JUnit
 repositories {
@@ -58,5 +67,5 @@ dependencies {
 // knows where to look for our Robot Class.
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+    manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
