@@ -1,4 +1,4 @@
-package org.usfirst.frc3711.FRC2019.commands;
+package org.usfirst.frc3711.FRC2019.commands.sequences;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
