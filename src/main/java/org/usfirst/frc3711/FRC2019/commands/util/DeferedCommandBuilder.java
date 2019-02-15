@@ -3,6 +3,7 @@ package org.usfirst.frc3711.FRC2019.commands.util;
 import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
 public class DeferedCommandBuilder {
   private final Command command;
@@ -42,6 +43,22 @@ public class DeferedCommandBuilder {
       protected void execute() {
         super.execute();
         if(guard.getAsBoolean())
+          cancel();
+      }
+
+      @Override
+      protected void end() {
+        super.end();
+        command.start();
+      }
+    };
+  }
+  public <T> Command runWhen(T source, Function<T,Boolean> guard){
+    return new AbstractCommand() {
+      @Override
+      protected void execute() {
+        super.execute();
+        if(guard.apply(source) == Boolean.TRUE)
           cancel();
       }
 
