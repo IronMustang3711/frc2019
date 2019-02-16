@@ -138,6 +138,7 @@ public class OI {
     tab.add(new HatchFuel2());
     tab.add(new HatchPanel2());
     tab.add(new GroundPickup());
+    tab.add(new GroundPickup2());
 
 
     // tab.add(new CommandSequences.PingPong());
