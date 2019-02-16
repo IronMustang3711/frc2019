@@ -55,6 +55,9 @@ public class OI {
     jogDown = new JoystickButton(joystick1, 10);
     jogDown.whenPressed(new JogElevator(false));
 
+    Robot.elevator.tab.add(new JogElevator(true));
+    Robot.elevator.tab.add(new JogElevator(false));
+
 
 //    elevator = new JoystickButton(joystick1, 5);
 //    elevator.whileHeld(new ManualTalonControl(Robot.elevator));

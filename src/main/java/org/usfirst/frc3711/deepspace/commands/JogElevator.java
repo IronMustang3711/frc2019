@@ -33,6 +33,6 @@ public class JogElevator extends TalonSubsystemCommand {
 
   @Override
   protected boolean isFinished() {
-    return (setpoint - subsystem.talon.getActiveTrajectoryPosition()) == 0;
+    return Math.abs(setpoint - subsystem.talon.getActiveTrajectoryPosition()) < 2.0 ;
   }
 }
