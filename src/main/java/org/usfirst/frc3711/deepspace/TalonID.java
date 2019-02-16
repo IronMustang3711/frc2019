@@ -2,7 +2,7 @@ package org.usfirst.frc3711.deepspace;
 
 public enum TalonID {
   ARM(12),
-  EJECTOR(1),
+  FICKLE_FINGER(1),
   ELEVATOR(2),
   INTAKE(15),
   WRIST(4),

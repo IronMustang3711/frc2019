@@ -27,7 +27,7 @@ public class DogLeg extends TalonSubsystem {
   public DogLeg() {
     super(DogLeg.class.getSimpleName(), TalonID.DOG_LEG.getId());
 
-    talonTelemetry = TalonUtil.basicTelemetry(this);
+    talonTelemetry = TalonUtil.basicTelemetryWithEncoder(this);
 
     motorOutput = tab.add("Output", 0.0)
                       .withWidget(BuiltInWidgets.kNumberSlider)
@@ -53,11 +53,14 @@ public class DogLeg extends TalonSubsystem {
     });
   }
 
-  public void runDown(){}
+public void setMotorOutput(double output){
+    talon.set(ControlMode.PercentOutput,output);
+}
 
   @Override
   public void periodic() {
     super.periodic();
     talonTelemetry.run();
   }
+
 }

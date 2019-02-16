@@ -2,6 +2,7 @@ package org.usfirst.frc3711.deepspace;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -32,11 +33,12 @@ public class OI {
 
   final JoystickButton stow;
 
-  final JoystickButton elevatorUp;
-  final JoystickButton elevatorDown;
+//  final JoystickButton elevatorUp;
+//  final JoystickButton elevatorDown;
 
   final JoystickButton doglegDownButton;
   final JoystickButton rearJackDownButton;
+  final JoystickButton liftingMechanismsUp;
 
 
   public OI() {
@@ -44,37 +46,56 @@ public class OI {
     joystick1 = new Joystick(0);
 
     stow = new JoystickButton(joystick1, 7);
+    stow.whenPressed(new RobotPoser(RobotPose.STOW));
+
 
     elevator = new JoystickButton(joystick1, 5);
+    elevator.whileHeld(new ManualTalonControl(Robot.elevator));
+
 //    arm = new JoystickButton(joystick1, 3);
 //    wrist = new JoystickButton(joystick1, 4);
 
 
     intakeInhale = new JoystickButton(joystick1, 1);
+    intakeInhale.whileHeld(IntakeCommands.eject());
+
     intakeExhale = new JoystickButton(joystick1,2);
+    intakeExhale.whileHeld(IntakeCommands.intake());
+
 
     fickleFingerHook = new JoystickButton(joystick1, 5);
-    fickleFingerEject = new JoystickButton(joystick1,3);
+    fickleFingerHook.whileHeld(FickleFingerCommands.hookingDirectionCommand());
 
-    elevatorUp = new JoystickButton(joystick1, 11);
-    elevatorDown = new JoystickButton(joystick1, 12);
+    fickleFingerEject = new JoystickButton(joystick1,3);
+    fickleFingerEject.whileHeld(FickleFingerCommands.ejectingDirectionCommand());
+
+
+//    elevatorUp = new JoystickButton(joystick1, 11);
+//    elevatorDown = new JoystickButton(joystick1, 12);
 
     rearJackDownButton = new JoystickButton(joystick1,4);
+    rearJackDownButton.whileHeld(RearJackCommands.runDown());
+
     doglegDownButton = new JoystickButton(joystick1,6);
+    doglegDownButton.whileHeld(DogLegCommands.dogLegDown());
+
+    liftingMechanismsUp = new JoystickButton(joystick1,12);
+    liftingMechanismsUp.whileHeld(new CommandGroup("Lifters up"){
+      {
+        addParallel(DogLegCommands.runUp());
+        addParallel(RearJackCommands.runUp());
+
+      }
+    });
 
 
-    stow.whenPressed(new RobotPoser(RobotPose.STOW));
 
 
-    elevator.whileHeld(new ManualTalonControl(Robot.elevator));
 //    arm.whileHeld(new ManualTalonControl(Robot.arm));
 //    wrist.whileHeld(new ManualTalonControl(Robot.wrist));
 
-    intakeInhale.whileHeld(IntakeCommands.eject());
-    intakeExhale.whileHeld(IntakeCommands.intake());
 
-    fickleFingerHook.whileHeld(FickleFingerCommands.hookingDirectionCommand());
-    fickleFingerEject.whileHeld(FickleFingerCommands.ejectingDirectionCommand());
+
 
 
     SmartDashboard.putData(new InstantCommand("Disable all", Robot::disableAll));

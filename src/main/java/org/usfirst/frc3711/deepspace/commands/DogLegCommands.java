@@ -14,7 +14,7 @@ public class DogLegCommands {
       @Override
       protected void execute() {
         super.execute();
-        Robot.dogLeg.runDown();
+        Robot.dogLeg.setMotorOutput(-1.0);
       }
 
       @Override
@@ -25,4 +25,24 @@ public class DogLegCommands {
     };
   }
 
+  public static Command runUp() {
+    return new Command("Dogleg up"){
+      @Override
+      protected boolean isFinished() {
+        return false; //TODO: check encoder
+      }
+
+      @Override
+      protected void execute() {
+        super.execute();
+        Robot.dogLeg.setMotorOutput(1.0);
+      }
+
+      @Override
+      protected void end() {
+        super.end();
+        Robot.dogLeg.disable();
+      }
+    };
+  }
 }

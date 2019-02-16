@@ -18,7 +18,7 @@ public class FickleFinger extends TalonSubsystem {
   private final Runnable talonTelemetry;
 
   public FickleFinger() {
-    super(FickleFinger.class.getSimpleName(), TalonID.EJECTOR.getId());
+    super(FickleFinger.class.getSimpleName(), TalonID.FICKLE_FINGER.getId());
 
     talonTelemetry = TalonUtil.closedLoopTelemetry(this);
   }
@@ -29,7 +29,7 @@ public class FickleFinger extends TalonSubsystem {
   }
 
 
-  public void run(double out){
+  public void setMotorOutput(double out){
     talon.set(ControlMode.PercentOutput,out);
   }
 
