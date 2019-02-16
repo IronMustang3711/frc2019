@@ -22,7 +22,7 @@ public class OI {
 
   public final Joystick joystick1;
 
-  final JoystickButton elevator;
+ // final JoystickButton elevator;
 //  final JoystickButton arm;
 //  final JoystickButton wrist;
 
@@ -49,8 +49,8 @@ public class OI {
     stow.whenPressed(new RobotPoser(RobotPose.STOW));
 
 
-    elevator = new JoystickButton(joystick1, 5);
-    elevator.whileHeld(new ManualTalonControl(Robot.elevator));
+//    elevator = new JoystickButton(joystick1, 5);
+//    elevator.whileHeld(new ManualTalonControl(Robot.elevator));
 
 //    arm = new JoystickButton(joystick1, 3);
 //    wrist = new JoystickButton(joystick1, 4);
