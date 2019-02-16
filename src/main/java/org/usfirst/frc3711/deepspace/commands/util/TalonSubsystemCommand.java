@@ -10,7 +10,7 @@ public class TalonSubsystemCommand extends AbstractCommand {
     this.subsystem = subsystem;
   }
 
-  TalonSubsystemCommand(String name, TalonSubsystem subsystem) {
+  protected TalonSubsystemCommand(String name, TalonSubsystem subsystem) {
     super(subsystem.getName() + ":" + name, subsystem);
     this.subsystem = subsystem;
   }
