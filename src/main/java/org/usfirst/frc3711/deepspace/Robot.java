@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
-    if((System.currentTimeMillis() - disableStartTime) > 2000){
+    if((System.currentTimeMillis() - disableStartTime) > 4000){
       subsystems.stream()
         .filter(TalonSubsystem.class::isInstance)
         .map(TalonSubsystem.class::cast)
