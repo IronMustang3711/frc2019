@@ -77,7 +77,7 @@ public class Elevator extends TalonSubsystem {
       config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
       config.forwardSoftLimitThreshold = 13112;
-      config.reverseSoftLimitThreshold = -6707;
+      config.reverseSoftLimitThreshold = -10000;
       config.forwardSoftLimitEnable = true;
       config.reverseSoftLimitEnable = true;
 
