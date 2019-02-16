@@ -57,6 +57,9 @@ public class DogLeg extends TalonSubsystem {
   void configureTalon() {
     super.configureTalon();
     talon.setInverted(true);
+    talon.setSensorPhase(true);
+    talon.configForwardSoftLimitThreshold(0);
+    talon.configForwardSoftLimitEnable(true);
   }
 
   public void setMotorOutput(double output){
