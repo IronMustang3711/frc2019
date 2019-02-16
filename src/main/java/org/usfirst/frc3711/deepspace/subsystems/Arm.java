@@ -45,7 +45,7 @@ public class Arm extends TalonSubsystem {
           SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
               .withKP(2.5)
               // .withKI(1e-9)
-              .withKF(1.0)
+              .withKF(2.0)
               .withMaxIntegralAccumulator(10000)
               // .withClosedLoopPeakOutput(0.9)
               .build();
@@ -106,8 +106,8 @@ public class Arm extends TalonSubsystem {
       config.openloopRamp = 1.0;
       // config.closedloopRamp = 1.705000;
 
-      config.motionCruiseVelocity = 70;
-      config.motionAcceleration = 40;
+      config.motionCruiseVelocity = 80;
+      config.motionAcceleration = 80;
 
       config.peakOutputForward = 0.9;
       config.peakOutputReverse = -0.5;

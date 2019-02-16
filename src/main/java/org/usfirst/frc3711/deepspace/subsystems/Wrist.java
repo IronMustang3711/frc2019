@@ -148,6 +148,9 @@ what voltage represents 100% output.
       applyConfig(CONFIGURATION);
       talon.configAllSettings(CONFIGURATION);
 
+      talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10);
+      talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10);
+
     }
   }
 
