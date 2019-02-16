@@ -11,12 +11,20 @@ public class HatchPanel0_2 extends CommandGroup {
   public HatchPanel0_2(){
     super(HatchPanel0_2.class.getSimpleName());
     elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 4000, 1.0);
+    addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
 
-    addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,1.0));
+   // addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,0.1));
     addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10,1.0));
-    addParallel(new DeferedCommandBuilder(
-        new MotionMagicSetpoint("Bring arm out", Robot.arm, 600))
-                    .runWhen(()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() > 0.30));
-    addSequential(elevatorUp);
+   // addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
+//    addParallel(new DeferedCommandBuilder(
+//        new MotionMagicSetpoint("Bring arm out", Robot.arm, 600){
+//          @Override
+//          protected void initialize() {
+//            super.initialize();
+//            System.out.println("HatchPanel0_2.initialize");
+//          }
+//        })
+//                    .runWhen(()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() > 0.10));
+    addParallel(elevatorUp);
   }
 }
