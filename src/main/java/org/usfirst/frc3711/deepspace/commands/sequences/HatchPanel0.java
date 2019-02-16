@@ -31,7 +31,7 @@ public class HatchPanel0 extends Command {
       () -> elevatorUp.getMotionProgress() >= 0.3);
 
   //TODO may be too low
-  private final Command elevatorDown = Commands.runWhenTrue(new MotionMagicSetpoint("bring elevator up", Robot.elevator, -200, 1.0),
+  private final Command elevatorDown = Commands.runWhenTrue(new MotionMagicSetpoint("bring elevator up", Robot.elevator, 1000, 1.0),
       armOut::isCompleted);
 
 //    Command elevatorHold = Commands.runWhenTrue(Commands.constantOutput(Robot.elevator,0.2),
