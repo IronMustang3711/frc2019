@@ -1,6 +1,7 @@
 package org.usfirst.frc3711.deepspace.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -42,9 +43,23 @@ public class RearJack extends TalonSubsystem {
   }
 
   @Override
+  void configureTalon() {
+    super.configureTalon();
+    talon.setNeutralMode(NeutralMode.Brake);
+  }
+
+  @Override
   public void periodic() {
     super.periodic();
     talonTelemetry.run();
+  }
+
+  public void runDown(){
+    talon.set(ControlMode.PercentOutput,1.0);
+  }
+
+  public void runUp(){
+    talon.set(ControlMode.PercentOutput,-1.0);
   }
 
 
