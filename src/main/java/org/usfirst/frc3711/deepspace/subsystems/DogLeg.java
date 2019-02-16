@@ -53,6 +53,7 @@ public class DogLeg extends TalonSubsystem {
     });
   }
 
+  public void runDown(){}
 
   @Override
   public void periodic() {
