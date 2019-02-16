@@ -30,15 +30,16 @@ public class OI {
   final JoystickButton intakeExhale;
   final JoystickButton fickleFingerHook;
   final JoystickButton fickleFingerEject;
+  final JoystickButton fickleFingerHookEngage;
 
   final JoystickButton stow;
 
 //  final JoystickButton elevatorUp;
 //  final JoystickButton elevatorDown;
 
-  final JoystickButton doglegDownButton;
-  final JoystickButton rearJackDownButton;
-  final JoystickButton liftingMechanismsUp;
+  // final JoystickButton doglegDownButton;
+  // final JoystickButton rearJackDownButton;
+  // final JoystickButton liftingMechanismsUp;
   final JoystickButton jogUp;
   final JoystickButton jogDown;
 
@@ -79,29 +80,32 @@ public class OI {
 
 
     fickleFingerHook = new JoystickButton(joystick1, 5);
-//    fickleFingerHook.whileHeld(FickleFingerCommands.hookingDirectionCommand());
+    fickleFingerHook.whileHeld(FickleFingerCommands.hookCommand());
 
     fickleFingerEject = new JoystickButton(joystick1,3);
-   // fickleFingerEject.whileHeld(FickleFingerCommands.ejectingDirectionCommand());
+    fickleFingerEject.whileHeld(FickleFingerCommands.ejectCommand());
+
+    fickleFingerHookEngage = new JoystickButton(joystick1, 4);
+    fickleFingerHookEngage.whenPressed(FickleFingerCommands.hookEngageCommand());
 
 
 //    elevatorUp = new JoystickButton(joystick1, 11);
 //    elevatorDown = new JoystickButton(joystick1, 12);
 
-    rearJackDownButton = new JoystickButton(joystick1,4);
-    rearJackDownButton.whileHeld(RearJackCommands.runDown());
+    // rearJackDownButton = new JoystickButton(joystick1,4);
+    // rearJackDownButton.whileHeld(RearJackCommands.runDown());
 
-    doglegDownButton = new JoystickButton(joystick1,6);
-    doglegDownButton.whileHeld(DogLegCommands.dogLegDown());
+    // doglegDownButton = new JoystickButton(joystick1,6);
+    // doglegDownButton.whileHeld(DogLegCommands.dogLegDown());
 
-    liftingMechanismsUp = new JoystickButton(joystick1,12);
-    liftingMechanismsUp.whileHeld(new CommandGroup("Lifters up"){
-      {
-        addParallel(DogLegCommands.runUp());
-        addParallel(RearJackCommands.runUp());
+    // liftingMechanismsUp = new JoystickButton(joystick1,12);
+    // liftingMechanismsUp.whileHeld(new CommandGroup("Lifters up"){
+    //   {
+    //     addParallel(DogLegCommands.runUp());
+    //     addParallel(RearJackCommands.runUp());
 
-      }
-    });
+    //   }
+    // });
 
 
 
