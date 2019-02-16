@@ -14,7 +14,7 @@ public class DogLegCommands {
       @Override
       protected void execute() {
         super.execute();
-        Robot.dogLeg.setMotorOutput(-1.0);
+        Robot.dogLeg.setMotorOutput(-0.5);
       }
 
       @Override
@@ -35,7 +35,7 @@ public class DogLegCommands {
       @Override
       protected void execute() {
         super.execute();
-        Robot.dogLeg.setMotorOutput(1.0);
+        Robot.dogLeg.setMotorOutput(0.5);
       }
 
       @Override
