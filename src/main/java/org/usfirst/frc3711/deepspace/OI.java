@@ -95,8 +95,11 @@ public class OI {
 //    wrist.whileHeld(new ManualTalonControl(Robot.wrist));
 
 
-
-
+    SmartDashboard.putData(new InstantCommand("Zero Encoders",
+        () -> Robot.subsystems.stream()
+                  .filter(TalonSubsystem.class::isInstance)
+                  .map(TalonSubsystem.class::cast)
+                  .forEach(TalonSubsystem::zeroEncoder)));
 
     SmartDashboard.putData(new InstantCommand("Disable all", Robot::disableAll));
 

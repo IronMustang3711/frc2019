@@ -54,6 +54,11 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     talon.enableCurrentLimit(false);
   }
 
+  public void zeroEncoder(){
+    talon.setSelectedSensorPosition(0, 0, 50);
+    talon.getSensorCollection().setQuadraturePosition(0, 50);
+  }
+
 
   public void setP(double p) {
     talon.config_kP(0, p, 50);
