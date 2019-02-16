@@ -53,7 +53,13 @@ public class DogLeg extends TalonSubsystem {
     });
   }
 
-public void setMotorOutput(double output){
+  @Override
+  void configureTalon() {
+    super.configureTalon();
+    talon.setInverted(true);
+  }
+
+  public void setMotorOutput(double output){
     talon.set(ControlMode.PercentOutput,output);
 }
 

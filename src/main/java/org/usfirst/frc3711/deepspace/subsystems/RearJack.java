@@ -46,6 +46,7 @@ public class RearJack extends TalonSubsystem {
   void configureTalon() {
     super.configureTalon();
     talon.setNeutralMode(NeutralMode.Brake);
+    talon.setSensorPhase(false);
   }
 
   @Override
