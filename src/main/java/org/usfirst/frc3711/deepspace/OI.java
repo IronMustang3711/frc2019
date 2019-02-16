@@ -39,6 +39,8 @@ public class OI {
   final JoystickButton doglegDownButton;
   final JoystickButton rearJackDownButton;
   final JoystickButton liftingMechanismsUp;
+  final JoystickButton jogUp;
+  final JoystickButton jogDown;
 
 
   public OI() {
@@ -47,6 +49,9 @@ public class OI {
 
     stow = new JoystickButton(joystick1, 7);
     stow.whenPressed(new RobotPoser(RobotPose.STOW));
+
+    jogUp = new JoystickButton(joystick1, 9);
+    jogDown = new JoystickButton(joystick1, 10);
 
 
 //    elevator = new JoystickButton(joystick1, 5);
