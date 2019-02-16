@@ -119,6 +119,7 @@ public class OI {
     tab.add(new StagingPose());
     tab.add(new HatchFuel0());
     tab.add(new HatchPanel0());
+    tab.add(new HatchPanel0_2());
     tab.add(new LoadingStationFuel());
     tab.add(new LoadingStationFuelToHome());
     tab.add(new HatchFuel1());
