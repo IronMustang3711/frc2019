@@ -45,8 +45,15 @@ public class RearJack extends TalonSubsystem {
   @Override
   void configureTalon() {
     super.configureTalon();
+    talon.configPeakCurrentLimit(20);
+    talon.configPeakCurrentDuration(1000);
+    talon.configContinuousCurrentLimit(0);
+    talon.enableCurrentLimit(true);
+
     talon.setNeutralMode(NeutralMode.Brake);
-    talon.setSensorPhase(true);
+
+    talon.setInverted(true);
+    talon.setSensorPhase(false);
     talon.configForwardSoftLimitThreshold(0);
     talon.configForwardSoftLimitEnable(true);
   }
@@ -58,11 +65,11 @@ public class RearJack extends TalonSubsystem {
   }
 
   public void runDown(){
-    talon.set(ControlMode.PercentOutput,1.0);
+    talon.set(ControlMode.PercentOutput,-1.0);
   }
 
   public void runUp(){
-    talon.set(ControlMode.PercentOutput,-1.0);
+    talon.set(ControlMode.PercentOutput,1.0);
   }
 
 
