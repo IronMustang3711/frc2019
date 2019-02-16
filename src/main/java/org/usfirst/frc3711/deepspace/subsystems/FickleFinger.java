@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc3711.deepspace.TalonID;
+import org.usfirst.frc3711.deepspace.commands.FickleFingerCommands;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
 /**
@@ -81,84 +82,86 @@ public class FickleFinger extends TalonSubsystem {
       }
 
     });
-
-    tab.add(new Command("Eject") {
-      {
-        requires(FickleFinger.this);
-      }
-
-      @Override
-      protected boolean isFinished() {
-        return isTimedOut() || isCanceled();
-      }
-
-      @Override
-      protected void initialize() {
-        talon.selectProfileSlot(0,0);
-      }
-
-      @Override
-      protected void execute() {
-        super.execute();
-        setMotorOutput(1.0);
-      }
-
-      @Override
-      protected void end() {
-        super.end();
-        disable();
-        int currentPosition = talon.getSelectedSensorPosition();
-        int desiredPosition = ENCODER_TICKS_PER_REV *((currentPosition + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV);
-        talon.set(ControlMode.Position,desiredPosition);
-
-      }
-    });
-
-    tab.add(new Command("Hook" ){
-      {requires(FickleFinger.this);}
-      int baseRev;
-      @Override
-      protected boolean isFinished() {
-        return talon.getClosedLoopError() < 30;
-      }
-
-      @Override
-      protected void initialize() {
-        super.initialize();
-        baseRev = talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
-
-      }
-
-      @Override
-      protected void execute() {
-        super.execute();
-        talon.set(ControlMode.Position,252 + ENCODER_TICKS_PER_REV*baseRev);
-      }
-    });
-
-    tab.add(new Command("Hook Engage" ){
-      {requires(FickleFinger.this);}
-
-      int baseRev;
-
-      @Override
-      protected void initialize() {
-        super.initialize();
-        baseRev = talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
-
-      }
-
-      @Override
-      protected boolean isFinished() {
-        return talon.getClosedLoopError() < 30;
-      }
-
-      @Override
-      protected void execute() {
-        super.execute();
-        talon.set(ControlMode.Position,120 + ENCODER_TICKS_PER_REV*baseRev);
-      }
-    });
+    tab.add(FickleFingerCommands.ejectCommand());
+    tab.add(FickleFingerCommands.hookCommand());
+    tab.add(FickleFingerCommands.hookEngageCommand());
+//    tab.add(new Command("Eject") {
+//      {
+//        requires(FickleFinger.this);
+//      }
+//
+//      @Override
+//      protected boolean isFinished() {
+//        return isTimedOut() || isCanceled();
+//      }
+//
+//      @Override
+//      protected void initialize() {
+//        talon.selectProfileSlot(0,0);
+//      }
+//
+//      @Override
+//      protected void execute() {
+//        super.execute();
+//        setMotorOutput(1.0);
+//      }
+//
+//      @Override
+//      protected void end() {
+//        super.end();
+//        disable();
+//        int currentPosition = talon.getSelectedSensorPosition();
+//        int desiredPosition = ENCODER_TICKS_PER_REV *((currentPosition + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV);
+//        talon.set(ControlMode.Position,desiredPosition);
+//
+//      }
+//    });
+//
+//    tab.add(new Command("Hook" ){
+//      {requires(FickleFinger.this);}
+//      int baseRev;
+//      @Override
+//      protected boolean isFinished() {
+//        return talon.getClosedLoopError() < 30;
+//      }
+//
+//      @Override
+//      protected void initialize() {
+//        super.initialize();
+//        baseRev = talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+//
+//      }
+//
+//      @Override
+//      protected void execute() {
+//        super.execute();
+//        talon.set(ControlMode.Position,252 + ENCODER_TICKS_PER_REV*baseRev);
+//      }
+//    });
+//
+//    tab.add(new Command("Hook Engage" ){
+//      {requires(FickleFinger.this);}
+//
+//      int baseRev;
+//
+//      @Override
+//      protected void initialize() {
+//        super.initialize();
+//        baseRev = talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+//
+//      }
+//
+//      @Override
+//      protected boolean isFinished() {
+//        return talon.getClosedLoopError() < 30;
+//      }
+//
+//      @Override
+//      protected void execute() {
+//        super.execute();
+//        talon.set(ControlMode.Position,120 + ENCODER_TICKS_PER_REV*baseRev);
+//      }
+//    });
   }
 
   @Override

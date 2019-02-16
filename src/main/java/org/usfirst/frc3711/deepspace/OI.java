@@ -74,10 +74,10 @@ public class OI {
 
 
     fickleFingerHook = new JoystickButton(joystick1, 5);
-    fickleFingerHook.whileHeld(FickleFingerCommands.hookingDirectionCommand());
+//    fickleFingerHook.whileHeld(FickleFingerCommands.hookingDirectionCommand());
 
     fickleFingerEject = new JoystickButton(joystick1,3);
-    fickleFingerEject.whileHeld(FickleFingerCommands.ejectingDirectionCommand());
+   // fickleFingerEject.whileHeld(FickleFingerCommands.ejectingDirectionCommand());
 
 
 //    elevatorUp = new JoystickButton(joystick1, 11);
