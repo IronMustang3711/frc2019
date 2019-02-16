@@ -51,7 +51,9 @@ public class OI {
     stow.whenPressed(new RobotPoser(RobotPose.STOW));
 
     jogUp = new JoystickButton(joystick1, 9);
+    jogUp.whenPressed(new JogElevator(true));
     jogDown = new JoystickButton(joystick1, 10);
+    jogDown.whenPressed(new JogElevator(false));
 
 
 //    elevator = new JoystickButton(joystick1, 5);
