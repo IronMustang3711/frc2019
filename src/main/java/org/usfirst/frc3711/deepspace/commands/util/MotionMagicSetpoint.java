@@ -49,7 +49,7 @@ public class MotionMagicSetpoint extends Command {
     return (trajPos - initialPosition) / totalDistance;
   }
   public boolean isMotionFinished(){
-    return (setpoint - subsystem.talon.getActiveTrajectoryPosition()) == 0;
+    return Math.abs(setpoint - subsystem.talon.getActiveTrajectoryPosition()) < 1.0;
   }
 
 
