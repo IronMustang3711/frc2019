@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.commands.util.TalonSubsystemCommand;
-import org.usfirst.frc3711.deepspace.subsystems.FickleFinger;
 
 public class FickleFingerCommands {
 
@@ -55,13 +54,18 @@ public class FickleFingerCommands {
       protected void initialize() {
         super.initialize();
         baseRev = subsystem.talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
-
       }
 
       @Override
       protected void execute() {
         super.execute();
         subsystem.talon.set(ControlMode.Position,252 + ENCODER_TICKS_PER_REV*baseRev);
+      }
+
+      @Override
+      protected void end() {
+        super.end();
+        subsystem.disable();
       }
     };
   }
@@ -88,45 +92,12 @@ public class FickleFingerCommands {
         super.execute();
         subsystem.talon.set(ControlMode.Position,120 + ENCODER_TICKS_PER_REV*baseRev);
       }
+
+      @Override
+      protected void end() {
+        super.end();
+        subsystem.disable();
+      }
     };
   }
-
-//  public static Command hookingDirectionCommand(){
-//    return new FullPower(true);
-//  }
-//  public static Command ejectingDirectionCommand(){
-//    return new FullPower(false);
-//  }
-//
-//
-//   static class FullPower extends Command {
-//    double  out;
-//     FullPower(boolean fwd) {
-//      requires(Robot.fickleFinger);
-//      out = fwd ? 1.0 : -1.0;
-//    }
-//
-//    // Called just before this Command runs the first time
-//    @Override
-//    protected void initialize() {
-//    }
-//
-//    // Called repeatedly when this Command is scheduled to run
-//    @Override
-//    protected void execute() {
-//      Robot.fickleFinger.setMotorOutput(out);
-//    }
-//
-//    // Make this return true when this Command no longer needs to run execute()
-//    @Override
-//    protected boolean isFinished() {
-//      return false;
-//    }
-//
-//    // Called once after isFinished returns true
-//    @Override
-//    protected void end() {
-//      Robot.fickleFinger.stop();
-//    }
-// }
 }

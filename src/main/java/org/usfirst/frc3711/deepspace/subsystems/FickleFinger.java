@@ -14,13 +14,9 @@ import org.usfirst.frc3711.deepspace.TalonID;
 import org.usfirst.frc3711.deepspace.commands.FickleFingerCommands;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
-/**
- * Add your docs here.
- */
+
 public class FickleFinger extends TalonSubsystem {
   private final Runnable talonTelemetry;
-
-  private static final int ENCODER_TICKS_PER_REV = 1680;
 
   public FickleFinger() {
     super(FickleFinger.class.getSimpleName(), TalonID.FICKLE_FINGER.getId());
