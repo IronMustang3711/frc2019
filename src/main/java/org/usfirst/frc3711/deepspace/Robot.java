@@ -39,6 +39,8 @@ public class Robot extends TimedRobot {
 
   public static List<RobotSubsystem> subsystems;
 
+  private long disableStartTime;
+
 
   private void disableWatchdog() {
     try {
@@ -83,11 +85,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     Shuffleboard.stopRecording();
     disableAll();
-    subsystems.stream()
-        .filter(TalonSubsystem.class::isInstance)
-        .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Coast));
-
+    disableStartTime = System.currentTimeMillis();
   }
 
   public static void disableAll() {
@@ -97,6 +95,12 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
+    if((System.currentTimeMillis() - disableStartTime) > 2000){
+      subsystems.stream()
+        .filter(TalonSubsystem.class::isInstance)
+        .map(TalonSubsystem.class::cast)
+        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Coast));
+    }
   }
 
   @Override
