@@ -124,6 +124,8 @@ public class OI {
     tab.add(new HatchFuel1());
     tab.add(new Level1ToHome());
     tab.add(new HatchPanel1());
+    tab.add(new HatchFuel2());
+    tab.add(new HatchPanel2());
 
 
     // tab.add(new CommandSequences.PingPong());

@@ -23,6 +23,8 @@ public class DogLeg extends TalonSubsystem {
   private final NetworkTableEntry motorOutput;
 
   private final Runnable talonTelemetry;
+  NetworkTableEntry encoderA;
+  NetworkTableEntry encoderB;
 
   public DogLeg() {
     super(DogLeg.class.getSimpleName(), TalonID.DOG_LEG.getId());
@@ -33,6 +35,8 @@ public class DogLeg extends TalonSubsystem {
                       .withWidget(BuiltInWidgets.kNumberSlider)
                       .withProperties(Map.of("min", -1.0, "max", 1.0))
                       .getEntry();
+    encoderA = tab.add("Encoder A", false).getEntry();
+    encoderB = tab.add("Encoder B", false).getEntry();
 
     tab.add(new Command("Run Motor") {
 
@@ -77,6 +81,8 @@ public class DogLeg extends TalonSubsystem {
   public void periodic() {
     super.periodic();
     talonTelemetry.run();
+    encoderA.setBoolean(talon.getSensorCollection().getPinStateQuadA());
+    encoderB.setBoolean(talon.getSensorCollection().getPinStateQuadB());
   }
 
 }
