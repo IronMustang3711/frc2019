@@ -8,7 +8,7 @@ import org.usfirst.frc3711.deepspace.commands.util.Commands;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 
 public class HatchPanel0 extends Command {
-  private final Command wristVertical = new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10,1.0);
+  private final Command wristVertical = new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, -160,1.0);
   private final Command armVertical = new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,1.0);
   private final MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 4000, 1.0){
 
