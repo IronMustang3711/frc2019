@@ -59,6 +59,11 @@ public class OI {
     Robot.elevator.tab.add(new JogElevator(false));
 
 
+    Robot.fickleFinger.tab.add(FickleFingerCommands.ejectCommand());
+    Robot.fickleFinger.tab.add(FickleFingerCommands.hookCommand());
+    Robot.fickleFinger.tab.add(FickleFingerCommands.hookEngageCommand());
+
+
 //    elevator = new JoystickButton(joystick1, 5);
 //    elevator.whileHeld(new ManualTalonControl(Robot.elevator));
 

@@ -82,9 +82,6 @@ public class FickleFinger extends TalonSubsystem {
       }
 
     });
-    tab.add(FickleFingerCommands.ejectCommand());
-    tab.add(FickleFingerCommands.hookCommand());
-    tab.add(FickleFingerCommands.hookEngageCommand());
 //    tab.add(new Command("Eject") {
 //      {
 //        requires(FickleFinger.this);
