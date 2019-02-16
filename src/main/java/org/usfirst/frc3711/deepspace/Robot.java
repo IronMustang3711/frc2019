@@ -12,6 +12,7 @@
 package org.usfirst.frc3711.deepspace;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Watchdog;
@@ -79,6 +80,7 @@ public class Robot extends TimedRobot {
 
     oi = new OI();
 
+    CameraServer.getInstance().startAutomaticCapture();
   }
 
   @Override
