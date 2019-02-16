@@ -10,7 +10,7 @@ import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 public class HatchPanel0 extends Command {
   private final Command wristVertical = new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10,1.0);
   private final Command armVertical = new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,1.0);
-  private final MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 2000, 1.0){
+  private final MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 4000, 1.0){
 
     @Override
     protected void execute() {
@@ -30,9 +30,9 @@ public class HatchPanel0 extends Command {
   private final Command armOut = Commands.runWhenTrue(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600),
       () -> elevatorUp.getMotionProgress() >= 0.3);
 
-  //TODO may be too low
-  private final Command elevatorDown = Commands.runWhenTrue(new MotionMagicSetpoint("bring elevator up", Robot.elevator, 4000, 1.0),
-      armOut::isCompleted);
+  // //TODO may be too low
+  // private final Command elevatorDown = Commands.runWhenTrue(new MotionMagicSetpoint("bring elevator up", Robot.elevator, 4000, 1.0),
+  //     armOut::isCompleted);
 
 //    Command elevatorHold = Commands.runWhenTrue(Commands.constantOutput(Robot.elevator,0.2),
 //        ()-> elevatorUp.isCompleted() && elevatorDown.isCompleted());
@@ -54,7 +54,7 @@ public class HatchPanel0 extends Command {
     wristVertical.start();
     armVertical.start();
     elevatorUp.start();
-    elevatorDown.start();
+   // elevatorDown.start();
   //  elevatorHold.start();
     armOut.start();
 
