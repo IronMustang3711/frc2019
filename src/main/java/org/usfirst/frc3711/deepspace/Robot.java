@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
   public static Wrist wrist;
   public static Intake intake;
   // public static Misc misc;
-  public static Ejector ejector;
+  public static FickleFinger fickleFinger;
   public static DogLeg dogLeg;
   public static RearJack rearJack;
 
@@ -71,11 +71,11 @@ public class Robot extends TimedRobot {
     wrist = new Wrist();
     intake = new Intake();
     // misc = new Misc();
-    ejector = new Ejector();
+    fickleFinger = new FickleFinger();
     dogLeg = new DogLeg();
     rearJack = new RearJack();
 
-    subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake/*,misc*/, ejector, dogLeg, rearJack);
+    subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake/*,misc*/, fickleFinger, dogLeg, rearJack);
 
 
     oi = new OI();

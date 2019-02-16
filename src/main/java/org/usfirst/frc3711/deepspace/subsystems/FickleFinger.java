@@ -14,11 +14,11 @@ import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 /**
  * Add your docs here.
  */
-public class Ejector extends TalonSubsystem {
+public class FickleFinger extends TalonSubsystem {
   private final Runnable talonTelemetry;
 
-  public Ejector() {
-    super(Ejector.class.getSimpleName(), TalonID.EJECTOR.getId());
+  public FickleFinger() {
+    super(FickleFinger.class.getSimpleName(), TalonID.EJECTOR.getId());
 
     talonTelemetry = TalonUtil.closedLoopTelemetry(this);
   }
@@ -28,8 +28,9 @@ public class Ejector extends TalonSubsystem {
     return talon.getMotorOutputPercent() != 0;
   }
 
-  public void run() {
-    talon.set(ControlMode.PercentOutput, 1.0);
+
+  public void run(double out){
+    talon.set(ControlMode.PercentOutput,out);
   }
 
   public void stow() {

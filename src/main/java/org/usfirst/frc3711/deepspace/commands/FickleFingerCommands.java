@@ -3,7 +3,14 @@ package org.usfirst.frc3711.deepspace.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc3711.deepspace.Robot;
 
-public class EjectorCommands {
+public class FickleFingerCommands {
+
+  public static Command hookingDirectionCommand(){
+    return new FullPower(true);
+  }
+  public static Command ejectingDirectionCommand(){
+    return new FullPower(false);
+  }
 
 //  public static Command hookHatchpanelCommand() {
 //    final double hook_setpoint = 100;
@@ -38,9 +45,11 @@ public class EjectorCommands {
 //    }.withTimeout(2.0);
 //  }
 //
-  public static class RunEjector extends Command {
-    public RunEjector() {
-      requires(Robot.ejector);
+   static class FullPower extends Command {
+    double  out;
+     FullPower(boolean fwd) {
+      requires(Robot.fickleFinger);
+      out = fwd ? 1.0 : -1.0;
     }
 
     // Called just before this Command runs the first time
@@ -51,7 +60,7 @@ public class EjectorCommands {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-      Robot.ejector.run();
+      Robot.fickleFinger.run(out);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -63,7 +72,7 @@ public class EjectorCommands {
     // Called once after isFinished returns true
     @Override
     protected void end() {
-      Robot.ejector.stop();
+      Robot.fickleFinger.stop();
     }
  }
 }
