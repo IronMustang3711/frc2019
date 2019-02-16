@@ -34,7 +34,7 @@ public class HatchPanel2 extends CommandGroup {
     addParallel(new MotionMagicSetpoint("Hold Elevator Position",
         Robot.elevator, elevatorPosition, armOutTimeout));
     //	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
-    addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3017.0, 3.0) {
+    addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3300, 3.0) {
       @Override
       protected boolean isFinished() {
         return super.isFinished();
@@ -42,9 +42,9 @@ public class HatchPanel2 extends CommandGroup {
         // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
       }
     });
-    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1996), armOutTimeout);
+    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1900), armOutTimeout);
 
-    addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -7688));
+    addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, 13000));
 
   }
 

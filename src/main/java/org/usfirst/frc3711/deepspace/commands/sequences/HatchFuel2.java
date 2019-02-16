@@ -15,11 +15,11 @@ public class HatchFuel2 extends CommandGroup {
     requires(Robot.elevator);
 
     double elevatorUpTimeout = 1.7;
-    double elevatorPosition = 4000;
+    double elevatorPosition = 13000;
 
     // elevator up:
-    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
-    addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
+    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, -2500), elevatorUpTimeout);
+    addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 3500), elevatorUpTimeout);
     addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
       @Override
       protected boolean isFinished() {
