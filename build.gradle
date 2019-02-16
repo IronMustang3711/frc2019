@@ -5,7 +5,7 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.2.1"
 }
 
-def ROBOT_MAIN_CLASS = "org.usfirst.frc3711.FRC2019.Main"
+def ROBOT_MAIN_CLASS = "org.usfirst.frc3711.deepspace.Main"
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
