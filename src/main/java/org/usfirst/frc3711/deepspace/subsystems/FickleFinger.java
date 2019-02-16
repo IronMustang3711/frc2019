@@ -19,10 +19,14 @@ import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 public class FickleFinger extends TalonSubsystem {
   private final Runnable talonTelemetry;
 
+  static final int ENCODER_TICKS_PER_REV = 1680;
+
   public FickleFinger() {
     super(FickleFinger.class.getSimpleName(), TalonID.FICKLE_FINGER.getId());
 
     talonTelemetry = TalonUtil.closedLoopTelemetry(this);
+
+    tab.add(this);
 
     tab.add(new Command("closed loop control(Position)") {
 
@@ -33,7 +37,7 @@ public class FickleFinger extends TalonSubsystem {
       @Override
       protected void execute() {
         // if (ntClosedLoopEnabled.getBoolean(false)) {
-        talon.set(ControlMode.Position, ntSetpoint.getDouble(0.0));
+        talon.set(ControlMode.Position, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
         //}
       }
 
@@ -79,6 +83,55 @@ public class FickleFinger extends TalonSubsystem {
       }
 
     });
+
+    tab.add(new Command("Eject") {
+      {
+        requires(FickleFinger.this);
+      }
+
+
+      //long startTime;
+      int nextPosition;
+
+      @Override
+      protected boolean isFinished() {
+        return
+            Math.abs(talon.getClosedLoopError()) < 40
+                && Math.abs(talon.getSelectedSensorVelocity()) <= 2;
+      }
+
+      @Override
+      protected void initialize() {
+        talon.selectProfileSlot(0,0);
+        int currentRev = 0;
+        int currentPosition = talon.getSelectedSensorPosition();
+        if(currentPosition % ENCODER_TICKS_PER_REV < ENCODER_TICKS_PER_REV/2){
+          int currRotTrunc = currentPosition / ENCODER_TICKS_PER_REV;
+          //currentRev = currentPosition / ENCODER_TICKS_PER_REV;
+        }
+        else {
+          currentRev = (currentPosition + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV;
+        }
+
+            // (talon.getSelectedSensorPosition() + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV;
+        System.out.println("currentRev = " + currentRev);
+        nextPosition = (currentRev + 1)*ENCODER_TICKS_PER_REV;
+        //startTime = System.currentTimeMillis();
+        System.out.println("nextPosition = " + nextPosition);
+      }
+
+      @Override
+      protected void execute() {
+        super.execute();
+        talon.set(ControlMode.Position,nextPosition);
+      }
+
+      @Override
+      protected void end() {
+        super.end();
+        disable();
+      }
+    });
   }
 
   @Override
@@ -98,6 +151,7 @@ public class FickleFinger extends TalonSubsystem {
     talon.set(ControlMode.PercentOutput,out);
   }
 
+
   public void stow() {
 //TODO:
   }
@@ -107,7 +161,13 @@ public class FickleFinger extends TalonSubsystem {
   }
 
   public void eject() {
-    //TODO;
+    int currentRev = talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+    System.out.println("currentRev = " + currentRev);
+    int nextPosition = (currentRev + 1)*ENCODER_TICKS_PER_REV;
+    System.out.println("nextPosition = " + nextPosition);
+    talon.set(ControlMode.Position,nextPosition);
+
+
   }
 
 
