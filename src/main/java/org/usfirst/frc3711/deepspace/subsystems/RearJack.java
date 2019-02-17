@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import org.usfirst.frc3711.deepspace.TalonID;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
@@ -38,6 +39,13 @@ public class RearJack extends TalonSubsystem {
       @Override
       protected boolean isFinished() {
         return false;
+      }
+    });
+    tab.add(new InstantCommand("disable forward soft limit"){
+      @Override
+      protected void execute() {
+        super.execute();
+        talon.configForwardSoftLimitEnable(false);
       }
     });
   }
