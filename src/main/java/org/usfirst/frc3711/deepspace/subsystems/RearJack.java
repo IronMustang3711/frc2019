@@ -48,6 +48,13 @@ public class RearJack extends TalonSubsystem {
         talon.configForwardSoftLimitEnable(false);
       }
     });
+    tab.add(new InstantCommand("enable forward soft limit"){
+      @Override
+      protected void execute() {
+        super.execute();
+        talon.configForwardSoftLimitEnable(true);
+      }
+    });
   }
 
   @Override
