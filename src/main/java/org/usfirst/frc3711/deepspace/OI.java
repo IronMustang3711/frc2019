@@ -158,14 +158,7 @@ public class OI {
 
     // tab.add(new CommandSequences.PingPong());
 
-    tab.add(new InstantCommand("Zero Encoders", () -> {
-
-      for (TalonSubsystem s : Arrays.asList(Robot.elevator, Robot.wrist, Robot.arm)) {
-        var t = s.talon;
-        t.setSelectedSensorPosition(0);
-        t.getSensorCollection().setQuadraturePosition(0, 50);
-      }
-    }));
+    tab.add(ZeroEncoder.resetAllEncoders());
     tab.add(Commands.disableAll());
   }
 
