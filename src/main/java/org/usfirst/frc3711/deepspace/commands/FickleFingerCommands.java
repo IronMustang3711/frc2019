@@ -100,4 +100,72 @@ public class FickleFingerCommands {
       }
     };
   }
+  public static Command fickleFingerToHome(){
+    return new TalonSubsystemCommand("Fickle Finger to Home", Robot.fickleFinger, 1.5){
+      @Override
+      protected void execute() {
+        super.execute();
+        subsystem.talon.set(ControlMode.Position, 0);
+
+      }
+      @Override
+        protected boolean isFinished() {
+          return super.isFinished() || Math.abs(subsystem.talon.getSelectedSensorPosition()) < 40;
+
+        }
+        @Override
+          protected void end() {
+            super.end();
+            subsystem.disable();
+          }
+    };
+  }
+  public static Command fickleFingerExtend(){
+    return new TalonSubsystemCommand("Fickle Finger Extend", Robot.fickleFinger, 1.5){
+      @Override
+      protected void execute() {
+        super.execute();
+        subsystem.talon.set(ControlMode.Position, -2500);
+
+      }
+      @Override
+        protected boolean isFinished() {
+          return super.isFinished() || Math.abs(subsystem.talon.getSelectedSensorPosition()) < 40;
+
+        }
+        @Override
+          protected void end() {
+            super.end();
+            subsystem.disable();
+          }
+    };
+  }
+  public static Command fickleFingerToggle(){
+    return new TalonSubsystemCommand("Fickle Finger Toggle", Robot.fickleFinger, 1.5){
+      @Override
+      protected void execute() {
+        super.execute();
+        subsystem.talon.set(ControlMode.Position, out ? -2500:0);
+
+      }
+      @Override
+        protected boolean isFinished() {
+          return super.isFinished() || Math.abs(subsystem.talon.getSelectedSensorPosition()) < 40;
+
+        }
+        @Override
+          protected void end() {
+            super.end();
+            subsystem.disable();
+          }
+          boolean out;
+          @Override
+            protected void initialize() {
+              super.initialize();
+              out =! Robot.fickleFinger.isOut();
+
+            }
+    };
+  }
 }
+
