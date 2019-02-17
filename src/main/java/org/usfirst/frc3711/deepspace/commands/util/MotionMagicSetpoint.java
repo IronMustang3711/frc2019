@@ -52,6 +52,12 @@ public class MotionMagicSetpoint extends Command {
     return Math.abs(setpoint - subsystem.talon.getActiveTrajectoryPosition()) < 1.0;
   }
 
+  public boolean isMotionFinished2(){
+    double closedLoopTarget = subsystem.talon.getClosedLoopTarget();
+    double trajPos = subsystem.talon.getActiveTrajectoryPosition();
+    return Math.abs(closedLoopTarget - trajPos) < 1.0;
+  }
+
 
   @Override
   protected void initialize() {
@@ -76,7 +82,7 @@ public class MotionMagicSetpoint extends Command {
 
   @Override
   protected boolean isFinished() {
-    return isTimedOut() || isCanceled();
+    return isTimedOut() || isCanceled() || isMotionFinished2();
   }
 
 
