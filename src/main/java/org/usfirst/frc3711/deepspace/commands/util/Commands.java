@@ -119,6 +119,14 @@ public class Commands {
     };
   }
 
+  public static Command delayUntil(BooleanSupplier guard){
+    return new Command("DelayUntil") {
+      @Override
+      protected boolean isFinished() {
+        return guard.getAsBoolean();
+      }
+    };
+  }
   public static Command constantOutput(TalonSubsystem subsystem, double output){
     return new ConstantOutput(subsystem, output);
   }
