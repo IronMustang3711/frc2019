@@ -2,7 +2,6 @@ package org.usfirst.frc3711.deepspace;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -11,8 +10,6 @@ import org.usfirst.frc3711.deepspace.commands.*;
 import org.usfirst.frc3711.deepspace.commands.sequences.*;
 import org.usfirst.frc3711.deepspace.commands.util.Commands;
 import org.usfirst.frc3711.deepspace.subsystems.TalonSubsystem;
-
-import java.util.Arrays;
 
 
 @SuppressWarnings("WeakerAccess")
@@ -144,7 +141,6 @@ public class OI {
     tab.add(new StagingPose());
     tab.add(new HatchFuel0());
     tab.add(new HatchPanel0());
-    tab.add(new HatchPanel0_2());
     tab.add(new LoadingStationFuel());
     tab.add(new LoadingStationFuelToHome());
     tab.add(new HatchFuel1());
