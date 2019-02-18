@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
-
+@Deprecated
 public class DeferedCommandBuilder {
   private final Command command;
 
