@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import org.usfirst.frc3711.deepspace.TalonID;
 import org.usfirst.frc3711.deepspace.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
@@ -160,9 +161,17 @@ what voltage represents 100% output.
   private final NetworkTableEntry lowPowerMode;
   private final Runnable talonTelemetry;
 
+  private SendableChooser<ControlMode> closedLoopChooser;
+
 
   public Wrist() {
     super(Wrist.class.getSimpleName(), TalonID.WRIST.getId());
+
+    closedLoopChooser = new SendableChooser<>();
+    closedLoopChooser.setDefaultOption("Motion Magic",ControlMode.MotionMagic);
+    closedLoopChooser.addOption("Position",ControlMode.Position);
+
+    tab.add("Closed Loop Chooser",closedLoopChooser);
 
 
     lowPowerMode = tab.add("low power mode", false)
@@ -174,7 +183,7 @@ what voltage represents 100% output.
 
     tab.add(this);
 
-    tab.add(new Command("closed loop control") {
+    tab.add(new Command("EnableSetpoint") {
 
       {
         requires(Wrist.this);
@@ -207,7 +216,7 @@ what voltage represents 100% output.
 //            talon.configVoltageCompSaturation(9.0);
 //          }
 //        }
-        talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
+        talon.set(closedLoopChooser.getSelected(), ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
       }
 
       @Override
