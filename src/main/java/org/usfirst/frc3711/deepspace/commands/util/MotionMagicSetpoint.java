@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.subsystems.TalonSubsystem;
 
 
@@ -13,6 +14,7 @@ public class MotionMagicSetpoint extends Command {
   private double setpoint;
 
   private long startTime;
+  private long motionCompleTime=-1;
   private double initialPosition;
 
   public MotionMagicSetpoint(String name, TalonSubsystem subsystem, double setpoint) {
@@ -39,6 +41,10 @@ public class MotionMagicSetpoint extends Command {
   }
 
   public double getElapsedTime(){
+    long now = System.currentTimeMillis();
+    return (now - startTime) / 1000.0;
+  }
+  public double getTimeSinceMotionComplete(){
     long now = System.currentTimeMillis();
     return (now - startTime) / 1000.0;
   }
@@ -73,6 +79,9 @@ public class MotionMagicSetpoint extends Command {
   protected void execute() {
     subsystem.talon.selectProfileSlot(0, 0);
     subsystem.talon.set(ControlMode.MotionMagic, setpoint);
+    if(isMotionFinished2() && motionCompleTime==-1){
+      motionCompleTime = System.currentTimeMillis();
+    }
   }
 
   @Override
@@ -83,6 +92,18 @@ public class MotionMagicSetpoint extends Command {
   @Override
   protected boolean isFinished() {
     return isTimedOut() || isCanceled() || isMotionFinished2();
+  }
+
+  public static class ArmSetpoint extends MotionMagicSetpoint {
+
+    public ArmSetpoint(String name, double setpoint){
+      super(name, Robot.arm,setpoint);
+    }
+
+    @Override
+    protected boolean isFinished() {
+      return super.isFinished() && getTimeSinceMotionComplete() > 0.5;
+    }
   }
 
 
