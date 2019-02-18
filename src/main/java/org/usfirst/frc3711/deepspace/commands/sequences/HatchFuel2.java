@@ -18,31 +18,23 @@ public class HatchFuel2 extends CommandGroup {
     double elevatorPosition = 13000;
 
     // elevator up:
-    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, -2500), elevatorUpTimeout);
-    addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 3500), elevatorUpTimeout);
-    addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
-      @Override
-      protected boolean isFinished() {
-        return super.isFinished();
-        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
-      }
-    });
-
-    double armOutTimeout = 3.0;
-    // Arm out, Wrist down
-    addParallel(new MotionMagicSetpoint("Hold Elevator Position",
-        Robot.elevator, elevatorPosition, armOutTimeout));
+    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, -2500));
+    addParallel(new MotionMagicSetpoint.ArmSetpoint("Arm Vertical", 3300));
+    addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition));
+//    double armOutTimeout = 3.0;
+//    // Arm out, Wrist down
+//    addParallel(new MotionMagicSetpoint("Hold Elevator Position",
+//        Robot.elevator, elevatorPosition, armOutTimeout));
     //	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
-    addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3300.0, 3.0) {
-      @Override
-      protected boolean isFinished() {
-        return super.isFinished();
-        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
-      }
-    });
-    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2440), armOutTimeout);
+//    addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3300.0, 3.0) {
+//      @Override
+//      protected boolean isFinished() {
+//        return super.isFinished();
+//        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
+//        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
+//      }
+//    });
+    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2440));
 
     //addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4000));
 
