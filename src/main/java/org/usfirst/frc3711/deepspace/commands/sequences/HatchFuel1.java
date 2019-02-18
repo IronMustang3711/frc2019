@@ -1,12 +1,12 @@
 package org.usfirst.frc3711.deepspace.commands.sequences;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.command.MyCommandGroup;
+import edu.wpi.first.wpilibj.command.WaitForChildren;
 import org.usfirst.frc3711.deepspace.Robot;
+import org.usfirst.frc3711.deepspace.commands.util.Commands;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 
-public class HatchFuel1 extends CommandGroup {
+public class HatchFuel1 extends MyCommandGroup {
 
   public HatchFuel1() {
     super(HatchFuel1.class.getSimpleName());
@@ -14,53 +14,21 @@ public class HatchFuel1 extends CommandGroup {
     requires(Robot.wrist);
     requires(Robot.elevator);
 
-    double elevatorUpTimeout = 1.7;
-    double elevatorPosition = 4000;
 
     // elevator up:
-    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
-    addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
-    addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
-      @Override
-      protected boolean isFinished() {
-        return super.isFinished();
-        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
-      }
-    });
+    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 0));
+    addParallel(new MotionMagicSetpoint.ArmSetpoint("Arm Vertical", 0));
 
-    double armOutTimeout = 3.0;
-    // Arm out, Wrist down
-    addParallel(new MotionMagicSetpoint("Hold Elevator Position",
-        Robot.elevator, elevatorPosition, armOutTimeout));
-    //	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
-    addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3133.0, 3.0) {
-      @Override
-      protected boolean isFinished() {
-        return super.isFinished();
-        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
-      }
-    });
-    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949), armOutTimeout);
+    var elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 5000);
+    addParallel(elevatorUp);
+    addSequential(Commands.delayUntil(()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() > 0.7));
 
-    //addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4000));
+    var armOut = new MotionMagicSetpoint.ArmSetpoint("Arm Out", 3100);
+    addParallel(armOut);
+    addSequential(Commands.delayUntil(()->armOut.isRunning() && armOut.getMotionProgress() >= 0.4));
+    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949));
+    addSequential(new WaitForChildren());
 
   }
 
-  @Override
-  protected void initialize() {
-    super.initialize();
-    Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
-
-  }
-
-  @Override
-  protected void end() {
-    super.end();
-    Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
-
-   // RestingPose.run();
-
-  }
 }
