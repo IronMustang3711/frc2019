@@ -47,7 +47,7 @@ public class OI {
     joystick1 = new Joystick(0);
 
     stow = new JoystickButton(joystick1, 7);
-    stow.whenPressed(new RobotPoser(RobotPose.STOW));
+    stow.whenPressed(new Stow());
 
     jogUp = new JoystickButton(joystick1, 9);
     jogUp.whenPressed(new JogElevator(true));
@@ -135,7 +135,7 @@ public class OI {
     subsys.add(Robot.wrist);
     subsys.add(Robot.elevator);
 
-    tab.add(new RobotPoser(RobotPose.STOW));
+    tab.add(new Stow());
     tab.add(new RestingPose());
     tab.add(new Resting2());
     tab.add(new StagingPose());
