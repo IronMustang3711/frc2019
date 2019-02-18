@@ -58,9 +58,9 @@ public class OI {
     Robot.elevator.tab.add(new JogElevator(false));
 
 
-    Robot.fickleFinger.tab.add(FickleFingerCommands.ejectCommand());
-    Robot.fickleFinger.tab.add(FickleFingerCommands.hookCommand());
-    Robot.fickleFinger.tab.add(FickleFingerCommands.hookEngageCommand());
+//    Robot.fickleFinger.tab.add(FickleFingerCommands.ejectCommand());
+//    Robot.fickleFinger.tab.add(FickleFingerCommands.hookCommand());
+//    Robot.fickleFinger.tab.add(FickleFingerCommands.hookEngageCommand());
     Robot.fickleFinger.tab.add(FickleFingerCommands.fickleFingerToHome());
     Robot.fickleFinger.tab.add(FickleFingerCommands.fickleFingerExtend());
 
