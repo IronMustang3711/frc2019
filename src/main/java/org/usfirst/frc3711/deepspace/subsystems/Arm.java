@@ -182,6 +182,7 @@ Status Frame Periods
       talon.enableVoltageCompensation(true);
       talon.enableCurrentLimit(true);
 
+      talon.configMotionSCurveStrength(8);
     }
   }
 
