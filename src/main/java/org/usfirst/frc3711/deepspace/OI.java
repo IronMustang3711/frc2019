@@ -136,8 +136,6 @@ public class OI {
     subsys.add(Robot.elevator);
 
     tab.add(new Stow());
-    tab.add(new RestingPose());
-    tab.add(new Resting2());
     tab.add(new StagingPose());
     tab.add(new HatchFuel0());
     tab.add(new HatchPanel0());
