@@ -33,4 +33,8 @@ public abstract class RobotSubsystem extends Subsystem {
 
   public void disable() {
   }
+
+  @Override
+  protected void initDefaultCommand() {
+  }
 }
