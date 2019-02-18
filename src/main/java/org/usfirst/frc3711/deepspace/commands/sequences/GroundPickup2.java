@@ -5,6 +5,7 @@ import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.commands.util.DeferedCommandBuilder;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 
+//TODO use or delete
 public class GroundPickup2 extends CommandGroup {
   private MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 10000, 2.5);
   private MotionMagicSetpoint armOut = new MotionMagicSetpoint("Arm  Out", Robot.arm, 1800);
