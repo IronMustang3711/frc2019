@@ -1,22 +1,31 @@
 package edu.wpi.first.wpilibj.command;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class MyCommandGroup extends CommandGroup {
 
 
+
+  private static Field childrenField;
+  private static Field commandsField;
+
+  static {
+    reflective_stuff();
+  }
+
+  private Vector<?> children;
+  private Vector<?> commands;
+  private String prevRunningCommands = "";
+  @SuppressWarnings("unused")
   public MyCommandGroup() {
     do_reflection();
   }
-  private static Field childrenField;
-  private static Field commandsField;
-  private static Field entryCommandField;
-
+  public MyCommandGroup(String name) {
+    super(name);
+    do_reflection();
+  }
 
   private static void reflective_stuff()  {
     try {
@@ -26,41 +35,13 @@ public class MyCommandGroup extends CommandGroup {
       commandsField.setAccessible(true);
 
       Class<?> entryClass = Class.forName("edu.wpi.first.wpilibj.command.CommandGroup$Entry");
-      entryCommandField = entryClass.getDeclaredField("m_command");
+      Field entryCommandField = entryClass.getDeclaredField("m_command");
       entryCommandField.setAccessible(true);
     } catch (ClassNotFoundException | NoSuchFieldException e) {
       throw new RuntimeException(e);
     }
   }
 
-  static {
-    reflective_stuff();
-  }
-
-  private static Iterable<Command> entryExtractor(Vector v){
-    return () -> {
-      Iterator src = v.iterator();
-      return new Iterator<>() {
-        @Override
-        public boolean hasNext() {
-          return src.hasNext();
-        }
-
-        @Override
-        public Command next() {
-          Object nextEntry = src.next();
-          try {
-            return (Command) entryCommandField.get(nextEntry);
-          } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-          }
-        }
-      };
-    };
-  }
-
-  private Vector children;
-  private Vector commands;
   private void do_reflection(){
     try {
       children = (Vector) childrenField.get(this);
@@ -70,60 +51,41 @@ public class MyCommandGroup extends CommandGroup {
     }
   }
 
-//  Command[] children(){
-//    return StreamSupport.stream(entryExtractor(children).spliterator(),false).toArray(Command[]::new);
-//  }
-   private String[] childrenNames(){
-    var lst = new ArrayList<String>();
-
-    for(var c : entryExtractor(children)){
-      lst.add(c.getName());
-    }
-    return lst.toArray(new String[0]);
-  }
-//  Command[] commands(){
-//    return StreamSupport.stream(entryExtractor(commands).spliterator(),false).toArray(Command[]::new);
-//  }
-//  private String[] commandNames(){
-//    var lst = new ArrayList<String>();
-//
-//    for(var c : entryExtractor(commands)){
-//      lst.add(c.getName());
-//    }
-//    return lst.toArray(new String[0]);
-//  }
-
-
-  public MyCommandGroup(String name) {
-    super(name);
-    do_reflection();
-  }
-
-//  @Override
-//  public void initSendable(SendableBuilder builder) {
-//    super.initSendable(builder);
-//    builder.addStringArrayProperty("childCommands",this::childrenNames,null);
-//    builder.addStringArrayProperty("commands",this::commandNames,null);
-//  }
-
-  private String prevChildren ="";
-  private String prevRunningCommands = "";
-
   @Override
   void _execute() {
     super._execute();
-    String runningCommands = StreamSupport.stream(entryExtractor(commands).spliterator(),false)
-        .filter(Command::isRunning).map(Command::getName).collect(Collectors.joining(", "));
 
-    if(!prevRunningCommands.equals(runningCommands)) {
-      System.out.println(getName() +"[Running]: "+runningCommands);
-      prevRunningCommands = runningCommands;
+    var runningCommands = commands.stream()
+                               .map(Command.class::cast)
+                               .filter(Command::isRunning)
+                               .collect(Collectors.toList());
+
+    var childCommands = children.stream()
+                            .map(Command.class::cast)
+                            .collect(Collectors.toSet());
+
+    var runningCommandsStr =
+        runningCommands.stream()
+            .map(command -> childCommands.contains(command) ? "." + command.getName() : ".." + command.getName())
+            .collect(Collectors.joining(", "));
+
+
+    if (!prevRunningCommands.equals(runningCommandsStr)) {
+      System.out.println(getName() + "[Running]: " + runningCommandsStr);
+      prevRunningCommands = runningCommandsStr;
     }
 
-    String children = String.join(", ",childrenNames());
-    if(!prevChildren.equals(children)){
-      System.out.println(getName()+"[Children]:"+children);
-      prevChildren = children;
-    }
+  }
+
+  @Override
+  void _initialize() {
+    super._initialize();
+    System.out.println(getName()+"[Init]");
+  }
+
+  @Override
+  void _end() {
+    super._end();
+    System.out.println(getName()+"[End]");
   }
 }
