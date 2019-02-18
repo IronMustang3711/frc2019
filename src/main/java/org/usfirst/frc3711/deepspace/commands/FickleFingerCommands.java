@@ -150,7 +150,7 @@ public class FickleFingerCommands {
       }
       @Override
         protected boolean isFinished() {
-          return super.isFinished() || Math.abs(subsystem.talon.getSelectedSensorPosition()) < 40;
+          return super.isFinished() /*|| Math.abs(subsystem.talon.getSelectedSensorPosition()) < 40*/;
 
         }
         @Override
