@@ -191,21 +191,21 @@ what voltage represents 100% output.
 
       @Override
       protected void execute() {
-        //relatively low error & not much motion:
-        if (Math.abs(talon.getErrorDerivative()) < 1.0 && Math.abs(talon.getClosedLoopError()) < 200) {
-          //enable 'low-power' mode
-          if (!lowPower) {
-            talon.configVoltageCompSaturation(5.0);
-            lowPower = true;
-          }
-        }
-        //high error and/or movement
-        else {
-          if (lowPower) {
-            lowPowerMode.setBoolean(lowPower = false);
-            talon.configVoltageCompSaturation(9.0);
-          }
-        }
+//        //relatively low error & not much motion:
+//        if (Math.abs(talon.getErrorDerivative()) < 1.0 && Math.abs(talon.getClosedLoopError()) < 200) {
+//          //enable 'low-power' mode
+//          if (!lowPower) {
+//            talon.configVoltageCompSaturation(5.0);
+//            lowPower = true;
+//          }
+//        }
+//        //high error and/or movement
+//        else {
+//          if (lowPower) {
+//            lowPowerMode.setBoolean(lowPower = false);
+//            talon.configVoltageCompSaturation(9.0);
+//          }
+//        }
         talon.set(ControlMode.MotionMagic, ntSetpoint.getDouble(talon.getSelectedSensorPosition()));
       }
 

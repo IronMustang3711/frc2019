@@ -243,28 +243,28 @@ Status Frame Periods
 
         double sp = ntSetpoint.getDouble(talon.getSelectedSensorPosition());
 
-        long elapsed = System.currentTimeMillis() - lowPowerStartTime;
-
-        if (Math.abs(talon.getErrorDerivative()) < 4.0
-                &&  elapsed > 500) {
-          if (!lowPower) {
-            System.out.println("low power @ " + elapsed
-                                   + " E=" + talon.getClosedLoopError()
-                                   + " dE=" + talon.getErrorDerivative());
-            lowPowerMode.setBoolean(lowPower = true);
-            talon.configVoltageCompSaturation(5.0);
-           // enableCurrentLimiting();
-          }
-        } else {
-          if (lowPower) {
-            System.out.println("full power @ " + elapsed
-                                   + " E=" + talon.getClosedLoopError()
-                                   + " dE=" + talon.getErrorDerivative());
-            lowPowerMode.setBoolean(lowPower = false);
-            talon.configVoltageCompSaturation(9.0);
-            // disableCurrentLimiting();
-          }
-        }
+//        long elapsed = System.currentTimeMillis() - lowPowerStartTime;
+//
+//        if (Math.abs(talon.getErrorDerivative()) < 4.0
+//                &&  elapsed > 500) {
+//          if (!lowPower) {
+//            System.out.println("low power @ " + elapsed
+//                                   + " E=" + talon.getClosedLoopError()
+//                                   + " dE=" + talon.getErrorDerivative());
+//            lowPowerMode.setBoolean(lowPower = true);
+//            talon.configVoltageCompSaturation(5.0);
+//           // enableCurrentLimiting();
+//          }
+//        } else {
+//          if (lowPower) {
+//            System.out.println("full power @ " + elapsed
+//                                   + " E=" + talon.getClosedLoopError()
+//                                   + " dE=" + talon.getErrorDerivative());
+//            lowPowerMode.setBoolean(lowPower = false);
+//            talon.configVoltageCompSaturation(9.0);
+//            // disableCurrentLimiting();
+//          }
+//        }
         talon.set(modeChooser.getSelected(), sp);
       }
 
