@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import org.usfirst.frc3711.deepspace.commands.Disable;
 import org.usfirst.frc3711.deepspace.commands.util.Commands;
 
 public abstract class TalonSubsystem extends RobotSubsystem {
@@ -16,7 +17,7 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     super(name);
     this.talon = new WPI_TalonSRX(talonID);
 
-    tab.add(Commands.disableCommand(this));
+  //  tab.add(Commands.disableCommand(this));
     tab.add(Commands.disableCurrentLimitCommand(this));
     tab.add(Commands.enableCurrentLimitCommand(this));
 
@@ -35,7 +36,7 @@ public abstract class TalonSubsystem extends RobotSubsystem {
 
   @Override
   protected void initDefaultCommand() {
-
+    tab.add(new Disable(this));
   }
 
   void configureTalon() {
