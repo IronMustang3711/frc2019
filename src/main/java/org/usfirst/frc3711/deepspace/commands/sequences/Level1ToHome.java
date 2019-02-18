@@ -9,10 +9,10 @@ public class Level1ToHome extends MyCommandGroup {
   public Level1ToHome(){
     super(Level1ToHome.class.getSimpleName());
 
-    var elevatorUp = new MotionMagicSetpoint("Elevator Up", Robot.elevator,5000);
+    var elevatorUp = new MotionMagicSetpoint("Elevator Up", Robot.elevator,6000);
     addParallel(elevatorUp);
     addSequential(Commands.delayUntil(() -> Math.abs(Robot.elevator.talon.getClosedLoopError()) < 500));
-
+//TODO: check arm position for ordering
     var wristHome = new MotionMagicSetpoint("Wrist Home",Robot.wrist,0);
     addParallel(wristHome);
     addSequential(Commands.delayUntil(()-> wristHome.getMotionProgress() > 0.5));
