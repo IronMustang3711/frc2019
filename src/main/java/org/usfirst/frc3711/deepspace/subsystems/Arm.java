@@ -97,7 +97,7 @@ public class Arm extends TalonSubsystem {
       config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
       config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
 
-      config.forwardSoftLimitThreshold = 4000; //TODO: This is just a guess;
+      config.forwardSoftLimitThreshold = 3100;
       config.reverseSoftLimitThreshold = -10;
       config.forwardSoftLimitEnable = true;
       config.reverseSoftLimitEnable = true;
@@ -109,7 +109,7 @@ public class Arm extends TalonSubsystem {
       config.motionCruiseVelocity = 100;
       config.motionAcceleration = 90;
 
-      config.peakOutputForward = 0.9;
+      config.peakOutputForward = 1.0;
       config.peakOutputReverse = -0.5;
 
 
@@ -135,14 +135,14 @@ Talon SRX and Victor SPX can be configured to adjust their outputs in response t
 voltage measurement (in all control modes). Use the voltage compensation saturation config to determine
 what voltage represents 100% output.
  */
-      config.voltageCompSaturation = 9.0;
+      config.voltageCompSaturation = 10.0;
 
 
               /*
         After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
          */
-      config.peakCurrentLimit = 20;
-      config.peakCurrentDuration = 1000;
+      config.peakCurrentLimit = 25;
+      config.peakCurrentDuration = 2000;
       config.continuousCurrentLimit = 1;
 
       config.slot0 = PIDSlots.configurationForSlot(0);
