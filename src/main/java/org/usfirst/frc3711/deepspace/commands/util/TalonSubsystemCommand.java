@@ -6,12 +6,12 @@ public class TalonSubsystemCommand extends AbstractCommand {
   protected final TalonSubsystem subsystem;
 
   public TalonSubsystemCommand(String name, TalonSubsystem subsystem, double timeout) {
-    super(subsystem.getName() + ":" + name, timeout, subsystem);
+    super( name, timeout, subsystem);
     this.subsystem = subsystem;
   }
 
   protected TalonSubsystemCommand(String name, TalonSubsystem subsystem) {
-    super(subsystem.getName() + ":" + name, subsystem);
+    super(name, subsystem);
     this.subsystem = subsystem;
   }
 }
