@@ -58,26 +58,28 @@ public class MyCommandGroup extends CommandGroup {
 
   @SuppressWarnings("WeakerAccess")
   public String debugString(){
-    var runningCommands = commands.stream()
-                              .map(Command.class::cast)
-                              .filter(Command::isRunning)
-                              .collect(Collectors.toList());
+    //TODO: commands is a vector of "Entry"'s , no commands
+    //TODO: need to extract Command from Entry
+//    var runningCommands = commands.stream()
+//                              .map(Command.class::cast)
+//                              .filter(Command::isRunning)
+//                              .collect(Collectors.toList());
+//
+//    var childCommands = children.stream()
+//                            .map(Command.class::cast)
+//                            .collect(Collectors.toSet());
+//
+//    var runningChildrenStr = runningCommands.stream()
+//                                 .filter(childCommands::contains)
+//                                 .map(Command::getName)
+//                                 .collect(Collectors.joining(", ", "@[", "]"));
+//
+//    var runningSiblingsStr = runningCommands.stream()
+//                                 .filter(c -> !childCommands.contains(c))
+//                                 .map(Command::getName)
+//                                 .collect(Collectors.joining(", "));
 
-    var childCommands = children.stream()
-                            .map(Command.class::cast)
-                            .collect(Collectors.toSet());
-
-    var runningChildrenStr = runningCommands.stream()
-                                 .filter(childCommands::contains)
-                                 .map(Command::getName)
-                                 .collect(Collectors.joining(", ", "@[", "]"));
-
-    var runningSiblingsStr = runningCommands.stream()
-                                 .filter(c -> !childCommands.contains(c))
-                                 .map(Command::getName)
-                                 .collect(Collectors.joining(", "));
-
-    return getName() + "[Running] " + runningChildrenStr + runningSiblingsStr;
+    return getName();// + "[Running] " + runningChildrenStr + runningSiblingsStr;
   }
 
   @Override
