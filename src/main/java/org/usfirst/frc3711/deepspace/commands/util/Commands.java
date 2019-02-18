@@ -75,35 +75,35 @@ public class Commands {
 
   }
 
-//  public static Command disableAll() {
-//    return new InstantCommand("Disable All") {
-//      @Override
-//      protected void execute() {
-//        Robot.disableAll();
-//      }
-//    };
-//
-//  }
+  public static Command disableAll() {
+    return new InstantCommand("Disable All") {
+      @Override
+      protected void execute() {
+        Robot.disableAll();
+      }
+    };
 
-//  public static Command disableCommand(final TalonSubsystem subsystem) {
-//    return new DisableTalon(subsystem);
-//  }
+  }
 
-//   static class DisableTalon extends InstantCommand {
-//    final TalonSubsystem subsystem;
-//
-//    DisableTalon(TalonSubsystem subsystem) {
-//      super(subsystem.getName() + "Disable");
-//      this.subsystem = subsystem;
-//      requires(subsystem);
-//    }
-//
-//    @Override
-//    protected void initialize() {
-//      subsystem.disable();
-//    }
-//
-//  }
+  public static Command disableCommand(final TalonSubsystem subsystem) {
+    return new DisableTalon(subsystem);
+  }
+
+   static class DisableTalon extends InstantCommand {
+    final TalonSubsystem subsystem;
+
+    DisableTalon(TalonSubsystem subsystem) {
+      super(subsystem.getName() + "Disable");
+      this.subsystem = subsystem;
+      requires(subsystem);
+    }
+
+    @Override
+    protected void initialize() {
+      subsystem.disable();
+    }
+
+  }
 
   public static Command runWhenTrue(Command c, BooleanSupplier guard){
     return new Command(){

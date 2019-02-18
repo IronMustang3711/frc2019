@@ -153,8 +153,7 @@ public class OI {
     // tab.add(new CommandSequences.PingPong());
 
     tab.add(ZeroEncoder.resetAllEncoders());
-   // tab.add(Commands.disableAll());
-    tab.add(Disable.all());
+    tab.add(Commands.disableAll());
   }
 
   public Joystick getJoystick1() {
