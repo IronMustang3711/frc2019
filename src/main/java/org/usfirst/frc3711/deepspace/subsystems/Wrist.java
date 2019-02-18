@@ -42,6 +42,7 @@ public class Wrist extends TalonSubsystem {
 
       public static final SlotConfiguration MM_SLOT =
           SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
+              .withAllowableClosedloopError(30)
               .withKP(4.5)
 //                            .withKI(0.01)
 //                            .withIntegralZone(100)
@@ -89,7 +90,7 @@ public class Wrist extends TalonSubsystem {
       config.motionAcceleration = 100;
 
       config.peakOutputForward = 1.0;
-      config.peakOutputReverse = -0.8;
+      config.peakOutputReverse = -1;
 
 
 
