@@ -1,12 +1,15 @@
 package org.usfirst.frc3711.deepspace.commands.sequences;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.MyCommandGroup;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import org.usfirst.frc3711.deepspace.Robot;
+import org.usfirst.frc3711.deepspace.commands.util.Commands;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 
-public class LoadingStationFuel extends CommandGroup {
+public class LoadingStationFuel extends MyCommandGroup {
 
   public LoadingStationFuel() {
     super(LoadingStationFuel.class.getSimpleName());
@@ -14,37 +17,23 @@ public class LoadingStationFuel extends CommandGroup {
     requires(Robot.wrist);
     requires(Robot.elevator);
 
-    double elevatorUpTimeout = 1.7;
-    double elevatorPosition = 3000;
 
     // elevator up:
-    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
-    addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
-    addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
-      @Override
-      protected boolean isFinished() {
-        return super.isFinished() || getMotionProgress() >= 0.5;
-        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
-      }
-    });
+    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90));
+    addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 0));
 
-    double armOutTimeout = 3.0;
+    var elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 3000);
+    addParallel(elevatorUp);
+
     // Arm out, Wrist down
-    addParallel(new MotionMagicSetpoint("Hold Elevator Position",
-        Robot.elevator, elevatorPosition, armOutTimeout));
-    //	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
-    addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3133.0, 3.0) {
-      @Override
-      protected boolean isFinished() {
-        return super.isFinished();
-        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
-      }
-    });
-    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949), armOutTimeout);
+    addSequential(Commands.delayUntil("Wait for elevator to get 80% way up",
+        ()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() >= 0.8));
 
-    addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4000));
+    addParallel(new MotionMagicSetpoint.ArmSetpoint("Arm Out", 3133));
+    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949));
+
+    //elevator back down
+    addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -3000));
 
   }
 
@@ -52,15 +41,11 @@ public class LoadingStationFuel extends CommandGroup {
   protected void initialize() {
     super.initialize();
     Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
-
   }
 
   @Override
   protected void end() {
     super.end();
     Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
-
-   // RestingPose.run();
-
   }
 }
