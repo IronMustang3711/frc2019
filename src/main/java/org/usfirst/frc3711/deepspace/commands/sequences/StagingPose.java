@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 
+//TODO: use or delete.
 public class StagingPose extends CommandGroup {
   public StagingPose() {
     super(StagingPose.class.getSimpleName());
