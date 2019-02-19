@@ -1,5 +1,7 @@
 package edu.wpi.first.wpilibj.command;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Vector;
@@ -9,7 +11,7 @@ import java.util.stream.Collectors;
 public class MyCommandGroup extends CommandGroup {
 
   @SuppressWarnings("WeakerAccess")
-  public Consumer<CharSequence> debugSink = System.out::println;
+  public Consumer<String> debugSink = charSequence -> DriverStation.reportWarning(charSequence,false);//System.out::println;
 
   enum Reflection {
     INSTANCE;
