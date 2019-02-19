@@ -1,10 +1,11 @@
 package org.usfirst.frc3711.deepspace.commands.sequences;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.MyCommandGroup;
 import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 
-public class HatchPanel0 extends CommandGroup {
+public class HatchPanel0 extends MyCommandGroup {
 
   public HatchPanel0(){
     super(HatchPanel0.class.getSimpleName());
