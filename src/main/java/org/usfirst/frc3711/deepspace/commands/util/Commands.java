@@ -76,7 +76,11 @@ public class Commands {
   }
 
   public static Command disableAll() {
+    //FIXME: this should requre all subsystems to flush existing commands!
     return new InstantCommand("Disable All") {
+      {
+        setRunWhenDisabled(true);
+      }
       @Override
       protected void execute() {
         Robot.disableAll();
@@ -96,6 +100,7 @@ public class Commands {
       super(subsystem.getName() + "Disable");
       this.subsystem = subsystem;
       requires(subsystem);
+      setRunWhenDisabled(true);
     }
 
     @Override
