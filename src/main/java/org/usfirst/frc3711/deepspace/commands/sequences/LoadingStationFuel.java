@@ -24,26 +24,20 @@ public class LoadingStationFuel extends MyCommandGroup {
     addParallel(elevatorUp);
 
     // Arm out, Wrist down
-    addSequential(Commands.delayUntil("Wait for elevator to get 80% way up",
-        ()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() >= 0.8));
+    addSequential(Commands.delayUntil("Wait for elevator to get 20% way up",
+        ()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() >= 0.2));
 
-    addParallel(new MotionMagicSetpoint.ArmSetpoint("Arm Out", 3133));
-    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949));
+    var armOut = new MotionMagicSetpoint.ArmSetpoint("Arm Out", 3133);
+    addParallel(armOut);
+
+    addSequential(Commands.delayUntil("Wait for arm to be horizontal-ish",() ->
+                                         armOut.isRunning() && armOut.getMotionProgress() >= .5));
+
+    addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949));
 
     //elevator back down
     addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -3000));
 
   }
 
-  @Override
-  protected void initialize() {
-    super.initialize();
-    Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
-  }
-
-  @Override
-  protected void end() {
-    super.end();
-    Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
-  }
 }
