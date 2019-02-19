@@ -21,13 +21,14 @@ public class HatchFuel1 extends MyCommandGroup {
 
     var elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 5000);
     addParallel(elevatorUp);
-    addSequential(Commands.delayUntil(()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() > 0.7));
+    addSequential(Commands.delayUntil(()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() > 0.3));
 
     var armOut = new MotionMagicSetpoint.ArmSetpoint("Arm Out", 3100);
     addParallel(armOut);
-    addSequential(Commands.delayUntil(()->armOut.isRunning() && armOut.getMotionProgress() >= 0.4));
-    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949));
-    addSequential(new WaitForChildren());
+
+    addSequential(Commands.delayUntil(()->armOut.isRunning() && armOut.getMotionProgress() >= 0.2));
+    addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949));
+    //addSequential(new WaitForChildren());
 
   }
 
