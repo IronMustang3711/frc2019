@@ -1,5 +1,6 @@
 package org.usfirst.frc3711.deepspace.subsystems;
 
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StickyFaults;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -14,8 +15,11 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   public final WPI_TalonSRX talon;
   private final NetworkTableEntry currentLimitingEnabled;
 
-  final StickyFaults tmpFaults = new StickyFaults();
-  final StickyFaults stickyFaults;
+  final StickyFaults tmpStickyFaults = new StickyFaults();
+  final StickyFaults stickyFaults = new StickyFaults();
+  final Faults tmpFaults = new Faults();
+  final Faults faults = new Faults();
+
 
   public TalonSubsystem(String name, int talonID) {
     super(name);
@@ -32,10 +36,9 @@ public abstract class TalonSubsystem extends RobotSubsystem {
         EntryListenerFlags.kUpdate);
     configureTalon();
 
-    stickyFaults = new StickyFaults();
 
     talon.getStickyFaults(stickyFaults);
-    tmpFaults.update(stickyFaults.toBitfield());
+    tmpStickyFaults.update(stickyFaults.toBitfield());
 
     if(stickyFaults.hasAnyFault()){
       DriverStation.reportError(getName() + "FAULT: "+stickyFaults.toString(),false);
@@ -77,10 +80,16 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   public void periodic() {
     super.periodic();
 
-    talon.getStickyFaults(tmpFaults);
-    if(stickyFaults.toBitfield() != tmpFaults.toBitfield()){
-      DriverStation.reportError(getName() + "FAULT: "+stickyFaults.toString(),false);
-      tmpFaults.update(stickyFaults.toBitfield());
+    talon.getStickyFaults(tmpStickyFaults);
+    if(stickyFaults.toBitfield() != tmpStickyFaults.toBitfield()){
+      DriverStation.reportError(getName() + "STICKY FAULT: "+stickyFaults.toString(),false);
+      tmpStickyFaults.update(stickyFaults.toBitfield());
+    }
+
+    talon.getFaults(tmpFaults);
+    if(faults.toBitfield() != tmpFaults.toBitfield()){
+      DriverStation.reportError(getName() + "FAULT: "+faults.toString(),false);
+      tmpFaults.update(faults.toBitfield());
     }
 
   }
