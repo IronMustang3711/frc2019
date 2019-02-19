@@ -14,8 +14,8 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   public final WPI_TalonSRX talon;
   private final NetworkTableEntry currentLimitingEnabled;
 
-  StickyFaults tmpFaults = new StickyFaults();
-  StickyFaults stickyFaults;
+  final StickyFaults tmpFaults = new StickyFaults();
+  final StickyFaults stickyFaults;
 
   public TalonSubsystem(String name, int talonID) {
     super(name);

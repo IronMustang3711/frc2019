@@ -161,7 +161,7 @@ what voltage represents 100% output.
   private final NetworkTableEntry lowPowerMode;
   private final Runnable talonTelemetry;
 
-  private SendableChooser<ControlMode> closedLoopChooser;
+  private final SendableChooser<ControlMode> closedLoopChooser;
 
 
   public Wrist() {

@@ -5,11 +5,10 @@ import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 
 public class HatchPanel0 extends CommandGroup {
-  private MotionMagicSetpoint elevatorUp;
 
   public HatchPanel0(){
     super(HatchPanel0.class.getSimpleName());
-    elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 4000, 1.0);
+    MotionMagicSetpoint elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 4000, 1.0);
     addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
 
    // addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,0.1));

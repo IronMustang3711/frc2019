@@ -23,8 +23,8 @@ public class DogLeg extends TalonSubsystem {
   private final NetworkTableEntry motorOutput;
 
   private final Runnable talonTelemetry;
-  NetworkTableEntry encoderA;
-  NetworkTableEntry encoderB;
+  private final NetworkTableEntry encoderA;
+  private final NetworkTableEntry encoderB;
 
   public DogLeg() {
     super(DogLeg.class.getSimpleName(), TalonID.DOG_LEG.getId());

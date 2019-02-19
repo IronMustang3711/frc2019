@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc3711.deepspace.TalonID;
-import org.usfirst.frc3711.deepspace.commands.FickleFingerCommands;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
 

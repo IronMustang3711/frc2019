@@ -37,8 +37,7 @@ public class GroundPickup extends Command {
         }
       }, ()-> {
         if(armOut.isCompleted()) armOutFinishedCound++;
-        if(armOutFinishedCound >= 10) return true;
-        else return false;
+        return armOutFinishedCound >= 10;
       });
 
   public GroundPickup() {

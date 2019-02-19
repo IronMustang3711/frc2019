@@ -9,5 +9,5 @@ public enum RobotPose {
   HATCH_1,
   FUEL_1,
   HATCH_2,
-  FUEL_2;
+  FUEL_2
 }

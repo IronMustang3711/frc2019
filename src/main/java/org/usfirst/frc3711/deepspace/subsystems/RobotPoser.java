@@ -3,7 +3,6 @@ package org.usfirst.frc3711.deepspace.subsystems;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.command.MyCommandGroup;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import org.usfirst.frc3711.deepspace.RobotPose;
 import org.usfirst.frc3711.deepspace.commands.sequences.*;
@@ -18,11 +17,11 @@ public class RobotPoser extends RobotSubsystem {
 
   private RobotPose currentPose = RobotPose.STOW;
 
-  private Map<RobotPose, Supplier<Command>> factories;
+  private final Map<RobotPose, Supplier<Command>> factories;
 
   private Command currentCommand = new InstantCommand();
 
-  private static Map<RobotPose,Set<RobotPose>> VALID_TRANSITIONS = validTransitions();
+  private static final Map<RobotPose,Set<RobotPose>> VALID_TRANSITIONS = validTransitions();
 
 
   private static Map<RobotPose, Set<RobotPose>> validTransitions(){
