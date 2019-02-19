@@ -15,24 +15,18 @@ public class HatchPanel2 extends CommandGroup {
     requires(Robot.elevator);
 
     double elevatorUpTimeout = 1.7;
-    double elevatorPosition = 3000;
+    double elevatorPosition = 13000;
 
     // elevator up:
     addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
     addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 40), elevatorUpTimeout);
-    addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition, 1.5) {
-      @Override
-      protected boolean isFinished() {
-        return super.isFinished();
-        // return isTimedOut() && Math.abs(subsystem.talon.getErrorDerivative()) < 1.0
-        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 100;
-      }
-    });
+    addParallel(new MotionMagicSetpoint("bring elevator up", Robot.elevator, elevatorPosition));
+
 
     double armOutTimeout = 3.0;
     // Arm out, Wrist down
-    addParallel(new MotionMagicSetpoint("Hold Elevator Position",
-        Robot.elevator, elevatorPosition, armOutTimeout));
+//    addParallel(new MotionMagicSetpoint("Hold Elevator Position",
+//        Robot.elevator, elevatorPosition, armOutTimeout));
     //	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
     addSequential(new MotionMagicSetpoint("Arm Out", Robot.arm, 3300, 3.0) {
       @Override
@@ -44,7 +38,7 @@ public class HatchPanel2 extends CommandGroup {
     });
     addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1900), armOutTimeout);
 
-    addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, 13000));
+    addSequential(new MotionMagicSetpoint("Elevator up", Robot.elevator, 13000));
 
   }
 
