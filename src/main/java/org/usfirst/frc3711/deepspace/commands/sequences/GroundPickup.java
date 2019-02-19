@@ -30,7 +30,7 @@ public class GroundPickup extends Command {
       ()->elevatorUp.getMotionProgress() >= 0.5);
 
 
-      private final Command elevatorDown = Commands.runWhenTrue( new MotionMagicSetpoint("bring elevator down", Robot.elevator, -9000, 2.5) {
+      private final Command elevatorDown = Commands.runWhenTrue( new MotionMagicSetpoint("bring elevator down", Robot.elevator, -6000, 2.5) {
         @Override
         protected boolean isFinished() {
           return isMotionFinished() || super.isFinished();
