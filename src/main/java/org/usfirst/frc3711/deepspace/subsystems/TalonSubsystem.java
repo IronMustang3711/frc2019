@@ -1,9 +1,11 @@
 package org.usfirst.frc3711.deepspace.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StickyFaults;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import org.usfirst.frc3711.deepspace.commands.util.Commands;
 
 public abstract class TalonSubsystem extends RobotSubsystem {
@@ -11,6 +13,9 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   final NetworkTableEntry ntSetpoint;
   public final WPI_TalonSRX talon;
   private final NetworkTableEntry currentLimitingEnabled;
+
+  StickyFaults tmpFaults = new StickyFaults();
+  StickyFaults stickyFaults;
 
   public TalonSubsystem(String name, int talonID) {
     super(name);
@@ -26,6 +31,15 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     ntSetpoint.addListener(entryNotification -> onSetpointChange(entryNotification.value.getDouble()),
         EntryListenerFlags.kUpdate);
     configureTalon();
+
+    stickyFaults = new StickyFaults();
+
+    talon.getStickyFaults(stickyFaults);
+    tmpFaults.update(stickyFaults.toBitfield());
+
+    if(stickyFaults.hasAnyFault()){
+      DriverStation.reportError(getName() + "FAULT: "+stickyFaults.toString(),false);
+    }
 
   }
 
@@ -59,6 +73,17 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     talon.getSensorCollection().setQuadraturePosition(0, 50);
   }
 
+  @Override
+  public void periodic() {
+    super.periodic();
+
+    talon.getStickyFaults(tmpFaults);
+    if(stickyFaults.toBitfield() != tmpFaults.toBitfield()){
+      DriverStation.reportError(getName() + "FAULT: "+stickyFaults.toString(),false);
+      tmpFaults.update(stickyFaults.toBitfield());
+    }
+
+  }
 
   public void setP(double p) {
     talon.config_kP(0, p, 50);
