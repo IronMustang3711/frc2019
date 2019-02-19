@@ -44,7 +44,7 @@ static class TestCommand extends Command {
   }
 
   @Test
-  public void testMyCommandGroupDebugString() {
+  public void testMyCommandGroupDebugString() throws InterruptedException {
     List<CharSequence> debugMessages = new ArrayList<>();
 
     var cg = new MyCommandGroup("testing");
@@ -65,13 +65,14 @@ static class TestCommand extends Command {
 
     Scheduler.getInstance().run();
 
-    assertEquals("[testing[Init], testing[Running] .[1] ..[2]]",debugMessages.toString());
+    assertEquals("[testing[Init], testing[Running@0.0] .[1] ..[2]]",debugMessages.toString());
+    Thread.sleep(1000);
 
     Scheduler.getInstance().run();
     Scheduler.getInstance().run();
     Scheduler.getInstance().run();
 
-    assertEquals("[testing[Init], testing[Running] .[1] ..[2], testing[Running] .[] ..[], testing[End]]",debugMessages.toString());
+    assertEquals("[testing[Init], testing[Running@0.0] .[1] ..[2], testing[Running@1.0] .[] ..[], testing[End]]",debugMessages.toString());
 
   }
 }

@@ -100,18 +100,20 @@ public class MyCommandGroup extends CommandGroup {
                                  .map(Command::getName)
                                  .collect(Collectors.joining(", ","..[","]"));
 
-    return getName()+ "[Running] " + runningChildrenStr +" "+ runningSiblingsStr;
+    return  runningChildrenStr +" "+ runningSiblingsStr;
   }
 
   private String prevDebugString = "";
-
+  private long startTime;
   @Override
   void _execute() {
     super._execute();
     var debugStr = debugString();
 
     if (!prevDebugString.equals(debugStr)) {
-      debugSink.accept(debugStr);
+      double elapsed = (System.currentTimeMillis() - startTime)/ 1000.0;
+      String elapsedStr = String.format("@%.1f",elapsed);
+      debugSink.accept(getName()+ "[Running"+elapsedStr+"] "+debugStr);
       prevDebugString = debugStr;
     }
 
@@ -120,6 +122,7 @@ public class MyCommandGroup extends CommandGroup {
   @Override
   void _initialize() {
     super._initialize();
+    startTime = System.currentTimeMillis();
     debugSink.accept(getName() + "[Init]");
   }
 
