@@ -2,6 +2,7 @@ package org.usfirst.frc3711.deepspace;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -35,9 +36,10 @@ public class OI {
 //  final JoystickButton elevatorUp;
 //  final JoystickButton elevatorDown;
 
-  // final JoystickButton doglegDownButton;
-  // final JoystickButton rearJackDownButton;
-  // final JoystickButton liftingMechanismsUp;
+  final JoystickButton doglegDownButton;
+  final JoystickButton doglegUpButton;
+   final JoystickButton rearJackDownButton;
+   final JoystickButton rearJackUp;
   final JoystickButton jogUp;
   final JoystickButton jogDown;
 
@@ -95,20 +97,17 @@ public class OI {
 //    elevatorUp = new JoystickButton(joystick1, 11);
 //    elevatorDown = new JoystickButton(joystick1, 12);
 
-    // rearJackDownButton = new JoystickButton(joystick1,4);
-    // rearJackDownButton.whileHeld(RearJackCommands.runDown());
+     rearJackDownButton = new JoystickButton(joystick1,4);
+     rearJackDownButton.whileHeld(RearJackCommands.runDown());
 
-    // doglegDownButton = new JoystickButton(joystick1,6);
-    // doglegDownButton.whileHeld(DogLegCommands.dogLegDown());
+     doglegDownButton = new JoystickButton(joystick1,6);
+     doglegDownButton.whileHeld(DogLegCommands.dogLegDown());
 
-    // liftingMechanismsUp = new JoystickButton(joystick1,12);
-    // liftingMechanismsUp.whileHeld(new CommandGroup("Lifters up"){
-    //   {
-    //     addParallel(DogLegCommands.runUp());
-    //     addParallel(RearJackCommands.runUp());
+     doglegUpButton = new JoystickButton(joystick1,11);
+     doglegUpButton.whileHeld(DogLegCommands.runUp());
 
-    //   }
-    // });
+    rearJackUp = new JoystickButton(joystick1,12);
+    rearJackUp.whileHeld(RearJackCommands.runUp());
 
 
 
@@ -147,7 +146,6 @@ public class OI {
     tab.add(new HatchFuel2());
     tab.add(new HatchPanel2());
     tab.add(new GroundPickup());
-    tab.add(new GroundPickup2());
 
 
     // tab.add(new CommandSequences.PingPong());
