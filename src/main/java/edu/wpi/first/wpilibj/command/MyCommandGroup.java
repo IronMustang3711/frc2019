@@ -102,7 +102,7 @@ public class MyCommandGroup extends CommandGroup {
 
     return  runningChildrenStr +" "+ runningSiblingsStr;
   }
-
+//FIXME: keep track of commands instead of debugString
   private String prevDebugString = "";
   private long startTime;
   @Override
