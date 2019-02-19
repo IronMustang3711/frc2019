@@ -13,7 +13,7 @@ public class HatchPanel0 extends CommandGroup {
     addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
 
    // addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 10,0.1));
-    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 10,1.0));
+    addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 30,1.0));
    // addParallel(new MotionMagicSetpoint("Bring arm out", Robot.arm, 600));
 //    addParallel(new DeferedCommandBuilder(
 //        new MotionMagicSetpoint("Bring arm out", Robot.arm, 600){
