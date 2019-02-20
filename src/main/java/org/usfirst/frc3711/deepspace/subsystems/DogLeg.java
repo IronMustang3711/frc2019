@@ -61,7 +61,7 @@ public class DogLeg extends TalonSubsystem {
   void configureTalon() {
     super.configureTalon();
 
-    talon.configPeakCurrentLimit(20);
+    talon.configPeakCurrentLimit(80);
     talon.configPeakCurrentDuration(1000);
     talon.configContinuousCurrentLimit(0);
     talon.enableCurrentLimit(false);

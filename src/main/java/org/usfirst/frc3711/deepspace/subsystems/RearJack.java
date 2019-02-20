@@ -60,9 +60,9 @@ public class RearJack extends TalonSubsystem {
   @Override
   void configureTalon() {
     super.configureTalon();
-    talon.configPeakCurrentLimit(20);
+    talon.configPeakCurrentLimit(80);
     talon.configPeakCurrentDuration(1000);
-    talon.configContinuousCurrentLimit(0);
+    talon.configContinuousCurrentLimit(1);
     talon.enableCurrentLimit(true);
 
     talon.setNeutralMode(NeutralMode.Brake);
