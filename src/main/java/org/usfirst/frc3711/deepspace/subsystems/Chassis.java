@@ -86,7 +86,7 @@ public class Chassis extends RobotSubsystem {
       talon.setSafetyEnabled(false);
       talon.configFactoryDefault();
 
-      talon.configOpenloopRamp(0.5);
+      talon.configOpenloopRamp(0.0);
       talon.setNeutralMode(NeutralMode.Brake);
       talon.configNeutralDeadband(0.04);
       talon.configNominalOutputForward(0.15);

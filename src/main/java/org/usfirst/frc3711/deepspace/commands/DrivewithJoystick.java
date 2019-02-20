@@ -57,7 +57,7 @@ public class DrivewithJoystick extends Command {
 
     turn = Math.copySign(turn*turn,turn);
     //turn = turn * turn * turn;
-    turn *= 0.60;
+    turn *= 0.70;
     Robot.chassis.drive(forward, turn);
 
   }
