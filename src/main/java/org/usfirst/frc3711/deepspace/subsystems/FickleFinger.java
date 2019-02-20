@@ -159,12 +159,13 @@ public class FickleFinger extends TalonSubsystem {
   @Override
   void configureTalon() {
     super.configureTalon();
+    talon.setInverted(false);
     talon.setSensorPhase(true);
     talon.config_kP(0,1.5);
     talon.configForwardSoftLimitThreshold(20);
     talon.configReverseSoftLimitThreshold(-2500);
-    talon.configForwardSoftLimitEnable(true);
-    talon.configReverseSoftLimitEnable(true);
+    talon.configForwardSoftLimitEnable(false);
+    talon.configReverseSoftLimitEnable(false);
 
   }
 
