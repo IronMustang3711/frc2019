@@ -31,7 +31,7 @@ public class LoadingStationFuel extends MyCommandGroup {
     addParallel(armOut);
 
     addSequential(Commands.delayUntil("Wait for arm to be horizontal-ish",() ->
-                                         armOut.isRunning() && armOut.getMotionProgress() >= .5));
+                                         armOut.isRunning() && armOut.getMotionProgress() >= .1));
 
     addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949));
 
