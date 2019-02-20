@@ -1,11 +1,13 @@
 package org.usfirst.frc3711.deepspace.commands;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc3711.deepspace.Robot;
 
 public class DogLegCommands {
   public static Command dogLegDown(){
     return new Command("Dogleg down"){
+      {requires(Robot.dogLeg);}
       @Override
       protected boolean isFinished() {
         return false; //TODO: check encoder
@@ -20,6 +22,39 @@ public class DogLegCommands {
       @Override
       protected void end() {
         super.end();
+        holdPosition().start();
+       // Robot.dogLeg.disable();
+      }
+    };
+  }
+
+  public static Command holdPosition(){
+    return new Command("Hold Position") {
+
+      private int position;
+
+      {
+        requires(Robot.dogLeg);
+      }
+
+      @Override
+      protected void initialize() {
+        super.initialize();
+        position = Robot.dogLeg.talon.getSelectedSensorPosition();
+      }
+
+      @Override
+      protected boolean isFinished() {
+        return false;
+      }
+
+      @Override
+      protected void execute() {
+        Robot.dogLeg.talon.set(ControlMode.Position,position);
+      }
+
+      @Override
+      protected void end() {
         Robot.dogLeg.disable();
       }
     };
@@ -45,4 +80,6 @@ public class DogLegCommands {
       }
     };
   }
+
+
 }

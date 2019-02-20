@@ -69,6 +69,8 @@ public class DogLeg extends TalonSubsystem {
 
     talon.setInverted(true);
     talon.setSensorPhase(false); //TODO: encoder not working correctly
+
+    talon.config_kP(0,1.0);
 //    talon.configForwardSoftLimitThreshold(0);
 //    talon.configForwardSoftLimitEnable(true);
   }
