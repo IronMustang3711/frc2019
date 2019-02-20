@@ -10,7 +10,7 @@ public class Stow extends MyCommandGroup {
 
     addParallel(new MotionMagicSetpoint("Wrist Home", Robot.wrist,0));
     addParallel(new MotionMagicSetpoint("Arm Home",Robot.arm,0));
-    addParallel(new MotionMagicSetpoint("Elevator Home",Robot.elevator,0));
+    addParallel(new MotionMagicSetpoint("Elevator Home",Robot.elevator,100));
   }
 
   @Override
