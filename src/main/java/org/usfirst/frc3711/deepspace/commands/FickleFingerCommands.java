@@ -32,14 +32,35 @@ public class FickleFingerCommands {
       @Override
       protected void end() {
         super.end();
-        subsystem.disable();
 
+      stowCommand().start();
+      }
+    };
+  }
+
+  static Command stowCommand(){
+    return new TalonSubsystemCommand("Stow",Robot.fickleFinger) {
+      @Override
+      protected void initialize() {
+        super.initialize();
         int currentPosition = subsystem.talon.getSelectedSensorPosition();
         int desiredPosition = ENCODER_TICKS_PER_REV *((currentPosition + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV);
         subsystem.talon.set(ControlMode.Position,desiredPosition);
+      }
 
+      @Override
+      protected boolean isFinished() {
+         return Math.abs(subsystem.talon.getClosedLoopError()) < 20
+                    && Math.abs(subsystem.talon.getSelectedSensorVelocity()) < 2.0;
+      }
+
+      @Override
+      protected void end() {
+        super.end();
+        subsystem.disable();
       }
     };
+
   }
 
   public static Command hookCommand(){
@@ -47,7 +68,8 @@ public class FickleFingerCommands {
       int baseRev;
       @Override
       protected boolean isFinished() {
-        return subsystem.talon.getClosedLoopError() < 30;
+        return Math.abs(subsystem.talon.getClosedLoopError()) < 20
+                   && Math.abs(subsystem.talon.getSelectedSensorVelocity()) < 2.0;
       }
 
       @Override
@@ -84,7 +106,8 @@ public class FickleFingerCommands {
 
       @Override
       protected boolean isFinished() {
-        return subsystem.talon.getClosedLoopError() < 30;
+        return Math.abs(subsystem.talon.getClosedLoopError()) < 20
+                   && Math.abs(subsystem.talon.getSelectedSensorVelocity()) < 2.0;
       }
 
       @Override
