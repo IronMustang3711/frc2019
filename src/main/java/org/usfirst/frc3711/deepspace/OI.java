@@ -25,9 +25,9 @@ public class OI {
 
   final JoystickButton intakeInhale;
   final JoystickButton intakeExhale;
-   final JoystickButton fickleFingerHook;
-   final JoystickButton fickleFingerEject;
-   final JoystickButton fickleFingerHookEngage;
+//   final JoystickButton fickleFingerHook;
+//   final JoystickButton fickleFingerEject;
+//   final JoystickButton fickleFingerHookEngage;
   //final JoystickButton fickleFingerToggle;
 
   final JoystickButton stow;
@@ -80,14 +80,14 @@ public class OI {
     intakeExhale.whileHeld(IntakeCommands.intake());
 
 
-     fickleFingerHook = new JoystickButton(joystick1, 5);
-     fickleFingerHook.whileHeld(FickleFingerCommands.hookCommand());
-
-     fickleFingerEject = new JoystickButton(joystick1,3);
-     fickleFingerEject.whileHeld(FickleFingerCommands.ejectCommand());
-
-     fickleFingerHookEngage = new JoystickButton(joystick1, 4);
-     fickleFingerHookEngage.whenPressed(FickleFingerCommands.hookEngageCommand());
+//     fickleFingerHook = new JoystickButton(joystick1, 5);
+//     fickleFingerHook.whileHeld(FickleFingerCommands.hookCommand());
+//
+//     fickleFingerEject = new JoystickButton(joystick1,3);
+//     fickleFingerEject.whileHeld(FickleFingerCommands.ejectCommand());
+//
+//     fickleFingerHookEngage = new JoystickButton(joystick1, 4);
+//     fickleFingerHookEngage.whenPressed(FickleFingerCommands.hookEngageCommand());
 
 //    fickleFingerToggle = new JoystickButton(joystick1, 5);
 //    fickleFingerToggle.whenPressed(FickleFingerCommands.fickleFingerToggle());
