@@ -82,14 +82,16 @@ public abstract class TalonSubsystem extends RobotSubsystem {
 
     talon.getStickyFaults(tmpStickyFaults);
     if(stickyFaults.toBitfield() != tmpStickyFaults.toBitfield()){
+      stickyFaults.update(tmpStickyFaults.toBitfield());
+
       DriverStation.reportError(getName() + "STICKY FAULT: "+stickyFaults.toString(),false);
-      tmpStickyFaults.update(stickyFaults.toBitfield());
     }
 
     talon.getFaults(tmpFaults);
     if(faults.toBitfield() != tmpFaults.toBitfield()){
+      faults.update(tmpFaults.toBitfield());
       DriverStation.reportError(getName() + "FAULT: "+faults.toString(),false);
-      tmpFaults.update(faults.toBitfield());
+
     }
 
   }
