@@ -13,11 +13,14 @@ package org.usfirst.frc3711.deepspace;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc3711.deepspace.subsystems.*;
 
 import java.lang.reflect.Field;
@@ -133,5 +136,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+  }
+
+  @Override
+  public void robotPeriodic() {
+    SmartDashboard.putString("buttons", 
+    Integer.toBinaryString(DriverStation.getInstance().getStickButtons(1)));
   }
 }
