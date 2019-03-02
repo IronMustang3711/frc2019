@@ -1,14 +1,17 @@
 package org.usfirst.frc3711.deepspace;
 
-import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.POVButton;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+
 import org.usfirst.frc3711.deepspace.commands.*;
 import org.usfirst.frc3711.deepspace.commands.sequences.*;
 import org.usfirst.frc3711.deepspace.commands.util.Commands;
@@ -20,28 +23,79 @@ public class OI {
 
   static class MyButton extends Button {
 
-    final GenericHID controller;
-    final int[] buttons;
+    final int controllerId;
+    final int buttonsMask;
 
-    MyButton(GenericHID controller, int...buttons){
-      this.controller = controller;
-      this.buttons = buttons;
+    MyButton(int controller, int buttonsMask){
+      this.controllerId = controller;
+      this.buttonsMask = buttonsMask;
     }
 
     @Override
     public boolean get() {
-      for(int button: buttons){
-        if(!controller.getRawButton(button)) return false;
-      }
-      return true;
+    return (DriverStation.getInstance().getStickButtons(controllerId) == buttonsMask);
     }
 
+  }
+
+  static class XboxControl {
+    static final int XBOX_ID = 1;
+    XboxController xbox = new XboxController(XBOX_ID);
+
+    Button groundPickup = new JoystickButton(xbox, 9);
+    Button loadingStationPickup = new JoystickButton(xbox, 4);
+    
+    Button shootBall = new JoystickButton(xbox, 7);
+    Button pullBall = new JoystickButton(xbox, 8);
+    
+    Button stow = new JoystickButton(xbox, 10);
+    
+    Button jogDown = new JoystickButton(xbox, 5);
+    Button jogUp = new JoystickButton(xbox, 6);
+    
+    Button fickleFingerOut = new POVButton(xbox, 270);//new JoystickButton(xbox, 13);
+    Button fickleFingerReallyHook = new POVButton(xbox, 90);//new JoystickButton(xbox,-1) ;
+    Button fickleFingerEject = new POVButton(xbox, 180); //new JoystickButton(xbox, -1);
+   
+    Button level0Fuel = new MyButton(XBOX_ID,1);
+    Button level1Fuel = new MyButton(XBOX_ID,1<<2);
+    Button level2Fuel = new MyButton(XBOX_ID,1<<3);
+    Button level0Panel = new MyButton(XBOX_ID,(1 | 1<< 11)); //left stick down & 1
+    Button level1Panel = new MyButton(XBOX_ID,(1<<2 | 1<< 11));
+    Button level2Panel = new MyButton(XBOX_ID,(1<<3 | 1 << 11));
+
+
+    XboxControl(){
+      groundPickup.whenPressed(new GroundPickup());
+      loadingStationPickup.whenPressed(new LoadingStationFuel());
+      
+      shootBall.whenPressed(IntakeCommands.eject());
+      pullBall.whenPressed(IntakeCommands.intake());
+
+      stow.whenPressed(new Stow());
+
+      jogUp.whenPressed(new JogElevator(true));
+      jogDown.whenPressed(new JogElevator(false));
+
+     
+      level0Fuel.whenPressed(new HatchFuel0());
+      level1Fuel.whenPressed(new HatchFuel1());
+      level2Fuel.whenPressed(new HatchFuel2());
+     
+      level0Panel.whenPressed(new HatchPanel0());
+      level1Panel.whenPressed(new HatchPanel1());
+      level2Panel.whenPressed(new HatchPanel2());
+   
+      fickleFingerEject.whenPressed(FickleFingerCommands.ejectCommand());
+      fickleFingerOut.whenPressed(FickleFingerCommands.hookCommand());
+      fickleFingerReallyHook.whenPressed(FickleFingerCommands.hookEngageCommand());
+    }
   }
 
 
 
   public final Joystick joystick1;
-  public final XboxController xbox;
+  public final XboxControl xbox ;
 
  // final JoystickButton elevator;
 //  final JoystickButton arm;
@@ -70,7 +124,7 @@ public class OI {
   public OI() {
 
     joystick1 = new Joystick(0);
-    xbox = new XboxController(1);
+    xbox = new XboxControl();
 
     stow = new JoystickButton(joystick1, 7);
     stow.whenPressed(new Stow());
