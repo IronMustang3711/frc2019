@@ -1,10 +1,8 @@
 package org.usfirst.frc3711.deepspace.commands.sequences;
 
 import edu.wpi.first.wpilibj.command.MyCommandGroup;
-import edu.wpi.first.wpilibj.command.WaitForChildren;
-import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import org.usfirst.frc3711.deepspace.Robot;
+import org.usfirst.frc3711.deepspace.commands.util.Commands;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 
 public class HatchPanel1 extends MyCommandGroup {
@@ -20,15 +18,19 @@ public class HatchPanel1 extends MyCommandGroup {
     // elevator up:
     addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90), elevatorUpTimeout);
     addParallel(new MotionMagicSetpoint("Arm Vertical", Robot.arm, 0), elevatorUpTimeout);
-    addSequential(new MotionMagicSetpoint("bring elevator up", Robot.elevator, 3000) );
+    var elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 3000);
+    addParallel(elevatorUp);
 
-    double armOutTimeout = 3.0;
+    addSequential(Commands.delayUntil("wait until elevator is 1/2 way up",
+        ()-> elevatorUp.getMotionProgress() >= 0.5));
+
     // Arm out, Wrist down
-
-    //	addSequential(new MotionMagicSetpoint("Wrist Down",Robot.wrist,-2949),armOutTimeout);
     addParallel(new MotionMagicSetpoint("Arm Out", Robot.arm, 3200));
-    addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1800), armOutTimeout);
-    addSequential(new WaitForChildren());
+    var wristDown = new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1800);
+    addParallel(wristDown, 3.0);
+
+    //elevator down
+    addSequential(Commands.delayUntil(()->wristDown.getMotionProgress() >= 0.9));
     addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -7688));
 
   }
