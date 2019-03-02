@@ -57,12 +57,13 @@ public class OI {
     Button fickleFingerReallyHook = new POVButton(xbox, 90);//new JoystickButton(xbox,-1) ;
     Button fickleFingerEject = new POVButton(xbox, 180); //new JoystickButton(xbox, -1);
    
-    Button level0Fuel = new MyButton(XBOX_ID,1);
-    Button level1Fuel = new MyButton(XBOX_ID,1<<1);
-    Button level2Fuel = new MyButton(XBOX_ID,1<<2);
-    Button level0Panel = new MyButton(XBOX_ID,(1 | 1<< 11)); //left stick down & 1
-    Button level1Panel = new MyButton(XBOX_ID,(1<<1 | 1<< 11));
-    Button level2Panel = new MyButton(XBOX_ID,(1<<2 | 1 << 11));
+    Button level0Fuel = new MyButton(XBOX_ID,1);    // button 1
+    Button level1Fuel = new MyButton(XBOX_ID,1<<1); //button 2
+    Button level2Fuel = new MyButton(XBOX_ID,1<<2); //button 3
+
+    Button level0Panel = new MyButton(XBOX_ID,(1    | 1<<11)); //left stick down & 1
+    Button level1Panel = new MyButton(XBOX_ID,(1<<1 | 1<<11)); //...
+    Button level2Panel = new MyButton(XBOX_ID,(1<<2 | 1<<11));
 
 
     XboxControl(){
