@@ -1,6 +1,9 @@
 package org.usfirst.frc3711.deepspace;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -15,9 +18,30 @@ import org.usfirst.frc3711.deepspace.subsystems.TalonSubsystem;
 @SuppressWarnings("WeakerAccess")
 public class OI {
 
+  static class MyButton extends Button {
+
+    final GenericHID controller;
+    final int[] buttons;
+
+    MyButton(GenericHID controller, int...buttons){
+      this.controller = controller;
+      this.buttons = buttons;
+    }
+
+    @Override
+    public boolean get() {
+      for(int button: buttons){
+        if(!controller.getRawButton(button)) return false;
+      }
+      return true;
+    }
+
+  }
+
 
 
   public final Joystick joystick1;
+  public final XboxController xbox;
 
  // final JoystickButton elevator;
 //  final JoystickButton arm;
@@ -46,6 +70,7 @@ public class OI {
   public OI() {
 
     joystick1 = new Joystick(0);
+    xbox = new XboxController(1);
 
     stow = new JoystickButton(joystick1, 7);
     stow.whenPressed(new Stow());
