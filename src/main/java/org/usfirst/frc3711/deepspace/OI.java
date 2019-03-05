@@ -87,7 +87,7 @@ public class OI {
       level1Panel.whenPressed(new HatchPanel1());
       level2Panel.whenPressed(new HatchPanel2());
    
-      fickleFingerEject.whenPressed(FickleFingerCommands.ejectCommand());
+      fickleFingerEject.whileHeld(FickleFingerCommands.ejectCommand());
       fickleFingerOut.whenPressed(FickleFingerCommands.hookCommand());
       fickleFingerReallyHook.whenPressed(FickleFingerCommands.hookEngageCommand());
     }
