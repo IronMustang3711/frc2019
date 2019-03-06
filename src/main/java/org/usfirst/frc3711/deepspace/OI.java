@@ -45,13 +45,13 @@ public class OI {
     Button groundPickup = new JoystickButton(xbox, 9);
     Button loadingStationPickup = new JoystickButton(xbox, 4);
     
-    Button shootBall = new JoystickButton(xbox, 7);
-    Button pullBall = new JoystickButton(xbox, 8);
+    Button shootBall = new JoystickButton(xbox, 8);
+    Button pullBall = new JoystickButton(xbox, 7);
     
     Button stow = new JoystickButton(xbox, 10);
     
-    Button jogDown = new JoystickButton(xbox, 5);
-    Button jogUp = new JoystickButton(xbox, 6);
+    Button jogDown = new JoystickButton(xbox, 6);
+    Button jogUp = new JoystickButton(xbox, 5);
     
     Button fickleFingerOut = new POVButton(xbox, 270);//new JoystickButton(xbox, 13);
     Button fickleFingerReallyHook = new POVButton(xbox, 90);//new JoystickButton(xbox,-1) ;
