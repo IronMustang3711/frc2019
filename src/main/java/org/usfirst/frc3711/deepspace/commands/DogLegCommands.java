@@ -62,6 +62,9 @@ public class DogLegCommands {
 
   public static Command runUp() {
     return new Command("Dogleg up"){
+
+      {requires(Robot.dogLeg);}
+
       @Override
       protected boolean isFinished() {
         return false; //TODO: check encoder
