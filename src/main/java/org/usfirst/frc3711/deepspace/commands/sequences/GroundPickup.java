@@ -41,7 +41,7 @@ public class GroundPickup extends Command {
       });
 
   public GroundPickup() {
-    super(GroundPickup.class.getSimpleName());
+    super(GroundPickup.class.getSimpleName(),5.0);
 //      requires(Robot.arm);
 //      requires(Robot.wrist);
 //      requires(Robot.elevator);
