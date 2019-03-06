@@ -205,32 +205,35 @@ public class OI {
 
 
     // SmartDashboard Buttons
-    SmartDashboard.putData("Drive with Joystick", new DrivewithJoystick());
+   // SmartDashboard.putData("Drive with Joystick", new DrivewithJoystick());
 
-    var tab = Shuffleboard.getTab("Poses");
-    var subsys = tab.getLayout("Subsystems", BuiltInLayouts.kList);
-    subsys.add(Robot.arm);
-    subsys.add(Robot.wrist);
-    subsys.add(Robot.elevator);
+    if(Robot.debug) {
+      var tab = Shuffleboard.getTab("Poses");
+      var subsys = tab.getLayout("Subsystems", BuiltInLayouts.kList);
+      subsys.add(Robot.arm);
+      subsys.add(Robot.wrist);
+      subsys.add(Robot.elevator);
 
-    tab.add(new Stow());
-    tab.add(new StagingPose());
-    tab.add(new HatchFuel0());
-    tab.add(new HatchPanel0());
-    tab.add(new LoadingStationFuel());
-    tab.add(new LoadingStationFuelToHome());
-    tab.add(new HatchFuel1());
-    tab.add(new Level1ToHome());
-    tab.add(new HatchPanel1());
-    tab.add(new HatchFuel2());
-    tab.add(new HatchPanel2());
-    tab.add(new GroundPickup());
+      tab.add(new Stow());
+      tab.add(new StagingPose());
+      tab.add(new HatchFuel0());
+      tab.add(new HatchPanel0());
+      tab.add(new LoadingStationFuel());
+      tab.add(new LoadingStationFuelToHome());
+      tab.add(new HatchFuel1());
+      tab.add(new Level1ToHome());
+      tab.add(new HatchPanel1());
+      tab.add(new HatchFuel2());
+      tab.add(new HatchPanel2());
+      tab.add(new GroundPickup());
+      // tab.add(new CommandSequences.PingPong());
+
+      tab.add(ZeroEncoder.resetAllEncoders());
+      tab.add(Commands.disableAll());
+    }
 
 
-    // tab.add(new CommandSequences.PingPong());
 
-    tab.add(ZeroEncoder.resetAllEncoders());
-    tab.add(Commands.disableAll());
   }
 
   public Joystick getJoystick1() {

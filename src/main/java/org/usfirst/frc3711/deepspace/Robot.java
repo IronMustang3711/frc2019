@@ -30,6 +30,8 @@ import java.util.List;
 
 public class Robot extends TimedRobot {
 
+  public static final boolean debug = true;
+
   public static OI oi;
   public static Chassis chassis;
   public static Elevator elevator;
@@ -140,7 +142,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putString("buttons", 
-    Integer.toBinaryString(DriverStation.getInstance().getStickButtons(1)));
+//    SmartDashboard.putString("buttons",
+//    Integer.toBinaryString(DriverStation.getInstance().getStickButtons(1)));
   }
 }
