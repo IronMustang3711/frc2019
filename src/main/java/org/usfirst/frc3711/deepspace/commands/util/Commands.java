@@ -2,7 +2,9 @@ package org.usfirst.frc3711.deepspace.commands.util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.subsystems.TalonSubsystem;
 
@@ -76,10 +78,12 @@ public class Commands {
   }
 
   public static Command disableAll() {
-    //FIXME: this should requre all subsystems to flush existing commands!
     return new InstantCommand("Disable All") {
       {
         setRunWhenDisabled(true);
+        for(Subsystem s : Robot.subsystems){
+          requires(s);
+        }
       }
       @Override
       protected void execute() {
@@ -148,6 +152,7 @@ public class Commands {
       super(subsystem.getName() + "Hold");
       this.subsystem = subsystem;
       this.output = output;
+      requires(subsystem);
     }
 
     // Called just before this Command runs the first time

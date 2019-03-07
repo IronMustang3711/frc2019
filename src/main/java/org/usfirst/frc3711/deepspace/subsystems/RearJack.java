@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.TalonID;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
@@ -25,7 +26,7 @@ public class RearJack extends TalonSubsystem {
                       .withProperties(Map.of("min", -1.0, "max", 1.0)).getEntry();
 
     tab.add(new Command("Run Motor") {
-
+      {requires(Robot.rearJack);}
       @Override
       protected void execute() {
         talon.set(ControlMode.PercentOutput, motorOutput.getDouble(0.0));

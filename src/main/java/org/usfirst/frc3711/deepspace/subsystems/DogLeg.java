@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.TalonID;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
@@ -39,6 +40,7 @@ public class DogLeg extends TalonSubsystem {
     encoderB = tab.add("Encoder B", false).getEntry();
 
     tab.add(new Command("Run Motor") {
+      {requires(Robot.dogLeg);}
 
       @Override
       protected void execute() {

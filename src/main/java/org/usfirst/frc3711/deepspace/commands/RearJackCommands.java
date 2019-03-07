@@ -6,6 +6,7 @@ import org.usfirst.frc3711.deepspace.Robot;
 public class RearJackCommands {
   public static Command runDown(){
     return new Command("Run read jack down"){
+      {requires(Robot.rearJack);}
       @Override
       protected boolean isFinished() {
         return false; //TODO: check encoder
@@ -26,6 +27,7 @@ public class RearJackCommands {
   }
   public static Command runUp(){
     return new Command("Run rear jack up"){
+      {requires(Robot.rearJack);}
       @Override
       protected boolean isFinished() {
         return false; //TODO: check encoder
