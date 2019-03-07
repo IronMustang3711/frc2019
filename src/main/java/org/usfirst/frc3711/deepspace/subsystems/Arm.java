@@ -38,11 +38,13 @@ public class Arm extends TalonSubsystem {
     static class PIDSlots {
       public static final SlotConfiguration POSITION_SLOT =
           SlotConfigBuilder.newBuilder()
+              .withSlot(1)
               .withKP(2.0)
               .build();
 
       public static final SlotConfiguration MM_SLOT =
           SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
+              .withSlot(0)
               .withKP(2.5)
               // .withKI(1e-9)
               .withKF(10.0)
@@ -75,9 +77,9 @@ public class Arm extends TalonSubsystem {
 
       public static int slotForMode(ControlMode mode) {
         if (mode == ControlMode.MotionMagic) {
-          return 1;
+          return 0;
         }
-        return 0;
+        return 1;
       }
     }
 

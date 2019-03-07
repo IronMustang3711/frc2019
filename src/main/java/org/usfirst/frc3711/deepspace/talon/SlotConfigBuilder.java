@@ -66,6 +66,8 @@ public final class SlotConfigBuilder {
    */
   private int closedLoopPeriod;
 
+  private int slotID = -1;
+
   private SlotConfigBuilder() {
   }
 
@@ -131,10 +133,10 @@ public final class SlotConfigBuilder {
     return this;
   }
 
-//	public SlotConfigBuilder withSlot(int slotId){
-//		this.slotId = slotId;
-//		return this;
-//	}
+	public SlotConfigBuilder withSlot(int slotId){
+		this.slotID = slotId;
+		return this;
+	}
 //
 //	public SlotConfigBuilder withControlMode(ControlMode controlMode){
 //		this.controlMode = controlMode;
@@ -151,8 +153,8 @@ public final class SlotConfigBuilder {
                .withAllowableClosedloopError(allowableClosedloopError)
                .withMaxIntegralAccumulator(maxIntegralAccumulator)
                .withClosedLoopPeakOutput(closedLoopPeakOutput)
-               .withClosedLoopPeriod(closedLoopPeriod);
-//				.withSlot(slotId)
+               .withClosedLoopPeriod(closedLoopPeriod)
+				       .withSlot(slotID);
 //				.withControlMode(controlMode);
   }
 
@@ -168,9 +170,14 @@ public final class SlotConfigBuilder {
     slotConfig.maxIntegralAccumulator = this.maxIntegralAccumulator;
     return slotConfig;
   }
+  public SlotConfigurationEx applyToEx(SlotConfigurationEx config){
+    applyTo(config);
+    config.slotID = this.slotID;
+    return config;
+  }
 
-  public SlotConfiguration build() {
-    return applyTo(new SlotConfiguration());
+  public SlotConfigurationEx build() {
+    return applyToEx(new SlotConfigurationEx());
   }
 
 
