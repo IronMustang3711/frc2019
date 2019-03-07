@@ -58,7 +58,9 @@ public class HatchFuel0 extends Command {
   @Override
   protected void initialize() {
     super.initialize();
-    Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+    if(Robot.debug)
+      Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+
     wristVertical.start();
     armVertical.start();
     elevatorUp.start();
@@ -76,7 +78,8 @@ public class HatchFuel0 extends Command {
   @Override
   protected void end() {
     super.end();
-    Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
+    if(Robot.debug)
+      Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
    // RestingPose.run();
   }
 }

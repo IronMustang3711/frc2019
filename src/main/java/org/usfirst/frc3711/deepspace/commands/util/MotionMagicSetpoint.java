@@ -71,7 +71,8 @@ public class MotionMagicSetpoint extends Command {
     initialPosition = subsystem.talon.getSelectedSensorPosition();
     startTime = System.currentTimeMillis();
     subsystem.talon.selectProfileSlot(0, 0);
-    Shuffleboard.addEventMarker("MM_"+getName() + "_Init", EventImportance.kNormal);
+    if(Robot.debug)
+      Shuffleboard.addEventMarker("MM_"+getName() + "_Init", EventImportance.kNormal);
 
   }
 
@@ -86,7 +87,8 @@ public class MotionMagicSetpoint extends Command {
 
   @Override
   protected void end() {
-    Shuffleboard.addEventMarker("MM_"+getName() + "_End", EventImportance.kNormal);
+    if(Robot.debug)
+      Shuffleboard.addEventMarker("MM_"+getName() + "_End", EventImportance.kNormal);
   }
 
   @Override

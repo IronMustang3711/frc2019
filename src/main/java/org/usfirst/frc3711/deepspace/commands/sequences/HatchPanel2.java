@@ -46,7 +46,8 @@ public class HatchPanel2 extends MyCommandGroup {
   @Override
   protected void end() {
     super.end();
-    Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
+    if(Robot.debug)
+      Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
 
    // RestingPose.run();
 

@@ -29,13 +29,14 @@ public class StagingPose extends MyCommandGroup {
   @Override
   protected void initialize() {
     super.initialize();
-    Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
-
+    if(Robot.debug)
+      Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
   }
 
   @Override
   protected void end() {
-    Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
+    if(Robot.debug)
+      Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
     Robot.elevator.talon.neutralOutput();
     Robot.arm.talon.neutralOutput();
     Robot.wrist.talon.neutralOutput();

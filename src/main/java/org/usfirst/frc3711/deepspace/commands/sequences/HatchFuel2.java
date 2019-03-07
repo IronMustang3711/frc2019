@@ -44,13 +44,15 @@ public class HatchFuel2 extends MyCommandGroup {
   @Override
   protected void initialize() {
     super.initialize();
-    Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
+    if(Robot.debug)
+      Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
 
   }
 
   @Override
   protected void end() {
     super.end();
+    if(Robot.debug)
     Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
 
    // RestingPose.run();
