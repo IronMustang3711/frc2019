@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import org.usfirst.frc3711.deepspace.TalonID;
+import org.usfirst.frc3711.deepspace.commands.util.TalonSubsystemCommand;
 import org.usfirst.frc3711.deepspace.talon.SlotConfigBuilder;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
@@ -36,11 +37,13 @@ public class Arm extends TalonSubsystem {
   @SuppressWarnings("WeakerAccess")
   static class TalonSettings {
     static class PIDSlots {
+      //slot 1
       public static final SlotConfiguration POSITION_SLOT =
           SlotConfigBuilder.newBuilder()
               .withKP(2.0)
               .build();
 
+      //slot 0
       public static final SlotConfiguration MM_SLOT =
           SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
               .withKP(2.5)
@@ -50,12 +53,21 @@ public class Arm extends TalonSubsystem {
               // .withClosedLoopPeakOutput(0.9)
               .build();
 
+      //slot 2
+      public static final SlotConfiguration LOW_POWER_HOLD_SLOT =
+          SlotConfigBuilder.builderWithBaseConfiguration(MM_SLOT)
+              //depends on config.voltageCompSaturation
+          .withClosedLoopPeakOutput(0.35) //3.5v
+          .build();
+
       public static SlotConfiguration configurationForSlot(int slot) {
         switch (slot) {
           case 0:
             return MM_SLOT;
           case 1:
             return POSITION_SLOT;
+          case 2:
+            return LOW_POWER_HOLD_SLOT;
           default:
             throw new IllegalArgumentException("invalid slot: " + slot);
         }
@@ -75,9 +87,9 @@ public class Arm extends TalonSubsystem {
 
       public static int slotForMode(ControlMode mode) {
         if (mode == ControlMode.MotionMagic) {
-          return 1;
+          return 0;
         }
-        return 0;
+        return 1;
       }
     }
 
@@ -110,7 +122,7 @@ public class Arm extends TalonSubsystem {
       config.motionAcceleration = 50;
 
       config.peakOutputForward = 1.0;
-      config.peakOutputReverse = -0.5;
+      config.peakOutputReverse = -0.7;
 
 
 
@@ -147,6 +159,7 @@ what voltage represents 100% output.
 
       config.slot0 = PIDSlots.configurationForSlot(0);
       config.slot1 = PIDSlots.configurationForSlot(1);
+      config.slot2 = PIDSlots.configurationForSlot(2);
 
       return config;
     }
@@ -316,6 +329,35 @@ Status Frame Periods
       }
     });
 
+  }
+
+  @Override
+  protected void initDefaultCommand() {
+    super.initDefaultCommand();
+    setDefaultCommand(new TalonSubsystemCommand("Low Power Hold", this) {
+      //double setpoint = talon.getSelectedSensorPosition();
+
+      @Override
+      protected void initialize() {
+        super.initialize();
+        double setpoint = talon.getClosedLoopTarget();
+        talon.selectProfileSlot(2, 0);
+        talon.set(ControlMode.Position, setpoint);
+        //TODO: check if setpoint is close to 0
+      }
+
+      @Override
+      protected void execute() {
+        super.execute();
+        //TODO: check if increased output results in movement (i.e. is it stuck?)
+      }
+
+      @Override
+      protected void end() {
+        super.end();
+        talon.selectProfileSlot(0, 0);
+      }
+    });
   }
 
   @Override
