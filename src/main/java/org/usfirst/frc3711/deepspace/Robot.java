@@ -135,6 +135,7 @@ public class Robot extends TimedRobot {
         .filter(TalonSubsystem.class::isInstance)
         .map(TalonSubsystem.class::cast)
         .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
+    lights.updateAllianceColor();
   }
 
   @Override

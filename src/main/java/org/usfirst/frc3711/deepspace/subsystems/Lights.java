@@ -1,5 +1,6 @@
 package org.usfirst.frc3711.deepspace.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class Lights extends RobotSubsystem {
@@ -17,6 +18,26 @@ public class Lights extends RobotSubsystem {
   }
   @Override
   protected void initDefaultCommand() {
+
+  }
+  public void updateAllianceColor(){
+    switch (DriverStation.getInstance().getAlliance()){
+      case Red:
+        red.set(true);
+        green.set(false);
+        blue.set(false);
+        break;
+      case Blue:
+        red.set(false);
+        green.set(false);
+        blue.set(true);
+        break;
+      case Invalid:
+        red.set(true);
+        green.set(true);
+        blue.set(true);
+        break;
+    }
 
   }
 }
