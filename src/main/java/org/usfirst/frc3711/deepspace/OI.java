@@ -56,9 +56,13 @@ public class OI {
     //POV quirks:
     //0 is vertical
     //angle increases clockwise
-    Button fickleFingerOut = new POVButton(xbox, 270);      //left
-    Button fickleFingerReallyHook = new POVButton(xbox, 0); //up
-    Button fickleFingerEject = new POVButton(xbox, 90);     //right
+    static final int POV_RIGHT = 90;
+    static final int POV_LEFT = 270;
+    static final int POV_DOWN = 180;
+
+    Button fickleFingerOut = new POVButton(xbox, POV_LEFT);      //left
+    Button fickleFingerReallyHook = new POVButton(xbox, POV_DOWN); //down
+    Button fickleFingerEject = new POVButton(xbox, POV_RIGHT);     //right
    
     Button level0Fuel = new MyButton(XBOX_ID,1<<0); // button 1
     Button level1Fuel = new MyButton(XBOX_ID,1<<1); //button 2
