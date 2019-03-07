@@ -60,9 +60,9 @@ public class OI {
     static final int POV_LEFT = 270;
     static final int POV_DOWN = 180;
 
-    Button fickleFingerOut = new POVButton(xbox, POV_LEFT);      //left
-    Button fickleFingerReallyHook = new POVButton(xbox, POV_DOWN); //down
-    Button fickleFingerEject = new POVButton(xbox, POV_RIGHT);     //right
+    Button fickleFingerOut = new POVButton(xbox, POV_RIGHT);
+    Button fickleFingerReallyHook = new POVButton(xbox, POV_LEFT);
+    Button fickleFingerEject = new POVButton(xbox, POV_DOWN);
    
     Button level0Fuel = new MyButton(XBOX_ID,1<<0); // button 1
     Button level1Fuel = new MyButton(XBOX_ID,1<<1); //button 2
