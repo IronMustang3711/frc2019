@@ -265,11 +265,18 @@ public final class TalonConfigBuilder {
    */
   public boolean enableOptimizations;
 
-  private TalonConfigBuilder() {
+  private TalonConfigBuilder(TalonSRXConfiguration base) {
+    copyFrom(base);
+  }
+  private TalonConfigBuilder(){
+    this(new TalonSRXConfiguration());
   }
 
   public static TalonConfigBuilder newBuilder() {
     return new TalonConfigBuilder();
+  }
+  public static TalonConfigBuilder from(TalonSRXConfiguration baseConfig){
+    return new TalonConfigBuilder(baseConfig);
   }
 
 
@@ -543,6 +550,16 @@ public final class TalonConfigBuilder {
     return this;
   }
 
+  public TalonConfigBuilder withSlot(SlotConfigurationEx slot){
+    switch (slot.slotID){
+      case 0: return withSlot0(slot);
+      case 1: return withSlot1(slot);
+      case 2: return withSlot2(slot);
+      case 3: return withSlot3(slot);
+      default: throw new IllegalArgumentException("Invalid slot ID: "+slot.slotID);
+    }
+  }
+
   public TalonConfigBuilder but() {
     return newBuilder().withPrimaryPID(primaryPID)
                        .withAuxiliaryPID(auxiliaryPID)
@@ -600,6 +617,66 @@ public final class TalonConfigBuilder {
                        .withCustomParam1(customParam1)
                        .withEnableOptimizations(enableOptimizations);
   }
+  
+
+  private void copyFrom(TalonSRXConfiguration from){
+
+    this.voltageMeasurementFilter = from.voltageMeasurementFilter;
+    this.slot1 = from.slot1;
+    this.primaryPID = from.primaryPID;
+    this.velocityMeasurementPeriod = from.velocityMeasurementPeriod;
+    this.reverseLimitSwitchSource = from.reverseLimitSwitchSource;
+    this.reverseSoftLimitEnable = from.reverseSoftLimitEnable;
+    this.nominalOutputForward = from.nominalOutputForward;
+    this.motionProfileTrajectoryPeriod = from.motionProfileTrajectoryPeriod;
+    this.auxiliaryPID = from.auxiliaryPID;
+    this.forwardLimitSwitchDeviceID = from.forwardLimitSwitchDeviceID;
+    this.pulseWidthPeriod_FilterWindowSz = from.pulseWidthPeriod_FilterWindowSz;
+    this.motionAcceleration = from.motionAcceleration;
+    this.forwardSoftLimitEnable = from.forwardSoftLimitEnable;
+    this.neutralDeadband = from.neutralDeadband;
+    this.clearPositionOnLimitF = from.clearPositionOnLimitF;
+    this.slot0 = from.slot0;
+    this.slot3 = from.slot3;
+    this.reverseSoftLimitThreshold = from.reverseSoftLimitThreshold;
+    this.openloopRamp = from.openloopRamp;
+    this.diff0Term = from.diff0Term;
+    this.closedloopRamp = from.closedloopRamp;
+    this.peakOutputForward = from.peakOutputForward;
+    this.clearPositionOnLimitR = from.clearPositionOnLimitR;
+    this.slot2 = from.slot2;
+    this.auxPIDPolarity = from.auxPIDPolarity;
+    this.feedbackNotContinuous = from.feedbackNotContinuous;
+    this.peakCurrentLimit = from.peakCurrentLimit;
+    this.motionCruiseVelocity = from.motionCruiseVelocity;
+    this.clearPositionOnQuadIdx = from.clearPositionOnQuadIdx;
+    this.peakOutputReverse = from.peakOutputReverse;
+    this.pulseWidthPeriod_EdgesPerRot = from.pulseWidthPeriod_EdgesPerRot;
+    this.forwardLimitSwitchSource = from.forwardLimitSwitchSource;
+    this.reverseLimitSwitchDeviceID = from.reverseLimitSwitchDeviceID;
+    this.diff1Term = from.diff1Term;
+    this.remoteFilter0 = from.remoteFilter0;
+    this.customParam0 = from.customParam0;
+    this.continuousCurrentLimit = from.continuousCurrentLimit;
+    this.velocityMeasurementWindow = from.velocityMeasurementWindow;
+    this.softLimitDisableNeutralOnLOS = from.softLimitDisableNeutralOnLOS;
+    this.forwardSoftLimitThreshold = from.forwardSoftLimitThreshold;
+    this.motionCurveStrength = from.motionCurveStrength;
+    this.nominalOutputReverse = from.nominalOutputReverse;
+    this.limitSwitchDisableNeutralOnLOS = from.limitSwitchDisableNeutralOnLOS;
+    this.remoteSensorClosedLoopDisableNeutralOnLOS = from.remoteSensorClosedLoopDisableNeutralOnLOS;
+    this.trajectoryInterpolationEnable = from.trajectoryInterpolationEnable;
+    this.reverseLimitSwitchNormal = from.reverseLimitSwitchNormal;
+    this.sum1Term = from.sum1Term;
+    this.peakCurrentDuration = from.peakCurrentDuration;
+    this.forwardLimitSwitchNormal = from.forwardLimitSwitchNormal;
+    this.enableOptimizations = from.enableOptimizations;
+    this.sum0Term = from.sum0Term;
+    this.customParam1 = from.customParam1;
+    this.voltageCompSaturation = from.voltageCompSaturation;
+    this.remoteFilter1 = from.remoteFilter1;
+  }
+
 
   public TalonSRXConfiguration build() {
     TalonSRXConfiguration config = new TalonSRXConfiguration();
