@@ -52,12 +52,15 @@ public class OI {
     
     Button jogDown = new JoystickButton(xbox, 6);
     Button jogUp = new JoystickButton(xbox, 5);
-    
-    Button fickleFingerOut = new POVButton(xbox, 270);//new JoystickButton(xbox, 13);
-    Button fickleFingerReallyHook = new POVButton(xbox, 90);//new JoystickButton(xbox,-1) ;
-    Button fickleFingerEject = new POVButton(xbox, 180); //new JoystickButton(xbox, -1);
+
+    //POV quirks:
+    //0 is vertical
+    //angle increases clockwise
+    Button fickleFingerOut = new POVButton(xbox, 270);      //left
+    Button fickleFingerReallyHook = new POVButton(xbox, 0); //up
+    Button fickleFingerEject = new POVButton(xbox, 90);     //right
    
-    Button level0Fuel = new MyButton(XBOX_ID,1<<0);    // button 1
+    Button level0Fuel = new MyButton(XBOX_ID,1<<0); // button 1
     Button level1Fuel = new MyButton(XBOX_ID,1<<1); //button 2
     Button level2Fuel = new MyButton(XBOX_ID,1<<2); //button 3
 
