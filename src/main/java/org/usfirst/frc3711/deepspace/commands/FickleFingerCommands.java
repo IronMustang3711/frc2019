@@ -1,6 +1,7 @@
 package org.usfirst.frc3711.deepspace.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.commands.util.TalonSubsystemCommand;
@@ -20,6 +21,7 @@ public class FickleFingerCommands {
 
       @Override
       protected void initialize() {
+        DriverStation.reportWarning(getName()+".initialize()",false);
         subsystem.talon.selectProfileSlot(0,0);
       }
 
@@ -32,6 +34,7 @@ public class FickleFingerCommands {
       @Override
       protected void end() {
         super.end();
+        DriverStation.reportWarning(getName()+".end()",false);
 
       stowCommand().start();
       }
@@ -46,6 +49,8 @@ public class FickleFingerCommands {
         int currentPosition = subsystem.talon.getSelectedSensorPosition();
         int desiredPosition = ENCODER_TICKS_PER_REV *((currentPosition + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV);
         subsystem.talon.set(ControlMode.Position,desiredPosition);
+        DriverStation.reportWarning(getName()+".initialize()",false);
+
       }
 
       @Override
@@ -58,6 +63,8 @@ public class FickleFingerCommands {
       protected void end() {
         super.end();
         subsystem.disable();
+        DriverStation.reportWarning(getName()+".end()",false);
+
       }
     };
 
@@ -76,18 +83,23 @@ public class FickleFingerCommands {
       protected void initialize() {
         super.initialize();
         baseRev = subsystem.talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+        DriverStation.reportWarning(getName()+".initialize()",false);
+
       }
 
       @Override
       protected void execute() {
         super.execute();
         subsystem.talon.set(ControlMode.Position,252 + ENCODER_TICKS_PER_REV*baseRev);
+
       }
 
       @Override
       protected void end() {
         super.end();
         subsystem.disable();
+        DriverStation.reportWarning(getName()+".end()",false);
+
       }
     };
   }
