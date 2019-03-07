@@ -86,7 +86,7 @@ public class GroundPickup extends Command {
 
   @Override
   protected boolean isFinished() {
-    return false;
+    return isTimedOut() || elevatorDown.isCompleted();
   }
 
   @Override

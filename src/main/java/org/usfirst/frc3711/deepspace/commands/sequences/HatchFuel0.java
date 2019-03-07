@@ -70,7 +70,7 @@ public class HatchFuel0 extends Command {
 
   @Override
   protected boolean isFinished() {
-    return false;
+    return isTimedOut() || (wristDown.isCompleted() && armOut.isCompleted());
   }
 
   @Override
