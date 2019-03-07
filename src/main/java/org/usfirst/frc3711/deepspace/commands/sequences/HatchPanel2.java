@@ -1,9 +1,9 @@
 package org.usfirst.frc3711.deepspace.commands.sequences;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.MyCommandGroup;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import org.usfirst.frc3711.deepspace.DebugMode;
 import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.commands.util.Commands;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
@@ -46,7 +46,7 @@ public class HatchPanel2 extends MyCommandGroup {
   @Override
   protected void end() {
     super.end();
-    if(Robot.debug)
+    if(Robot.DEBUG_MODE == DebugMode.FULL)
       Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
 
    // RestingPose.run();

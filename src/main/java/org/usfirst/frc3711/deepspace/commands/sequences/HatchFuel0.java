@@ -3,6 +3,7 @@ package org.usfirst.frc3711.deepspace.commands.sequences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import org.usfirst.frc3711.deepspace.DebugMode;
 import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.commands.util.Commands;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
@@ -58,7 +59,7 @@ public class HatchFuel0 extends Command {
   @Override
   protected void initialize() {
     super.initialize();
-    if(Robot.debug)
+    if(Robot.DEBUG_MODE == DebugMode.FULL)
       Shuffleboard.addEventMarker(getName() + "_Init", EventImportance.kNormal);
 
     wristVertical.start();
@@ -78,7 +79,7 @@ public class HatchFuel0 extends Command {
   @Override
   protected void end() {
     super.end();
-    if(Robot.debug)
+    if(Robot.DEBUG_MODE == DebugMode.FULL)
       Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
    // RestingPose.run();
   }

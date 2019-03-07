@@ -1,6 +1,7 @@
 package edu.wpi.first.wpilibj.command;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import org.usfirst.frc3711.deepspace.DebugMode;
 import org.usfirst.frc3711.deepspace.Robot;
 
 import java.lang.reflect.Field;
@@ -77,7 +78,7 @@ public class MyCommandGroup extends CommandGroup {
 
   @SuppressWarnings("unused")
   public MyCommandGroup() {
-    if(!Robot.debug) debugSink = s -> {};
+    if(Robot.DEBUG_MODE == DebugMode.NONE) debugSink = s -> {};
   }
 
   public MyCommandGroup(String name) {

@@ -30,7 +30,7 @@ import java.util.List;
 
 public class Robot extends TimedRobot {
 
-  public static final boolean debug = true;
+  public static final DebugMode DEBUG_MODE = DebugMode.FULL;
 
   public static OI oi;
   public static Chassis chassis;

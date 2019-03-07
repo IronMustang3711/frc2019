@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import org.usfirst.frc3711.deepspace.DebugMode;
 import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.subsystems.TalonSubsystem;
 
@@ -71,7 +72,7 @@ public class MotionMagicSetpoint extends Command {
     initialPosition = subsystem.talon.getSelectedSensorPosition();
     startTime = System.currentTimeMillis();
     subsystem.talon.selectProfileSlot(0, 0);
-    if(Robot.debug)
+    if(Robot.DEBUG_MODE == DebugMode.FULL)
       Shuffleboard.addEventMarker("MM_"+getName() + "_Init", EventImportance.kNormal);
 
   }
@@ -87,7 +88,7 @@ public class MotionMagicSetpoint extends Command {
 
   @Override
   protected void end() {
-    if(Robot.debug)
+    if(Robot.DEBUG_MODE == DebugMode.FULL)
       Shuffleboard.addEventMarker("MM_"+getName() + "_End", EventImportance.kNormal);
   }
 

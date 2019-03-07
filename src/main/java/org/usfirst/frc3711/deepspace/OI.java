@@ -214,7 +214,7 @@ public class OI {
     // SmartDashboard Buttons
    // SmartDashboard.putData("Drive with Joystick", new DrivewithJoystick());
 
-    if(Robot.debug) {
+    if(Robot.DEBUG_MODE.isEnabled(DebugMode.FULL)) {
       var tab = Shuffleboard.getTab("Poses");
       var subsys = tab.getLayout("Subsystems", BuiltInLayouts.kList);
       subsys.add(Robot.arm);
