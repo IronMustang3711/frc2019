@@ -40,7 +40,7 @@ public class DogLeg extends TalonSubsystem {
     encoderB = tab.add("Encoder B", false).getEntry();
 
     tab.add(new Command("Run Motor") {
-      {requires(Robot.dogLeg);}
+      {requires(DogLeg.this);}
 
       @Override
       protected void execute() {

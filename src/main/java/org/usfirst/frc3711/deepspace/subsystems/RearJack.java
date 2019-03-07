@@ -26,7 +26,7 @@ public class RearJack extends TalonSubsystem {
                       .withProperties(Map.of("min", -1.0, "max", 1.0)).getEntry();
 
     tab.add(new Command("Run Motor") {
-      {requires(Robot.rearJack);}
+      {requires(RearJack.this);}
       @Override
       protected void execute() {
         talon.set(ControlMode.PercentOutput, motorOutput.getDouble(0.0));
