@@ -18,7 +18,7 @@ public class Elevator extends TalonSubsystem {
     static class PIDSlots {
       public static final SlotConfiguration POSITION_SLOT =
           SlotConfigBuilder.newBuilder()
-              .withKP(1.0)
+              .withKP(0.5)
               .build();
 
 
@@ -31,9 +31,10 @@ public class Elevator extends TalonSubsystem {
       todo: reapply integral?
        */
       public static final SlotConfiguration MM_SLOT =
-          SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-              .withKF(1.0)
-              .build();
+          SlotConfigBuilder.newBuilder()
+                           .withKP(1.0)
+                           .withKF(1.0)
+                           .build();
 
       public static SlotConfiguration configurationForSlot(int slot) {
         switch (slot) {
