@@ -75,9 +75,9 @@ public class Arm extends TalonSubsystem {
 
       public static int slotForMode(ControlMode mode) {
         if (mode == ControlMode.MotionMagic) {
-          return 1;
+          return 0;
         }
-        return 0;
+        return 1;
       }
     }
 
