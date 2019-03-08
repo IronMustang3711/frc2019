@@ -6,7 +6,7 @@ import org.usfirst.frc3711.deepspace.commands.util.TalonSubsystemCommand;
 
 public class JogElevatorContinuously extends TalonSubsystemCommand {
   private final boolean up;
-  private static final int UP_SETPOINT = 8000;
+  private static final int UP_SETPOINT = 13000;
   private static final int DOWN_SETPOINT = 0;//-8000;
   private static final int STOP_DISTANCE = 600;
   private int position;
@@ -36,6 +36,15 @@ public class JogElevatorContinuously extends TalonSubsystemCommand {
     super.end();
     subsystem.talon.selectProfileSlot(1, 0); //position slot
     subsystem.talon.set(ControlMode.Position, position);
+    /*
+        int vel = subsystem.talon.getSelectedSensorVelocity();
+
+
+    int setpoint = up ? position + (int) (vel*0.7) : position - (int)( 0.1*vel);
+
+
+    subsystem.talon.set(ControlMode.MotionMagic, setpoint);
+    */
 
   }
 
