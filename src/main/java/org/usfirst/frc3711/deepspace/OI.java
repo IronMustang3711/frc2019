@@ -82,8 +82,9 @@ public class OI {
 
       stow.whenPressed(new Stow());
 
-      jogUp.whenPressed(new JogElevator(true));
-      jogDown.whenPressed(new JogElevator(false));
+      jogUp.whileHeld(new JogElevatorContinuously(true));
+      jogDown.whileHeld(new JogElevatorContinuously(false));
+
 
      
       level0Fuel.whenPressed(new HatchFuel0());
