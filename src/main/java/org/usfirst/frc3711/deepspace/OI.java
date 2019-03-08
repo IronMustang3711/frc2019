@@ -138,9 +138,11 @@ public class OI {
     stow.whenPressed(new Stow());
 
     jogUp = new JoystickButton(joystick1, 9);
-    jogUp.whenPressed(new JogElevator(true));
+    //jogUp.whenPressed(new JogElevator(true));
+    jogUp.whileHeld(new JogElevatorContinuously(true));
     jogDown = new JoystickButton(joystick1, 10);
-    jogDown.whenPressed(new JogElevator(false));
+    //jogDown.whenPressed(new JogElevator(false));
+    jogDown.whileHeld(new JogElevatorContinuously(false));
 
     Robot.elevator.tab.add(new JogElevator(true));
     Robot.elevator.tab.add(new JogElevator(false));
