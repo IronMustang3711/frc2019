@@ -13,8 +13,6 @@ package org.usfirst.frc3711.deepspace.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
@@ -23,6 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import org.usfirst.frc3711.deepspace.TalonID;
 import org.usfirst.frc3711.deepspace.talon.SlotConfigBuilder;
+import org.usfirst.frc3711.deepspace.talon.TalonConfigBuilder;
 import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
 import java.util.Map;
@@ -33,160 +32,49 @@ import java.util.Map;
  */
 public class Arm extends TalonSubsystem {
 
-  @SuppressWarnings("WeakerAccess")
-  static class TalonSettings {
-    static class PIDSlots {
-      public static final SlotConfiguration POSITION_SLOT =
-          SlotConfigBuilder.newBuilder()
-              .withSlot(1)
-              .withKP(2.0)
-              .build();
-
-      public static final SlotConfiguration MM_SLOT =
-          SlotConfigBuilder.builderWithBaseConfiguration(POSITION_SLOT)
-              .withSlot(0)
-              .withKP(2.5)
-              // .withKI(1e-9)
-              .withKF(10.0)
-              .withMaxIntegralAccumulator(10000)
-              // .withClosedLoopPeakOutput(0.9)
-              .build();
-
-      public static SlotConfiguration configurationForSlot(int slot) {
-        switch (slot) {
-          case 0:
-            return MM_SLOT;
-          case 1:
-            return POSITION_SLOT;
-          default:
-            throw new IllegalArgumentException("invalid slot: " + slot);
-        }
-      }
-
-      public static SlotConfiguration configurationForMode(ControlMode mode) {
-        switch (mode) {
-          case Position:
-          case Disabled:
-            return POSITION_SLOT;
-          case MotionMagic:
-            return MM_SLOT;
-          default:
-            throw new IllegalArgumentException("Control Mode:" + mode);
-        }
-      }
-
-      public static int slotForMode(ControlMode mode) {
-        if (mode == ControlMode.MotionMagic) {
-          return 0;
-        }
-        return 1;
-      }
-    }
+  private static final
+  TalonSRXConfiguration DEFAULT_CONFIG
+      = TalonConfigBuilder.newBuilder()
+                          .withSlot(
+                              SlotConfigBuilder.newBuilder()
+                                               .withSlot(1)
+                                               .withKP(2.0)
+                                               .build())
+                          .withSlot(
+                              SlotConfigBuilder.newBuilder()
+                                               .withSlot(0)
+                                               .withKP(2.5)
+                                               .withKF(10.0)
+                                               .build())
 
 
-    public static final TalonSRXConfiguration CONFIGURATION = new TalonSRXConfiguration();
+                          .withForwardSoftLimitThreshold(3500)
+                          .withReverseSoftLimitThreshold(-100)
+                          .withForwardSoftLimitEnable(true)
+                          .withReverseSoftLimitEnable(true)
 
-    @SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
-    static TalonSRXConfiguration applyConfig(TalonSRXConfiguration config) {
-      config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
+                          .withMotionCruiseVelocity(80)
+                          .withMotionAcceleration(50)
 
-      config.remoteFilter0.remoteSensorSource = RemoteSensorSource.Off;
-      config.remoteFilter1.remoteSensorSource = RemoteSensorSource.Off;
+                          .withPeakOutputForward(1.0)
+                          .withPeakOutputReverse(-0.6)
 
-      config.forwardLimitSwitchSource = LimitSwitchSource.Deactivated;
-      config.reverseLimitSwitchSource = LimitSwitchSource.Deactivated;
+                          .withNominalOutputForward(0.0)
+                          .withNominalOutputReverse(0.0)
 
-      config.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
-      config.reverseLimitSwitchNormal = LimitSwitchNormal.Disabled;
+                          .withVoltageCompSaturation(10.0)
 
-      config.forwardSoftLimitThreshold = 3500; //this is probably a little too far back
-      config.reverseSoftLimitThreshold = -100;
-      config.forwardSoftLimitEnable = true;
-      config.reverseSoftLimitEnable = true;
+                          .withPeakCurrentLimit(25)
+                          .withPeakCurrentDuration(2000)
+                          .withContinuousCurrentLimit(1)
 
+                          .withForwardLimitSwitchSource(LimitSwitchSource.Deactivated)
+                          .withReverseLimitSwitchSource(LimitSwitchSource.Deactivated)
+                          .withForwardLimitSwitchNormal(LimitSwitchNormal.Disabled)
+                          .withReverseLimitSwitchNormal(LimitSwitchNormal.Disabled)
 
-      config.openloopRamp = 1.0;
-      // config.closedloopRamp = 1.705000;
-
-      config.motionCruiseVelocity = 80;
-      config.motionAcceleration = 50;
-
-      config.peakOutputForward = 1.0;
-      config.peakOutputReverse = -0.5;
-
-
-
-        /*
-        https://phoenix-documentation.readthedocs.io/en/latest/ch13_MC.html#ramping
-       The nominal outputs can be selected to ensure that any non-zero requested motor output gets promoted
-       to a minimum output. For example, if the nominal forward is set to +0.10 (+10%), then any motor request
-       within (0%, +10%) will be promoted to +10% assuming request is beyond the neutral dead band.
-       This is useful for mechanisms that require a minimum output for movement,
-       and can be used as a simpler alternative to the kI (integral) component of closed-looping in some circumstances.
-         */
-      config.nominalOutputForward = 0;
-      config.nominalOutputReverse = 0;
-
-
-      // config.neutralDeadband = 0.199413; //TODO: configure
-
-
-
-      /*
-Talon SRX and Victor SPX can be configured to adjust their outputs in response to the battery
-voltage measurement (in all control modes). Use the voltage compensation saturation config to determine
-what voltage represents 100% output.
- */
-      config.voltageCompSaturation = 10.0;
-
-
-              /*
-        After setting the three configurations, current limiting must be enabled via enableCurrentLimit() or LabVIEW VI.
-         */
-      config.peakCurrentLimit = 25;
-      config.peakCurrentDuration = 2000;
-      config.continuousCurrentLimit = 1;
-
-      config.slot0 = PIDSlots.configurationForSlot(0);
-      config.slot1 = PIDSlots.configurationForSlot(1);
-
-      return config;
-    }
-
-
-    /*
-things not handled with config:
-[x]Current Limit Enable (though the thresholds are configs)
-[x]Voltage Compensation Enable (though the nominal voltage is a config)
-Control Mode and Target/Output demand (percent, position, velocity, etc.)
-[x]Invert direction and sensor phase
-[x]Closed-loop slot selection [0,3] for primary and aux PID loops.
-Neutral mode override (convenient to temporarily override configs)
-Limit switch override (convenient to temporarily override configs)
-Soft Limit override (convenient to temporarily override configs)
-Status Frame Periods
-*/
-    public static void configure(TalonSRX talon) {
-      talon.configFactoryDefault();
-
-      talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-      talon.selectProfileSlot(0, 0); //motion magic slot & primary pid
-
-
-      talon.setInverted(true);
-      talon.setSensorPhase(false);
-
-
-      talon.getAllConfigs(CONFIGURATION);
-      applyConfig(CONFIGURATION);
-      talon.configAllSettings(CONFIGURATION);
-
-      talon.enableVoltageCompensation(true);
-      talon.enableCurrentLimit(true);
-
-      talon.configMotionSCurveStrength(8);
-    }
-  }
+                          .withOpenloopRamp(1.0)
+                          .build();
 
 
   private final Runnable talonTelemetry;
@@ -227,14 +115,13 @@ Status Frame Periods
       boolean lowPower;
 
 
-      @SuppressWarnings("deprecation") //for talon.configureSlot
       @Override
       protected void initialize() {
         ControlMode mode = modeChooser.getSelected();
-        SlotConfiguration configuration = TalonSettings.PIDSlots.configurationForMode(mode);
-        int slot = TalonSettings.PIDSlots.slotForMode(mode);
-        talon.configureSlot(configuration, slot, 50);
-
+//        SlotConfiguration configuration = TalonSettings.PIDSlots.configurationForMode(mode);
+//        int slot = TalonSettings.PIDSlots.slotForMode(mode);
+//        talon.configureSlot(configuration, slot, 50);
+        //TODO: this probably doesnt work anymore
         lowPowerMode.setBoolean(lowPower = false);
         lowPowerStartTime = System.currentTimeMillis();
 
@@ -335,7 +222,23 @@ Status Frame Periods
   @Override
   void configureTalon() {
     super.configureTalon();
-    TalonSettings.configure(talon);
+    talon.configFactoryDefault();
+
+    talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    talon.selectProfileSlot(0, 0); //motion magic slot & primary pid
+
+
+    talon.setInverted(true);
+    talon.setSensorPhase(false);
+
+
+
+    talon.configAllSettings(DEFAULT_CONFIG);
+
+    talon.enableVoltageCompensation(true);
+    talon.enableCurrentLimit(true);
+
+    talon.configMotionSCurveStrength(8);
 
     /* Set relevant frame periods to be at least as fast as periodic rate */
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10);
