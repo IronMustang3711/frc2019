@@ -101,6 +101,7 @@ public class Robot extends TimedRobot {
     Shuffleboard.stopRecording();
     disableAll();
     disableStartTime = System.currentTimeMillis();
+    DriverStation.reportError("Disabled!", false);
   }
 
   public static void disableAll() {
@@ -139,6 +140,11 @@ public class Robot extends TimedRobot {
         .map(TalonSubsystem.class::cast)
         .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
     lights.updateAllianceColor();
+
+    if (lastAutoCommand != null) {
+      DriverStation.reportWarning("last running(auto) command: " + lastAutoCommand.toString(), false);
+     // lastAutoCommand.start();
+    }
   }
 
   @Override

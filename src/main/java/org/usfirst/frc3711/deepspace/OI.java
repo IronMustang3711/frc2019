@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.WaitForChildren;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,6 +50,7 @@ public class OI {
       super.initialize();
       Robot.lastAutoCommand =actual;
       actual.start();
+     // new InstantCommand(()->Robot.lastAutoCommand = new MaintainSetpoint.HoldAll()).start();
     }
 
   }
@@ -56,17 +58,21 @@ public class OI {
   static enum CommandSequences {
     INSTANCE;
 
+  
+
     final Command armHold = new MaintainSetpoint(Robot.arm);
 
    final Command stow =new MyCommand(new Stow());
    final Command groundPickup = new MyCommand(new GroundPickup());
    final Command loadingStationFuel = new MyCommand(new LoadingStationFuel(){
+  
+    @Override
+    protected void end(){
+      super.end();
+    //  Robot.lastAutoCommand = new MaintainSetpoint.HoldAll();
+    //  Robot.lastAutoCommand.start();
+    }
 
-     @Override
-     protected void end() {
-       super.end();
-       armHold.start();
-     }
    });
 
    final  Command panel0 = new MyCommand(new HatchPanel0());
