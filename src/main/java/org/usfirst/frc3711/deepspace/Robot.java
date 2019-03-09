@@ -13,19 +13,17 @@ package org.usfirst.frc3711.deepspace;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.usfirst.frc3711.deepspace.subsystems.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class Robot extends TimedRobot {
@@ -49,6 +47,7 @@ public class Robot extends TimedRobot {
   public static List<RobotSubsystem> subsystems;
 
   private long disableStartTime;
+  private boolean lastNonDisabledStateWasAuto = false;
 
 
   private void disableWatchdog() {
@@ -66,9 +65,9 @@ public class Robot extends TimedRobot {
   public Robot() {
     super(0.02);
     disableWatchdog();
-
-
   }
+
+
 
   @Override
   public void robotInit() {
@@ -78,25 +77,37 @@ public class Robot extends TimedRobot {
     arm = new Arm();
     wrist = new Wrist();
     intake = new Intake();
-    // misc = new Misc();
     fickleFinger = new FickleFinger();
     dogLeg = new DogLeg();
     rearJack = new RearJack();
     poser = new RobotPoser();
     lights = new Lights();
 
-    subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake/*,misc*/, fickleFinger, dogLeg, rearJack,poser, lights);
-
+    subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake, fickleFinger, dogLeg, rearJack,poser, lights);
+    lastNonDisabledStateWasAuto = false;
 
     oi = new OI();
 
     CameraServer.getInstance().startAutomaticCapture();
   }
 
+  private Stream<TalonSubsystem> talonSubsystems() {
+    return subsystems.stream()
+                     .filter(TalonSubsystem.class::isInstance)
+                     .map(TalonSubsystem.class::cast);
+  }
+  private void neutralMode(NeutralMode mode){
+   talonSubsystems().forEach(subsystem -> subsystem.talon.setNeutralMode(mode));
+  }
+
   @Override
   public void disabledInit() {
-    Shuffleboard.stopRecording();
-    disableAll();
+    lights.updateAllianceColor();
+
+    if(!lastNonDisabledStateWasAuto){
+      Shuffleboard.stopRecording();
+      disableAll();
+    }
     disableStartTime = System.currentTimeMillis();
   }
 
@@ -107,20 +118,19 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
-    if((System.currentTimeMillis() - disableStartTime) > 5000){
-      subsystems.stream()
-        .filter(TalonSubsystem.class::isInstance)
-        .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Coast));
+
+    if((System.currentTimeMillis() - disableStartTime) > 5000 && !lastNonDisabledStateWasAuto){
+      neutralMode(NeutralMode.Coast);
     }
   }
 
   @Override
   public void autonomousInit() {
-    subsystems.stream()
-        .filter(TalonSubsystem.class::isInstance)
-        .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
+    Shuffleboard.startRecording();
+
+    neutralMode(NeutralMode.Brake);
+
+    lastNonDisabledStateWasAuto = true;
   }
 
   @Override
@@ -131,11 +141,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     Shuffleboard.startRecording();
-    subsystems.stream()
-        .filter(TalonSubsystem.class::isInstance)
-        .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
-    lights.updateAllianceColor();
+
+    neutralMode(NeutralMode.Brake);
+
+    lastNonDisabledStateWasAuto = false;
   }
 
   @Override
@@ -145,7 +154,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-//    SmartDashboard.putString("buttons",
-//    Integer.toBinaryString(DriverStation.getInstance().getStickButtons(1)));
+  }
+
+  @Override
+  public void testInit() {
+    lastNonDisabledStateWasAuto = false;
   }
 }
