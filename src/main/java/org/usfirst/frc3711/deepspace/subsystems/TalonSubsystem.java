@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import org.usfirst.frc3711.deepspace.commands.util.Commands;
+import org.usfirst.frc3711.deepspace.commands.util.TalonSubsystemCommand;
 
 public abstract class TalonSubsystem extends RobotSubsystem {
 
@@ -13,10 +14,29 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   protected final TalonSRX talon;
   private final NetworkTableEntry currentLimitingEnabled;
 
-  final StickyFaults tmpStickyFaults = new StickyFaults();
-  final StickyFaults stickyFaults = new StickyFaults();
-  final Faults tmpFaults = new Faults();
-  final Faults faults = new Faults();
+  private final StickyFaults[] stickyFaults = {new StickyFaults(),new StickyFaults()};
+
+  private final Faults[] faults = {new Faults(), new Faults()};
+
+  static class TalonSetpointSpec {
+    final double value;
+    final boolean motion;
+
+    TalonSetpointSpec(double value, boolean motion) {
+      this.value = value;
+      this.motion = motion;
+    }
+
+    @Override
+    public String toString() {
+      return "{" +
+             "value=" + value +
+             ", motion=" + motion +
+             '}';
+    }
+  }
+
+  private TalonSetpointSpec lastPosition;
 
 
   public TalonSubsystem(String name, int talonID) {
@@ -36,11 +56,11 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     configureTalon();
 
 
-    talon.getStickyFaults(stickyFaults);
-    tmpStickyFaults.update(stickyFaults.toBitfield());
+    talon.getStickyFaults(stickyFaults[0]);
+    talon.getStickyFaults(stickyFaults[1]);
 
-    if(stickyFaults.hasAnyFault()){
-      DriverStation.reportError(getName() + "FAULT: "+stickyFaults.toString(),false);
+    if(stickyFaults[0].hasAnyFault()){
+      DriverStation.reportError(getName() + "FAULT: "+stickyFaults[0].toString(),false);
     }
 
   }
@@ -51,6 +71,26 @@ public abstract class TalonSubsystem extends RobotSubsystem {
 
   @Override
   protected void initDefaultCommand() {
+    setDefaultCommand(new TalonSubsystemCommand("Hold",this){
+      @Override
+      protected void initialize() {
+        super.initialize();
+
+        DriverStation.reportWarning("["+TalonSubsystem.this.getName()+"] last setpoint = "+lastPosition,false);
+
+        if(lastPosition == null){
+          cancel();
+        }
+      }
+
+      @Override
+      protected void execute() {
+        super.execute();
+        if(lastPosition!= null){
+          setPosition(lastPosition.value,lastPosition.motion);
+        }
+      }
+    });
 
   }
 
@@ -78,42 +118,33 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   @Override
   public void periodic() {
     super.periodic();
+    talon.getStickyFaults(stickyFaults[0]);
+    talon.getFaults(faults[0]);
 
-    talon.getStickyFaults(tmpStickyFaults);
-    if(stickyFaults.toBitfield() != tmpStickyFaults.toBitfield()){
-      stickyFaults.update(tmpStickyFaults.toBitfield());
 
-      DriverStation.reportError(getName() + "STICKY FAULT: "+stickyFaults.toString(),false);
+    if(stickyFaults[0].toBitfield() != stickyFaults[1].toBitfield()){
+
+      stickyFaults[1].update(stickyFaults[0].toBitfield());
+      DriverStation.reportError(getName() + "STICKY FAULT: "+stickyFaults[1].toString(),false);
     }
 
-    talon.getFaults(tmpFaults);
-    if(faults.toBitfield() != tmpFaults.toBitfield()){
-      faults.update(tmpFaults.toBitfield());
-      DriverStation.reportError(getName() + "FAULT: "+faults.toString(),false);
+    if(faults[0].toBitfield() != faults[1].toBitfield()){
+
+      faults[1].update(faults[0].toBitfield());
+      DriverStation.reportError(getName() + "FAULT: "+faults[1].toString(),false);
 
     }
 
   }
 
-//  public void setP(double p) {
-//    talon.config_kP(0, p, 50);
-//  }
-//
-//  public void setI(double i) {
-//    talon.config_kI(0, i, 50);
-//  }
-//
-//  public void setIZone(int iZone) {
-//    talon.config_IntegralZone(0, iZone, 50);
-//  }
-//
-//  public void setD(double d) {
-//    talon.config_kD(0, d, 50);
-//  }
-//
-//  public void setF(double f) {
-//    talon.config_kF(0, f, 50);
-//  }
+  public void replayLastSetpoint(){
+    DriverStation.reportWarning("["+TalonSubsystem.this.getName()+"] Replay last setpoint = "+lastPosition,false);
+    if(lastPosition!= null){
+      setPosition(lastPosition.value,lastPosition.motion);
+    }
+
+  }
+
 
   public boolean isClosedLoop(){
     return TalonUtil.isClosedLoopMode(talon.getControlMode());
@@ -141,9 +172,6 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     talon.setNeutralMode(enable ? NeutralMode.Brake : NeutralMode.Coast);
   }
 
-//  public void setNeutralMode(NeutralMode brake) {
-//    talon.setNeutralMode(brake);
-//  }
 
   public int getVelocity() {
     return talon.getSelectedSensorVelocity();
@@ -153,13 +181,6 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     return talon.getSelectedSensorPosition();
   }
 
-//  public void set(ControlMode position, double desiredPosition) {
-//    talon.set(position, desiredPosition);
-//  }
-
-//  public void selectProfileSlot(int slotidx, int pididx) {
-//    talon.selectProfileSlot(slotidx, pididx);
-//  }
 
   public void setOutput(double output){
     talon.selectProfileSlot(TalonUtil.POSITION_SLOT,TalonUtil.PRIMARY_PID);
@@ -170,6 +191,8 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   }
 
   public void setPosition(double position, boolean useMotionProfiling){
+    lastPosition = new TalonSetpointSpec(position,useMotionProfiling);
+
     if(useMotionProfiling){
       talon.selectProfileSlot(TalonUtil.MM_SLOT,TalonUtil.PRIMARY_PID);
       talon.set(ControlMode.MotionMagic,position);
@@ -195,14 +218,6 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   ControlMode getControlMode() {
     return talon.getControlMode();
   }
-
-//  public double getClosedLoopTarget() {
-//    return talon.getClosedLoopTarget();
-//  }
-
-//  double getErrorDerivative() {
-//    return talon.getErrorDerivative();
-//  }
 
   double getIntegralAccumulator() {
     return talon.getIntegralAccumulator();
