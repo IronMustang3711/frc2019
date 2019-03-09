@@ -62,7 +62,7 @@ public class TalonUtil {
     BasicTelemetry(TalonSubsystem subsystem) {
       this.subsystem = subsystem;
       //table = NetworkTableInstance.getDefault().getTable(subsystem.getName()+"Telemetry");
-      container = subsystem.tab.getLayout("talon telemetry", BuiltInLayouts.kList)
+      container = subsystem.tab.getLayout("talon telemetry",BuiltInLayouts.kList)
                       .withPosition(8, 0)
                       .withSize(2, 4)
                       .withProperties(Map.of("Label position", "LEFT"));
@@ -75,9 +75,9 @@ public class TalonUtil {
 
     @Override
     public void run() {
-      outputPercent.setDouble(subsystem.talon.getMotorOutputPercent());
-      outputVoltage.setDouble(subsystem.talon.getMotorOutputVoltage());
-      outputCurrent.setDouble(subsystem.talon.getOutputCurrent());
+      outputPercent.setDouble(subsystem.getMotorOutputPercent());
+      outputVoltage.setDouble(subsystem.getMotorOutputVoltage());
+      outputCurrent.setDouble(subsystem.getOutputCurrent());
     }
 
   }
@@ -96,8 +96,8 @@ public class TalonUtil {
     @Override
     public void run() {
       super.run();
-      position.setDouble(subsystem.talon.getSelectedSensorPosition());
-      velocity.setDouble(subsystem.talon.getSelectedSensorVelocity());
+      position.setDouble(subsystem.getSelectedSensorPosition());
+      velocity.setDouble(subsystem.getSelectedSensorVelocity());
     }
   }
 
@@ -120,12 +120,12 @@ public class TalonUtil {
     @Override
     public void run() {
       super.run();
-      if (!CLOSED_LOOP_MODES.contains(subsystem.talon.getControlMode())) return;
+      if (!CLOSED_LOOP_MODES.contains(subsystem.getControlMode())) return;
 
-      target.setDouble(subsystem.talon.getClosedLoopTarget());
-      error.setDouble(subsystem.talon.getClosedLoopError());
-      errorDerivative.setDouble(subsystem.talon.getErrorDerivative());
-      iAccum.setDouble(subsystem.talon.getIntegralAccumulator());
+      target.setDouble(subsystem.getClosedLoopTarget());
+      error.setDouble(subsystem.getClosedLoopError());
+      errorDerivative.setDouble(subsystem.getErrorDerivative());
+      iAccum.setDouble(subsystem.getIntegralAccumulator());
 
     }
   }
@@ -146,11 +146,11 @@ public class TalonUtil {
     @Override
     public void run() {
       super.run();
-      if (!MOTION_PROFILE_MODES.contains(subsystem.talon.getControlMode())) return;
+      if (!MOTION_PROFILE_MODES.contains(subsystem.getControlMode())) return;
 
-      trajPosition.setDouble(subsystem.talon.getActiveTrajectoryPosition());
-      trajVelocity.setDouble(subsystem.talon.getActiveTrajectoryVelocity());
-      trajFF.setDouble(subsystem.talon.getActiveTrajectoryArbFeedFwd());
+      trajPosition.setDouble(subsystem.getActiveTrajectoryPosition());
+      trajVelocity.setDouble(subsystem.getActiveTrajectoryVelocity());
+      trajFF.setDouble(subsystem.getActiveTrajectoryArbFeedFwd());
     }
   }
 }

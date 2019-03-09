@@ -111,7 +111,7 @@ public class Robot extends TimedRobot {
       subsystems.stream()
         .filter(TalonSubsystem.class::isInstance)
         .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Coast));
+        .forEach(subsystem -> subsystem.setNeutralMode(NeutralMode.Coast));
     }
   }
 
@@ -120,7 +120,7 @@ public class Robot extends TimedRobot {
     subsystems.stream()
         .filter(TalonSubsystem.class::isInstance)
         .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
+        .forEach(subsystem -> subsystem.setNeutralMode(NeutralMode.Brake));
   }
 
   @Override
@@ -134,7 +134,7 @@ public class Robot extends TimedRobot {
     subsystems.stream()
         .filter(TalonSubsystem.class::isInstance)
         .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
+        .forEach(subsystem -> subsystem.setNeutralMode(NeutralMode.Brake));
     lights.updateAllianceColor();
   }
 

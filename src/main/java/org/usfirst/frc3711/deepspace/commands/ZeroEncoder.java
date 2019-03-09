@@ -16,8 +16,7 @@ public class ZeroEncoder extends TalonSubsystemCommand {
   @Override
   protected void initialize() {
     super.initialize();
-    subsystem.talon.setSelectedSensorPosition(0);
-    subsystem.talon.getSensorCollection().setQuadraturePosition(0, 50);
+    subsystem.zeroEncoder();
   }
 
   @Override

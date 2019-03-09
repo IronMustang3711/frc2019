@@ -23,8 +23,7 @@ public class ResetTalonEncoder extends InstantCommand {
 
   @Override
   protected void execute() {
-    subsystem.talon.setSelectedSensorPosition(0, 0, 50);
-    subsystem.talon.getSensorCollection().setQuadraturePosition(0, 50);
+    subsystem.zeroEncoder();
   }
 
 

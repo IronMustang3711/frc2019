@@ -51,16 +51,16 @@ public class MotionMagicSetpoint extends Command {
 
   public double getMotionProgress(){
     double totalDistance = setpoint - initialPosition;
-    double trajPos = subsystem.talon.getActiveTrajectoryPosition();
+    double trajPos = subsystem.getActiveTrajectoryPosition();
     return (trajPos - initialPosition) / totalDistance;
   }
   public boolean isMotionFinished(){
-    return Math.abs(setpoint - subsystem.talon.getActiveTrajectoryPosition()) < 1.0;
+    return Math.abs(setpoint - subsystem.getActiveTrajectoryPosition()) < 1.0;
   }
 
   public boolean isMotionFinished2(){
-    double closedLoopTarget = subsystem.talon.getClosedLoopTarget();
-    double trajPos = subsystem.talon.getActiveTrajectoryPosition();
+    double closedLoopTarget = subsystem.getClosedLoopTarget();
+    double trajPos = subsystem.getActiveTrajectoryPosition();
     return Math.abs(closedLoopTarget - trajPos) < 1.0;
   }
 
@@ -68,9 +68,9 @@ public class MotionMagicSetpoint extends Command {
   @Override
   protected void initialize() {
     super.initialize();
-    initialPosition = subsystem.talon.getSelectedSensorPosition();
+    initialPosition = subsystem.getSelectedSensorPosition();
     startTime = System.currentTimeMillis();
-    subsystem.talon.selectProfileSlot(0, 0);
+    subsystem.selectProfileSlot(0,0);
     if(Robot.debug)
       Shuffleboard.addEventMarker("MM_"+getName() + "_Init", EventImportance.kNormal);
 
@@ -78,8 +78,8 @@ public class MotionMagicSetpoint extends Command {
 
   @Override
   protected void execute() {
-    subsystem.talon.selectProfileSlot(0, 0);
-    subsystem.talon.set(ControlMode.MotionMagic, setpoint);
+    subsystem.selectProfileSlot(0,0);
+    subsystem.set(ControlMode.MotionMagic,setpoint);
     if(isMotionFinished2() && motionCompleTime==-1){
       motionCompleTime = System.currentTimeMillis();
     }

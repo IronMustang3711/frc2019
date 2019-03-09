@@ -1,8 +1,7 @@
 package org.usfirst.frc3711.deepspace.subsystems;
 
-import com.ctre.phoenix.motorcontrol.Faults;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.StickyFaults;
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -12,7 +11,7 @@ import org.usfirst.frc3711.deepspace.commands.util.Commands;
 public abstract class TalonSubsystem extends RobotSubsystem {
 
   final NetworkTableEntry ntSetpoint;
-  public final WPI_TalonSRX talon;
+  public final TalonSRX talon;
   private final NetworkTableEntry currentLimitingEnabled;
 
   final StickyFaults tmpStickyFaults = new StickyFaults();
@@ -23,7 +22,8 @@ public abstract class TalonSubsystem extends RobotSubsystem {
 
   public TalonSubsystem(String name, int talonID) {
     super(name);
-    this.talon = new WPI_TalonSRX(talonID);
+    this.talon = new TalonSRX(talonID);
+    addChild("Talon["+talon.getDeviceID()+"]:"+name);
 
     tab.add(Commands.disableCommand(this));
     tab.add(Commands.disableCurrentLimitCommand(this));
@@ -132,5 +132,66 @@ public abstract class TalonSubsystem extends RobotSubsystem {
   public void disable() {
     super.disable();
     talon.neutralOutput();
+  }
+
+  public void setNeutralMode(NeutralMode brake) {
+  }
+
+  public int getClosedLoopError() {
+    return 0;
+  }
+
+  public int getSelectedSensorVelocity() {
+    return 0;
+  }
+
+  public int getSelectedSensorPosition() {
+    return 0;
+  }
+
+  public void set(ControlMode position, double desiredPosition) {
+  }
+
+  public void selectProfileSlot(int i, int i1) {
+  }
+
+  public double getMotorOutputPercent() {
+    return 0;
+  }
+
+  public double getMotorOutputVoltage() {
+    return 0;
+  }
+
+  public double getOutputCurrent() {
+    return 0;
+  }
+
+  public ControlMode getControlMode() {
+    return null;
+  }
+
+  public double getClosedLoopTarget() {
+    return 0;
+  }
+
+  public double getErrorDerivative() {
+    return 0;
+  }
+
+  public double getIntegralAccumulator() {
+    return 0;
+  }
+
+  public double getActiveTrajectoryPosition() {
+    return 0;
+  }
+
+  public double getActiveTrajectoryVelocity() {
+    return 0;
+  }
+
+  public double getActiveTrajectoryArbFeedFwd() {
+    return 0;
   }
 }

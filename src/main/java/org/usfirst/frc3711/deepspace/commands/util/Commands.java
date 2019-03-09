@@ -37,15 +37,15 @@ public class Commands {
     @Override
     protected void initialize() {
       if (ControlMode.MotionMagic.equals(mode)) {
-        subsystem.talon.selectProfileSlot(0, 0);
+        subsystem.selectProfileSlot(0,0);
       } else if (ControlMode.Position.equals(mode)) {
-        subsystem.talon.selectProfileSlot(1, 0);
+        subsystem.selectProfileSlot(1,0);
       }
     }
 
     @Override
     protected void execute() {
-      subsystem.talon.set(mode, setpoint);
+      subsystem.set(mode,setpoint);
     }
   }
 
@@ -163,7 +163,7 @@ public class Commands {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-      subsystem.talon.set(ControlMode.PercentOutput, output);
+      subsystem.set(ControlMode.PercentOutput,output);
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -22,13 +22,13 @@ public class FickleFingerCommands {
       @Override
       protected void initialize() {
         DriverStation.reportWarning(getName()+".initialize()",false);
-        subsystem.talon.selectProfileSlot(0,0);
+        subsystem.selectProfileSlot(0,0);
       }
 
       @Override
       protected void execute() {
         super.execute();
-        subsystem.talon.set(ControlMode.PercentOutput,1.0);
+        subsystem.set(ControlMode.PercentOutput,1.0);
       }
 
       @Override
@@ -46,17 +46,17 @@ public class FickleFingerCommands {
       @Override
       protected void initialize() {
         super.initialize();
-        int currentPosition = subsystem.talon.getSelectedSensorPosition();
+        int currentPosition = subsystem.getSelectedSensorPosition();
         int desiredPosition = ENCODER_TICKS_PER_REV *((currentPosition + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV);
-        subsystem.talon.set(ControlMode.Position,desiredPosition);
+        subsystem.set(ControlMode.Position,desiredPosition);
         DriverStation.reportWarning(getName()+".initialize()",false);
 
       }
 
       @Override
       protected boolean isFinished() {
-         return Math.abs(subsystem.talon.getClosedLoopError()) < 20
-                    && Math.abs(subsystem.talon.getSelectedSensorVelocity()) < 2.0;
+         return Math.abs(subsystem.getClosedLoopError()) < 20
+                    && Math.abs(subsystem.getSelectedSensorVelocity()) < 2.0;
       }
 
       @Override
@@ -75,14 +75,14 @@ public class FickleFingerCommands {
       int baseRev;
       @Override
       protected boolean isFinished() {
-        return Math.abs(subsystem.talon.getClosedLoopError()) < 20
-                   && Math.abs(subsystem.talon.getSelectedSensorVelocity()) < 2.0;
+        return Math.abs(subsystem.getClosedLoopError()) < 20
+                   && Math.abs(subsystem.getSelectedSensorVelocity()) < 2.0;
       }
 
       @Override
       protected void initialize() {
         super.initialize();
-        baseRev = subsystem.talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+        baseRev = subsystem.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
         DriverStation.reportWarning(getName()+".initialize()",false);
 
       }
@@ -90,7 +90,7 @@ public class FickleFingerCommands {
       @Override
       protected void execute() {
         super.execute();
-        subsystem.talon.set(ControlMode.Position,252 + ENCODER_TICKS_PER_REV*baseRev);
+        subsystem.set(ControlMode.Position,252 + ENCODER_TICKS_PER_REV*baseRev);
 
       }
 
@@ -112,20 +112,20 @@ public class FickleFingerCommands {
       @Override
       protected void initialize() {
         super.initialize();
-        baseRev = subsystem.talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+        baseRev = subsystem.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
 
       }
 
       @Override
       protected boolean isFinished() {
-        return Math.abs(subsystem.talon.getClosedLoopError()) < 20
-                   && Math.abs(subsystem.talon.getSelectedSensorVelocity()) < 2.0;
+        return Math.abs(subsystem.getClosedLoopError()) < 20
+                   && Math.abs(subsystem.getSelectedSensorVelocity()) < 2.0;
       }
 
       @Override
       protected void execute() {
         super.execute();
-        subsystem.talon.set(ControlMode.Position,120 + ENCODER_TICKS_PER_REV*baseRev);
+        subsystem.set(ControlMode.Position,120 + ENCODER_TICKS_PER_REV*baseRev);
       }
 
       @Override
