@@ -1,4 +1,4 @@
-package org.usfirst.frc3711.deepspace.commands.util;
+package edu.wpi.first.wpilibj.command;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -39,6 +39,13 @@ public abstract class AbstractCommand extends Command {
     super.setTimeout(timeout);
     return this;
   }
+
+  @Override
+  public synchronized void cancel() {
+    super._cancel();
+  }
+
+
 
   @Override
   protected boolean isFinished() {
