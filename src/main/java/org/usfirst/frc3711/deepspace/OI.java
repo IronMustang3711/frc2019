@@ -56,9 +56,18 @@ public class OI {
   static enum CommandSequences {
     INSTANCE;
 
+    final Command armHold = new MaintainSetpoint(Robot.arm);
+
    final Command stow =new MyCommand(new Stow());
    final Command groundPickup = new MyCommand(new GroundPickup());
-   final Command loadingStationFuel = new LoadingStationFuel();
+   final Command loadingStationFuel = new MyCommand(new LoadingStationFuel(){
+
+     @Override
+     protected void end() {
+       super.end();
+       armHold.start();
+     }
+   });
 
    final  Command panel0 = new MyCommand(new HatchPanel0());
    final  Command panel1 = new MyCommand(new HatchPanel1());
@@ -67,9 +76,6 @@ public class OI {
    final Command fuel0 = new MyCommand(new HatchFuel0());
    final Command fuel1 = new MyCommand(new HatchFuel1());
    final Command fuel2 = new MyCommand(new HatchFuel2());
-
-
-
   }
 
   
@@ -111,25 +117,25 @@ public class OI {
 
     XboxControl(){
      // groundPickup.whenPressed(new GroundPickup());
-      loadingStationPickup.whenPressed(new LoadingStationFuel());
+      loadingStationPickup.whenPressed(CommandSequences.INSTANCE.loadingStationFuel);
       
       shootBall.whenPressed(IntakeCommands.eject());
       pullBall.whenPressed(IntakeCommands.intake());
 
-      stow.whenPressed(new Stow());
+      stow.whenPressed(CommandSequences.INSTANCE.stow);
 
       jogUp.whileHeld(new JogElevatorContinuously(true));
       jogDown.whileHeld(new JogElevatorContinuously(false));
 
 
      
-      level0Fuel.whenPressed(new HatchFuel0());
-      level1Fuel.whenPressed(new HatchFuel1());
-      level2Fuel.whenPressed(new HatchFuel2());
+      level0Fuel.whenPressed(CommandSequences.INSTANCE.fuel0);
+      level1Fuel.whenPressed(CommandSequences.INSTANCE.fuel1);
+      level2Fuel.whenPressed(CommandSequences.INSTANCE.fuel2);
      
-      level0Panel.whenPressed(new HatchPanel0());
-      level1Panel.whenPressed(new HatchPanel1());
-      level2Panel.whenPressed(new HatchPanel2());
+      level0Panel.whenPressed(CommandSequences.INSTANCE.panel0);
+      level1Panel.whenPressed(CommandSequences.INSTANCE.panel1);
+      level2Panel.whenPressed(CommandSequences.INSTANCE.panel2);
    
       fickleFingerEject.whileHeld(FickleFingerCommands.ejectCommand());
       fickleFingerOut.whenPressed(FickleFingerCommands.hookCommand());
