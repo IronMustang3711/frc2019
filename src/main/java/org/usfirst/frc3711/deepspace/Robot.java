@@ -50,6 +50,8 @@ public class Robot extends TimedRobot {
 
   private long disableStartTime;
 
+  boolean autoDidRun = false;
+
 
   private void disableWatchdog() {
     try {
@@ -91,13 +93,21 @@ public class Robot extends TimedRobot {
     oi = new OI();
 
     CameraServer.getInstance().startAutomaticCapture();
+
+    lights.updateAllianceColor();
   }
 
   @Override
   public void disabledInit() {
     Shuffleboard.stopRecording();
-    disableAll();
+    disableAll(); //TODO: ????!!!!! really?
     disableStartTime = System.currentTimeMillis();
+
+    if(autoDidRun){
+      arm.replayLastSetpoint();
+      wrist.replayLastSetpoint();
+      elevator.replayLastSetpoint();
+    }
   }
 
   public static void disableAll() {
@@ -121,6 +131,9 @@ public class Robot extends TimedRobot {
         .filter(TalonSubsystem.class::isInstance)
         .map(TalonSubsystem.class::cast)
         .forEach(subsystem -> subsystem.enableBraking(true));
+
+    lights.updateAllianceColor();
+    autoDidRun = true;
   }
 
   @Override
@@ -136,6 +149,10 @@ public class Robot extends TimedRobot {
         .map(TalonSubsystem.class::cast)
         .forEach(subsystem -> subsystem.enableBraking(true));
     lights.updateAllianceColor();
+
+    arm.replayLastSetpoint();
+    wrist.replayLastSetpoint();
+    elevator.replayLastSetpoint();
   }
 
   @Override
