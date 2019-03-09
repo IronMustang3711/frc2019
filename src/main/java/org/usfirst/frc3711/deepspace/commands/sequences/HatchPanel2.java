@@ -29,7 +29,7 @@ public class HatchPanel2 extends MyCommandGroup {
     addParallel(armOut);
 
     addSequential(Commands.delayUntil("wait unitl arm is about horizontal",
-        ()->armOut.isRunning() && Robot.arm.talon.getSelectedSensorPosition() >= 1500));
+        ()->armOut.isRunning() && Robot.arm.getSelectedSensorPosition() >= 1500));
 
     addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1900));
 

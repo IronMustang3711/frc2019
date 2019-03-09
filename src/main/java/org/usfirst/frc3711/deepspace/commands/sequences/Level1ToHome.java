@@ -11,7 +11,7 @@ public class Level1ToHome extends MyCommandGroup {
 
     var elevatorUp = new MotionMagicSetpoint("Elevator Up", Robot.elevator,6000);
     addParallel(elevatorUp);
-    addSequential(Commands.delayUntil(() -> Math.abs(Robot.elevator.talon.getClosedLoopError()) < 500));
+    addSequential(Commands.delayUntil(() -> Math.abs(Robot.elevator.getClosedLoopError()) < 500));
 //TODO: check arm position for ordering
     var wristHome = new MotionMagicSetpoint("Wrist Home",Robot.wrist,0);
     addParallel(wristHome);

@@ -37,8 +37,8 @@ public class StagingPose extends MyCommandGroup {
   protected void end() {
     if(Robot.debug)
       Shuffleboard.addEventMarker(getName() + "_End", EventImportance.kNormal);
-    Robot.elevator.talon.neutralOutput();
-    Robot.arm.talon.neutralOutput();
-    Robot.wrist.talon.neutralOutput();
+    Robot.elevator.disable();
+    Robot.arm.disable();
+    Robot.wrist.disable();
   }
 }

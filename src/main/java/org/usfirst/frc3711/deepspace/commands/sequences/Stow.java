@@ -15,8 +15,9 @@ public class Stow extends MyCommandGroup {
 
   @Override
   protected void end() {
-    Robot.elevator.talon.neutralOutput();
-    Robot.arm.talon.neutralOutput();
-    Robot.wrist.talon.neutralOutput();
+
+    Robot.elevator.neutralOutput();
+    Robot.arm.neutralOutput();
+    Robot.wrist.neutralOutput();
   }
 }

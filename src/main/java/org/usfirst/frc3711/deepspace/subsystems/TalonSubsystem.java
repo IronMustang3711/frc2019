@@ -11,7 +11,7 @@ import org.usfirst.frc3711.deepspace.commands.util.Commands;
 public abstract class TalonSubsystem extends RobotSubsystem {
 
   final NetworkTableEntry ntSetpoint;
-  public final TalonSRX talon;
+  protected final TalonSRX talon;
   private final NetworkTableEntry currentLimitingEnabled;
 
   final StickyFaults tmpStickyFaults = new StickyFaults();
@@ -193,5 +193,8 @@ public abstract class TalonSubsystem extends RobotSubsystem {
 
   public double getActiveTrajectoryArbFeedFwd() {
     return 0;
+  }
+
+  public void neutralOutput() {
   }
 }
