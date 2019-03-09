@@ -1,6 +1,5 @@
 package org.usfirst.frc3711.deepspace.commands.sequences;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.MyCommandGroup;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,7 +28,7 @@ public class HatchPanel2 extends MyCommandGroup {
     addParallel(armOut);
 
     addSequential(Commands.delayUntil("wait unitl arm is about horizontal",
-        ()->armOut.isRunning() && Robot.arm.getSelectedSensorPosition() >= 1500));
+        ()->armOut.isRunning() && Robot.arm.getPosition() >= 1500));
 
     addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1900));
 

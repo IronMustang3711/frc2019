@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc3711.deepspace.TalonID;
 import org.usfirst.frc3711.deepspace.commands.util.MotionMagicSetpoint;
 import org.usfirst.frc3711.deepspace.talon.SlotConfigBuilder;
-import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
 public class Elevator extends TalonSubsystem {
   @SuppressWarnings("WeakerAccess")

@@ -59,7 +59,7 @@ public class MotionMagicSetpoint extends Command {
   }
 
   public boolean isMotionFinished2(){
-    double closedLoopTarget = subsystem.getClosedLoopTarget();
+    double closedLoopTarget = subsystem.getSetpoint();
     double trajPos = subsystem.getActiveTrajectoryPosition();
     return Math.abs(closedLoopTarget - trajPos) < 1.0;
   }
@@ -68,9 +68,9 @@ public class MotionMagicSetpoint extends Command {
   @Override
   protected void initialize() {
     super.initialize();
-    initialPosition = subsystem.getSelectedSensorPosition();
+    initialPosition = subsystem.getPosition();
     startTime = System.currentTimeMillis();
-    subsystem.selectProfileSlot(0,0);
+//    subsystem.selectProfileSlot(0,0);
     if(Robot.debug)
       Shuffleboard.addEventMarker("MM_"+getName() + "_Init", EventImportance.kNormal);
 
@@ -78,8 +78,8 @@ public class MotionMagicSetpoint extends Command {
 
   @Override
   protected void execute() {
-    subsystem.selectProfileSlot(0,0);
-    subsystem.set(ControlMode.MotionMagic,setpoint);
+    //subsystem.selectProfileSlot(0,0);
+    subsystem.setPosition(setpoint);
     if(isMotionFinished2() && motionCompleTime==-1){
       motionCompleTime = System.currentTimeMillis();
     }

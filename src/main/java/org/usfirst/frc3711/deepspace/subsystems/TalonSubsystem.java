@@ -2,7 +2,6 @@ package org.usfirst.frc3711.deepspace.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -96,36 +95,40 @@ public abstract class TalonSubsystem extends RobotSubsystem {
 
   }
 
-  public void setP(double p) {
-    talon.config_kP(0, p, 50);
-  }
+//  public void setP(double p) {
+//    talon.config_kP(0, p, 50);
+//  }
+//
+//  public void setI(double i) {
+//    talon.config_kI(0, i, 50);
+//  }
+//
+//  public void setIZone(int iZone) {
+//    talon.config_IntegralZone(0, iZone, 50);
+//  }
+//
+//  public void setD(double d) {
+//    talon.config_kD(0, d, 50);
+//  }
+//
+//  public void setF(double f) {
+//    talon.config_kF(0, f, 50);
+//  }
 
-  public void setI(double i) {
-    talon.config_kI(0, i, 50);
-  }
-
-  public void setIZone(int iZone) {
-    talon.config_IntegralZone(0, iZone, 50);
-  }
-
-  public void setD(double d) {
-    talon.config_kD(0, d, 50);
-  }
-
-  public void setF(double f) {
-    talon.config_kF(0, f, 50);
+  public boolean isClosedLoop(){
+    return TalonUtil.isClosedLoopMode(talon.getControlMode());
   }
 
   public double getSetpoint() {
-    return talon.getClosedLoopTarget();
+    return isClosedLoop() ? talon.getClosedLoopTarget() : 0;
   }
 
   public double getError() {
-    return talon.getClosedLoopError(0);
+    return isClosedLoop() ? talon.getClosedLoopError() : 0;
   }
 
   public double getErrorDelta() {
-    return talon.getErrorDerivative();
+    return isClosedLoop() ? talon.getErrorDerivative() : 0;
   }
 
   @Override
@@ -134,67 +137,90 @@ public abstract class TalonSubsystem extends RobotSubsystem {
     talon.neutralOutput();
   }
 
-  public void setNeutralMode(NeutralMode brake) {
+  public void enableBraking(boolean enable){
+    talon.setNeutralMode(enable ? NeutralMode.Brake : NeutralMode.Coast);
   }
 
-  public int getClosedLoopError() {
-    return 0;
+//  public void setNeutralMode(NeutralMode brake) {
+//    talon.setNeutralMode(brake);
+//  }
+
+  public int getVelocity() {
+    return talon.getSelectedSensorVelocity();
   }
 
-  public int getSelectedSensorVelocity() {
-    return 0;
+  public int getPosition() {
+    return talon.getSelectedSensorPosition();
   }
 
-  public int getSelectedSensorPosition() {
-    return 0;
+//  public void set(ControlMode position, double desiredPosition) {
+//    talon.set(position, desiredPosition);
+//  }
+
+//  public void selectProfileSlot(int slotidx, int pididx) {
+//    talon.selectProfileSlot(slotidx, pididx);
+//  }
+
+  public void setOutput(double output){
+    talon.selectProfileSlot(TalonUtil.POSITION_SLOT,TalonUtil.PRIMARY_PID);
+    talon.set(ControlMode.PercentOutput,output);
+  }
+  public void setPosition(double position){
+    setPosition(position,true);
   }
 
-  public void set(ControlMode position, double desiredPosition) {
+  public void setPosition(double position, boolean useMotionProfiling){
+    if(useMotionProfiling){
+      talon.selectProfileSlot(TalonUtil.MM_SLOT,TalonUtil.PRIMARY_PID);
+      talon.set(ControlMode.MotionMagic,position);
+    }
+    else {
+      talon.selectProfileSlot(TalonUtil.POSITION_SLOT,TalonUtil.PRIMARY_PID);
+      talon.set(ControlMode.Position,position);
+    }
   }
 
-  public void selectProfileSlot(int i, int i1) {
+  double getOutput() {
+    return talon.getMotorOutputPercent();
   }
 
-  public double getMotorOutputPercent() {
-    return 0;
+  double getOutputVoltage() {
+    return talon.getMotorOutputVoltage();
   }
 
-  public double getMotorOutputVoltage() {
-    return 0;
+  double getOutputCurrent() {
+    return talon.getOutputCurrent();
   }
 
-  public double getOutputCurrent() {
-    return 0;
+  ControlMode getControlMode() {
+    return talon.getControlMode();
   }
 
-  public ControlMode getControlMode() {
-    return null;
-  }
+//  public double getClosedLoopTarget() {
+//    return talon.getClosedLoopTarget();
+//  }
 
-  public double getClosedLoopTarget() {
-    return 0;
-  }
+//  double getErrorDerivative() {
+//    return talon.getErrorDerivative();
+//  }
 
-  public double getErrorDerivative() {
-    return 0;
-  }
-
-  public double getIntegralAccumulator() {
-    return 0;
+  double getIntegralAccumulator() {
+    return talon.getIntegralAccumulator();
   }
 
   public double getActiveTrajectoryPosition() {
-    return 0;
+    return talon.getActiveTrajectoryPosition();
   }
 
-  public double getActiveTrajectoryVelocity() {
-    return 0;
+  double getActiveTrajectoryVelocity() {
+    return talon.getActiveTrajectoryVelocity();
   }
 
-  public double getActiveTrajectoryArbFeedFwd() {
-    return 0;
+  double getActiveTrajectoryArbFeedFwd() {
+    return talon.getActiveTrajectoryArbFeedFwd();
   }
 
   public void neutralOutput() {
+    disable();
   }
 }

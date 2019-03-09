@@ -1,8 +1,6 @@
 package org.usfirst.frc3711.deepspace.commands.util;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc3711.deepspace.Robot;
@@ -12,42 +10,42 @@ import java.util.function.BooleanSupplier;
 
 public class Commands {
 
-  public static Command setpointCommand(final String name, final TalonSubsystem subsystem, final double setpoint, final ControlMode mode) {
-    return new SetpointCommand(name, subsystem, setpoint, mode);
-  }
-
-  public static Command positionSetpointCommand(String name, TalonSubsystem subsystem, double setpoint) {
-    return new SetpointCommand(name, subsystem, setpoint, ControlMode.Position);
-  }
+//  public static Command setpointCommand(final String name, final TalonSubsystem subsystem, final double setpoint, final ControlMode mode) {
+//    return new SetpointCommand(name, subsystem, setpoint, mode);
+//  }
+//
+//  public static Command positionSetpointCommand(String name, TalonSubsystem subsystem, double setpoint) {
+//    return new SetpointCommand(name, subsystem, setpoint, ControlMode.Position);
+//  }
 
 //  public static Command motionMagicSetpointSetpointCommand(String name, TalonSubsystem subsystem, double setpoint) {
 //    return new SetpointCommand(name, subsystem, setpoint, ControlMode.MotionMagic);
 //  }
 
-  static class SetpointCommand extends TalonSubsystemCommand {
-    final double setpoint;
-    final ControlMode mode;
-
-    SetpointCommand(String name, TalonSubsystem subsystem, double setpoint, ControlMode mode) {
-      super(name, subsystem);
-      this.setpoint = setpoint;
-      this.mode = mode;
-    }
-
-    @Override
-    protected void initialize() {
-      if (ControlMode.MotionMagic.equals(mode)) {
-        subsystem.selectProfileSlot(0,0);
-      } else if (ControlMode.Position.equals(mode)) {
-        subsystem.selectProfileSlot(1,0);
-      }
-    }
-
-    @Override
-    protected void execute() {
-      subsystem.set(mode,setpoint);
-    }
-  }
+//  static class SetpointCommand extends TalonSubsystemCommand {
+//    final double setpoint;
+//    final ControlMode mode;
+//
+//    SetpointCommand(String name, TalonSubsystem subsystem, double setpoint, ControlMode mode) {
+//      super(name, subsystem);
+//      this.setpoint = setpoint;
+//      this.mode = mode;
+//    }
+//
+//    @Override
+//    protected void initialize() {
+//      if (ControlMode.MotionMagic.equals(mode)) {
+//        subsystem.selectProfileSlot(0,0);
+//      } else if (ControlMode.Position.equals(mode)) {
+//        subsystem.selectProfileSlot(1,0);
+//      }
+//    }
+//
+//    @Override
+//    protected void execute() {
+//      subsystem.set(mode,setpoint);
+//    }
+//  }
 
   public static Command enableCurrentLimitCommand(TalonSubsystem subsystem) {
     return new CurrentLimit(subsystem, true);
@@ -163,7 +161,7 @@ public class Commands {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-      subsystem.set(ControlMode.PercentOutput,output);
+      subsystem.setOutput(output);
     }
 
     // Make this return true when this Command no longer needs to run execute()

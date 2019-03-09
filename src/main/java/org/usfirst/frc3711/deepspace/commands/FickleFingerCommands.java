@@ -1,6 +1,5 @@
 package org.usfirst.frc3711.deepspace.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc3711.deepspace.Robot;
@@ -22,13 +21,12 @@ public class FickleFingerCommands {
       @Override
       protected void initialize() {
         DriverStation.reportWarning(getName()+".initialize()",false);
-        subsystem.selectProfileSlot(0,0);
       }
 
       @Override
       protected void execute() {
         super.execute();
-        subsystem.set(ControlMode.PercentOutput,1.0);
+        subsystem.setOutput(1.0);
       }
 
       @Override
@@ -46,17 +44,17 @@ public class FickleFingerCommands {
       @Override
       protected void initialize() {
         super.initialize();
-        int currentPosition = subsystem.getSelectedSensorPosition();
+        int currentPosition = subsystem.getPosition();
         int desiredPosition = ENCODER_TICKS_PER_REV *((currentPosition + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV);
-        subsystem.set(ControlMode.Position,desiredPosition);
+        subsystem.setPosition(desiredPosition,false);
         DriverStation.reportWarning(getName()+".initialize()",false);
 
       }
 
       @Override
       protected boolean isFinished() {
-         return Math.abs(subsystem.getClosedLoopError()) < 20
-                    && Math.abs(subsystem.getSelectedSensorVelocity()) < 2.0;
+        return Math.abs(subsystem.getError()) < 20
+               && Math.abs(subsystem.getVelocity()) < 2.0;
       }
 
       @Override
@@ -75,14 +73,14 @@ public class FickleFingerCommands {
       int baseRev;
       @Override
       protected boolean isFinished() {
-        return Math.abs(subsystem.getClosedLoopError()) < 20
-                   && Math.abs(subsystem.getSelectedSensorVelocity()) < 2.0;
+        return Math.abs(subsystem.getError()) < 20
+                   && Math.abs(subsystem.getVelocity()) < 2.0;
       }
 
       @Override
       protected void initialize() {
         super.initialize();
-        baseRev = subsystem.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+        baseRev = subsystem.getPosition() / ENCODER_TICKS_PER_REV;
         DriverStation.reportWarning(getName()+".initialize()",false);
 
       }
@@ -90,7 +88,7 @@ public class FickleFingerCommands {
       @Override
       protected void execute() {
         super.execute();
-        subsystem.set(ControlMode.Position,252 + ENCODER_TICKS_PER_REV*baseRev);
+        subsystem.setPosition(252 + ENCODER_TICKS_PER_REV*baseRev, false);
 
       }
 
@@ -112,20 +110,20 @@ public class FickleFingerCommands {
       @Override
       protected void initialize() {
         super.initialize();
-        baseRev = subsystem.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+        baseRev = subsystem.getPosition() / ENCODER_TICKS_PER_REV;
 
       }
 
       @Override
       protected boolean isFinished() {
-        return Math.abs(subsystem.getClosedLoopError()) < 20
-                   && Math.abs(subsystem.getSelectedSensorVelocity()) < 2.0;
+        return Math.abs(subsystem.getError()) < 20
+                   && Math.abs(subsystem.getVelocity()) < 2.0;
       }
 
       @Override
       protected void execute() {
         super.execute();
-        subsystem.set(ControlMode.Position,120 + ENCODER_TICKS_PER_REV*baseRev);
+        subsystem.setPosition(120 + ENCODER_TICKS_PER_REV*baseRev,false);
       }
 
       @Override
@@ -145,7 +143,7 @@ public class FickleFingerCommands {
   //     }
   //     @Override
   //       protected boolean isFinished() {
-  //         return super.isFinished() || Math.abs(subsystem.talon.getSelectedSensorPosition()) < 40;
+  //         return super.isFinished() || Math.abs(subsystem.talon.getPosition()) < 40;
 
   //       }
   //       @Override
@@ -165,7 +163,7 @@ public class FickleFingerCommands {
   //     }
   //     @Override
   //       protected boolean isFinished() {
-  //         return super.isFinished() || Math.abs(subsystem.talon.getSelectedSensorPosition()) < 40;
+  //         return super.isFinished() || Math.abs(subsystem.talon.getPosition()) < 40;
 
   //       }
   //       @Override
@@ -185,7 +183,7 @@ public class FickleFingerCommands {
   //     }
   //     @Override
   //       protected boolean isFinished() {
-  //         return super.isFinished() /*|| Math.abs(subsystem.talon.getSelectedSensorPosition()) < 40*/;
+  //         return super.isFinished() /*|| Math.abs(subsystem.talon.getPosition()) < 40*/;
 
   //       }
   //       @Override

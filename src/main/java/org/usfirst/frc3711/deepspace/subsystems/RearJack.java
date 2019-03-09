@@ -6,9 +6,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import org.usfirst.frc3711.deepspace.Robot;
 import org.usfirst.frc3711.deepspace.TalonID;
-import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
 import java.util.Map;
 

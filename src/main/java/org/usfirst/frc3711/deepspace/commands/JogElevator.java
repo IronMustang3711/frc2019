@@ -21,14 +21,14 @@ public class JogElevator extends TalonSubsystemCommand {
   @Override
   protected void initialize() {
     super.initialize();
-    double initialPosition = subsystem.getSelectedSensorPosition();
+    double initialPosition = subsystem.getPosition();
     setpoint = up ? initialPosition + 4 * JOG_DISTANCE : initialPosition - JOG_DISTANCE;
   }
 
   @Override
   protected void execute() {
     super.execute();
-    subsystem.set(ControlMode.MotionMagic,setpoint);
+    subsystem.setPosition(setpoint);
   }
 
   @Override

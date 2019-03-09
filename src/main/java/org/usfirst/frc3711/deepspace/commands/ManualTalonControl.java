@@ -25,7 +25,7 @@ public class ManualTalonControl extends Command {
   @Override
   protected void execute() {
     double output = Robot.oi.joystick1.getY();
-    subsystem.set(ControlMode.PercentOutput,output);
+    subsystem.setOutput(output);
 
     Robot.chassis.drive(0, 0); // just in case
   }

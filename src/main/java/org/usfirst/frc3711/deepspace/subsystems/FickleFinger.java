@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc3711.deepspace.TalonID;
-import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
 
 public class FickleFinger extends TalonSubsystem {
@@ -102,7 +101,7 @@ public class FickleFinger extends TalonSubsystem {
 //      protected void end() {
 //        super.end();
 //        disable();
-//        int currentPosition = talon.getSelectedSensorPosition();
+//        int currentPosition = talon.getPosition();
 //        int desiredPosition = ENCODER_TICKS_PER_REV *((currentPosition + ENCODER_TICKS_PER_REV/2) / ENCODER_TICKS_PER_REV);
 //        talon.set(ControlMode.Position,desiredPosition);
 //
@@ -120,7 +119,7 @@ public class FickleFinger extends TalonSubsystem {
 //      @Override
 //      protected void initialize() {
 //        super.initialize();
-//        baseRev = talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+//        baseRev = talon.getPosition() / ENCODER_TICKS_PER_REV;
 //
 //      }
 //
@@ -139,7 +138,7 @@ public class FickleFinger extends TalonSubsystem {
 //      @Override
 //      protected void initialize() {
 //        super.initialize();
-//        baseRev = talon.getSelectedSensorPosition() / ENCODER_TICKS_PER_REV;
+//        baseRev = talon.getPosition() / ENCODER_TICKS_PER_REV;
 //
 //      }
 //

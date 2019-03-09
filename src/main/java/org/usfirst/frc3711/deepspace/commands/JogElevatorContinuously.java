@@ -19,25 +19,25 @@ public class JogElevatorContinuously extends TalonSubsystemCommand {
   @Override
   protected void initialize() {
     super.initialize();
-    subsystem.selectProfileSlot(0,0); //MM slot
+   // subsystem.selectProfileSlot(0,0); //MM slot
 
-    subsystem.set(ControlMode.MotionMagic,up ? UP_SETPOINT : DOWN_SETPOINT);
+    subsystem.setPosition(up ? UP_SETPOINT : DOWN_SETPOINT);
   }
 
   @Override
   protected void execute() {
     super.execute();
-    position = subsystem.getSelectedSensorPosition();
+    position = subsystem.getPosition();
 
   }
 
   @Override
   protected void end() {
     super.end();
-    subsystem.selectProfileSlot(1,0); //position slot
-    subsystem.set(ControlMode.Position,position);
+   // subsystem.selectProfileSlot(1,0); //position slot
+    subsystem.setPosition(position,false);
     /*
-        int vel = subsystem.talon.getSelectedSensorVelocity();
+        int vel = subsystem.talon.getVelocity();
 
 
     int setpoint = up ? position + (int) (vel*0.7) : position - (int)( 0.1*vel);
@@ -50,7 +50,7 @@ public class JogElevatorContinuously extends TalonSubsystemCommand {
 
   @Override
   protected boolean isFinished() {
-    int position = subsystem.getSelectedSensorPosition();
+    int position = subsystem.getPosition();
     return super.isFinished()
            || (up && position >= UP_SETPOINT - STOP_DISTANCE)
            || (!up && position <= DOWN_SETPOINT + STOP_DISTANCE);

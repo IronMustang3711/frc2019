@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import org.usfirst.frc3711.deepspace.TalonID;
 import org.usfirst.frc3711.deepspace.talon.SlotConfigBuilder;
-import org.usfirst.frc3711.deepspace.talon.TalonUtil;
 
 import java.util.Map;
 

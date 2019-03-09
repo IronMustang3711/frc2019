@@ -40,7 +40,7 @@ public class DogLegCommands {
       @Override
       protected void initialize() {
         super.initialize();
-        position = Robot.dogLeg.getSelectedSensorPosition();
+        position = Robot.dogLeg.getPosition();
       }
 
       @Override
@@ -50,7 +50,7 @@ public class DogLegCommands {
 
       @Override
       protected void execute() {
-        Robot.dogLeg.set(ControlMode.Position,position);
+        Robot.dogLeg.setPosition(position,false);
       }
 
       @Override
