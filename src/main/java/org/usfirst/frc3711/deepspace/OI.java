@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,6 +38,41 @@ public class OI {
     }
 
   }
+
+  static class MyCommand extends InstantCommand {
+    final Command actual;
+    MyCommand(Command actual){
+      this.actual = actual;
+    }
+    @Override
+    protected void initialize() {
+      super.initialize();
+      Robot.lastAutoCommand =actual;
+      actual.start();
+    }
+
+  }
+
+  static enum CommandSequences {
+    INSTANCE;
+
+   final Command stow =new MyCommand(new Stow());
+   final Command groundPickup = new MyCommand(new GroundPickup());
+   final Command loadingStationFuel = new LoadingStationFuel();
+
+   final  Command panel0 = new MyCommand(new HatchPanel0());
+   final  Command panel1 = new MyCommand(new HatchPanel1());
+   final Command panel2 = new MyCommand(new HatchPanel2());
+
+   final Command fuel0 = new MyCommand(new HatchFuel0());
+   final Command fuel1 = new MyCommand(new HatchFuel1());
+   final Command fuel2 = new MyCommand(new HatchFuel2());
+
+
+
+  }
+
+  
 
   static class XboxControl {
     static final int XBOX_ID = 1;
@@ -74,7 +110,7 @@ public class OI {
 
 
     XboxControl(){
-      groundPickup.whenPressed(new GroundPickup());
+     // groundPickup.whenPressed(new GroundPickup());
       loadingStationPickup.whenPressed(new LoadingStationFuel());
       
       shootBall.whenPressed(IntakeCommands.eject());
