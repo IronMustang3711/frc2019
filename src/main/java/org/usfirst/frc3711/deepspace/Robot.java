@@ -25,6 +25,7 @@ import org.usfirst.frc3711.deepspace.subsystems.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class Robot extends TimedRobot {
@@ -67,9 +68,9 @@ public class Robot extends TimedRobot {
   public Robot() {
     super(0.02);
     disableWatchdog();
-
-
   }
+
+
 
   @Override
   public void robotInit() {
@@ -79,14 +80,13 @@ public class Robot extends TimedRobot {
     arm = new Arm();
     wrist = new Wrist();
     intake = new Intake();
-    // misc = new Misc();
     fickleFinger = new FickleFinger();
     dogLeg = new DogLeg();
     rearJack = new RearJack();
     poser = new RobotPoser();
     lights = new Lights();
 
-    subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake/*,misc*/, fickleFinger, dogLeg, rearJack,poser, lights);
+    subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake, fickleFinger, dogLeg, rearJack,poser, lights);
     lastNonDisabledStateWasAuto = false;
 
     oi = new OI();
@@ -94,9 +94,20 @@ public class Robot extends TimedRobot {
     CameraServer.getInstance().startAutomaticCapture();
   }
 
+  private Stream<TalonSubsystem> talonSubsystems() {
+    return subsystems.stream()
+                     .filter(TalonSubsystem.class::isInstance)
+                     .map(TalonSubsystem.class::cast);
+  }
+  private void neutralMode(NeutralMode mode){
+   talonSubsystems().forEach(subsystem -> subsystem.talon.setNeutralMode(mode));
+  }
+
   @Override
   public void disabledInit() {
-    if (!lastNonDisabledStateWasAuto) {
+    lights.updateAllianceColor();
+
+    if(!lastNonDisabledStateWasAuto){
       Shuffleboard.stopRecording();
       disableAll();
     }
@@ -110,21 +121,19 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
+
     if((System.currentTimeMillis() - disableStartTime) > 5000 && !lastNonDisabledStateWasAuto){
-      subsystems.stream()
-        .filter(TalonSubsystem.class::isInstance)
-        .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Coast));
+      neutralMode(NeutralMode.Coast);
     }
   }
 
   @Override
   public void autonomousInit() {
-    subsystems.stream()
-        .filter(TalonSubsystem.class::isInstance)
-        .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
-        lastNonDisabledStateWasAuto = true;
+    Shuffleboard.startRecording();
+
+    neutralMode(NeutralMode.Brake);
+
+    lastNonDisabledStateWasAuto = true;
   }
 
   @Override
@@ -136,16 +145,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     lastNonDisabledStateWasAuto = false;
     Shuffleboard.startRecording();
-    subsystems.stream()
-        .filter(TalonSubsystem.class::isInstance)
-        .map(TalonSubsystem.class::cast)
-        .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
-    lights.updateAllianceColor();
 
-    if (lastAutoCommand != null) {
-      DriverStation.reportWarning("last running(auto) command: " + lastAutoCommand.toString(), false);
-     // lastAutoCommand.start();
-    }
+    neutralMode(NeutralMode.Brake);
   }
 
   @Override
@@ -155,12 +156,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-//    SmartDashboard.putString("buttons",
-//    Integer.toBinaryString(DriverStation.getInstance().getStickButtons(1)));
   }
+
   @Override
   public void testInit() {
     lastNonDisabledStateWasAuto = false;
   }
 }
-
