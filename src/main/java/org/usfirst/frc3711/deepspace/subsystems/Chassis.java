@@ -5,12 +5,14 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import org.usfirst.frc3711.deepspace.TalonID;
-import org.usfirst.frc3711.deepspace.commands.DrivewithJoystick;
+import org.usfirst.frc3711.deepspace.commands.ArcadeDrive;
+import org.usfirst.frc3711.deepspace.commands.CurvatureDrive;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,6 +78,9 @@ public class Chassis extends RobotSubsystem {
 
 
     tab.add(drive);
+
+    tab.add(new ArcadeDrive());
+    tab.add(new CurvatureDrive());
     //  tab.add(new DrivewithJoystick());
 
   }
@@ -125,18 +130,29 @@ public class Chassis extends RobotSubsystem {
     }
   }
 
-  public void drive(double forward, double turn) {
+  public void arcadeDrive(double forward, double turn) {
     drive.arcadeDrive(forward, turn);
+  }
+  public void curvatureDrive(double fwd,double rotate,boolean quickTurn){
+    drive.curvatureDrive(fwd, rotate, quickTurn);
+  }
+  public void curvatureDrive(double fwd,double rotate){
+    curvatureDrive(fwd, rotate,false);
   }
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new DrivewithJoystick());
+    setDefaultCommand(new ArcadeDrive());
   }
 
   @Override
   public void periodic() {
     telemetry();
+    double quickStopAlpha = Preferences.getInstance().getDouble("chassis.quickStopAlpha", DifferentialDrive.kDefaultQuickStopAlpha);
+    double quickStopThreshold = Preferences.getInstance().getDouble("chassis.quickStopThreshold",DifferentialDrive.kDefaultQuickStopThreshold);
+  
+    drive.setQuickStopAlpha(quickStopAlpha);
+    drive.setQuickStopThreshold(quickStopThreshold);
   }
 
   @Override
