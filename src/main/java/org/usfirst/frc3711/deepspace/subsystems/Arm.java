@@ -107,7 +107,7 @@ public class Arm extends TalonSubsystem {
       // config.closedloopRamp = 1.705000;
 
       config.motionCruiseVelocity = 80;
-      config.motionAcceleration = 90;
+      config.motionAcceleration = 50;
 
       config.peakOutputForward = 1.0;
       config.peakOutputReverse = -0.5;

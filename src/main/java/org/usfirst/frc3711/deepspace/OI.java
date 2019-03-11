@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.WaitForChildren;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,6 +39,52 @@ public class OI {
     }
 
   }
+
+  static class MyCommand extends InstantCommand {
+    final Command actual;
+    MyCommand(Command actual){
+      this.actual = actual;
+    }
+    @Override
+    protected void initialize() {
+      super.initialize();
+      Robot.lastAutoCommand =actual;
+      actual.start();
+     // new InstantCommand(()->Robot.lastAutoCommand = new MaintainSetpoint.HoldAll()).start();
+    }
+
+  }
+
+  static enum CommandSequences {
+    INSTANCE;
+
+
+
+    final Command armHold = new MaintainSetpoint(Robot.arm);
+
+   final Command stow =new MyCommand(new Stow());
+   final Command groundPickup = new MyCommand(new GroundPickup());
+   final Command loadingStationFuel = new MyCommand(new LoadingStationFuel(){
+
+    @Override
+    protected void end(){
+      super.end();
+    //  Robot.lastAutoCommand = new MaintainSetpoint.HoldAll();
+    //  Robot.lastAutoCommand.start();
+    }
+
+   });
+
+   final  Command panel0 = new MyCommand(new HatchPanel0());
+   final  Command panel1 = new MyCommand(new HatchPanel1());
+   final Command panel2 = new MyCommand(new HatchPanel2());
+
+   final Command fuel0 = new MyCommand(new HatchFuel0());
+   final Command fuel1 = new MyCommand(new HatchFuel1());
+   final Command fuel2 = new MyCommand(new HatchFuel2());
+  }
+
+  
 
   static class XboxControl {
     static final int XBOX_ID = 1;
@@ -74,26 +122,26 @@ public class OI {
 
 
     XboxControl(){
-      groundPickup.whenPressed(new GroundPickup());
-      loadingStationPickup.whenPressed(new LoadingStationFuel());
+      groundPickup.whenPressed(CommandSequences.INSTANCE.groundPickup);
+      loadingStationPickup.whenPressed(CommandSequences.INSTANCE.loadingStationFuel);
       
       shootBall.whenPressed(IntakeCommands.eject());
       pullBall.whenPressed(IntakeCommands.intake());
 
-      stow.whenPressed(new Stow());
+      stow.whenPressed(CommandSequences.INSTANCE.stow);
 
       jogUp.whileHeld(new JogElevatorContinuously(true));
       jogDown.whileHeld(new JogElevatorContinuously(false));
 
 
      
-      level0Fuel.whenPressed(new HatchFuel0());
-      level1Fuel.whenPressed(new HatchFuel1());
-      level2Fuel.whenPressed(new HatchFuel2());
+      level0Fuel.whenPressed(CommandSequences.INSTANCE.fuel0);
+      level1Fuel.whenPressed(CommandSequences.INSTANCE.fuel1);
+      level2Fuel.whenPressed(CommandSequences.INSTANCE.fuel2);
      
-      level0Panel.whenPressed(new HatchPanel0());
-      level1Panel.whenPressed(new HatchPanel1());
-      level2Panel.whenPressed(new HatchPanel2());
+      level0Panel.whenPressed(CommandSequences.INSTANCE.panel0);
+      level1Panel.whenPressed(CommandSequences.INSTANCE.panel1);
+      level2Panel.whenPressed(CommandSequences.INSTANCE.panel2);
    
       fickleFingerEject.whileHeld(FickleFingerCommands.ejectCommand());
       fickleFingerOut.whenPressed(FickleFingerCommands.hookCommand());
