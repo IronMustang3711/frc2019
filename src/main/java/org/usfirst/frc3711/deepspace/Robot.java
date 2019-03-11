@@ -50,6 +50,7 @@ public class Robot extends TimedRobot {
   public static List<RobotSubsystem> subsystems;
 
   private long disableStartTime;
+  private boolean lastNonDisabledStateWasAuto = false;
 
  static Command lastAutoCommand;
 
@@ -89,7 +90,7 @@ public class Robot extends TimedRobot {
     lights = new Lights();
 
     subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake/*,misc*/, fickleFinger, dogLeg, rearJack,poser, lights);
-
+    lastNonDisabledStateWasAuto = false;
 
     oi = new OI();
 
@@ -98,8 +99,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    if(! lastNonDisabledStateWasAuto){
     Shuffleboard.stopRecording();
     disableAll();
+    }
     disableStartTime = System.currentTimeMillis();
     DriverStation.reportError("Disabled!", false);
   }
@@ -111,7 +114,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
-    if((System.currentTimeMillis() - disableStartTime) > 5000){
+    if((System.currentTimeMillis() - disableStartTime) > 5000 && !lastNonDisabledStateWasAuto){
       subsystems.stream()
         .filter(TalonSubsystem.class::isInstance)
         .map(TalonSubsystem.class::cast)
@@ -125,6 +128,7 @@ public class Robot extends TimedRobot {
         .filter(TalonSubsystem.class::isInstance)
         .map(TalonSubsystem.class::cast)
         .forEach(subsystem -> subsystem.talon.setNeutralMode(NeutralMode.Brake));
+        lastNonDisabledStateWasAuto = true;
   }
 
   @Override
@@ -134,6 +138,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    lastNonDisabledStateWasAuto = false;
     Shuffleboard.startRecording();
     subsystems.stream()
         .filter(TalonSubsystem.class::isInstance)
@@ -157,4 +162,9 @@ public class Robot extends TimedRobot {
 //    SmartDashboard.putString("buttons",
 //    Integer.toBinaryString(DriverStation.getInstance().getStickButtons(1)));
   }
+  @Override
+  public void testInit() {
+    lastNonDisabledStateWasAuto = false;
+  }
 }
+
