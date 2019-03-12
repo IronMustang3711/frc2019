@@ -41,7 +41,7 @@ deploy {
     }
 }
 
-test.onlyIf { Boolean.getBoolean('run.tests') }
+//test.onlyIf { Boolean.getBoolean('run.tests') }
 
 // Set this to true to enable desktop support.
 def includeDesktopSupport = false
