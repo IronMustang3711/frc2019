@@ -35,7 +35,7 @@ public class HatchFuel2 extends MyCommandGroup {
 //        // 		|| Math.abs(subsystem.talon.getClosedLoopError()) < 150;
 //      }
 //    });
-    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2440));
+    addSequential(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2000));
 
     //addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4000));
 

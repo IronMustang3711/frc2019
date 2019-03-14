@@ -27,16 +27,16 @@ public class LoadingStationFuel extends MyCommandGroup {
     addSequential(Commands.delayUntil("Wait for elevator to get 20% way up",
         ()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() >= 0.2));
 
-    var armOut = new MotionMagicSetpoint.ArmSetpoint("Arm Out", 3133);
+    var armOut = new MotionMagicSetpoint.ArmSetpoint("Arm Out", 3100);
     addParallel(armOut);
 
     addSequential(Commands.delayUntil("Wait for arm to be horizontal-ish",() ->
                                          armOut.isRunning() && armOut.getMotionProgress() >= .1));
 
-    addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2949));
+    addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2200));
 
     //elevator back down
-    addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -3000));
+    addSequential(new MotionMagicSetpoint("Elevator Down", Robot.elevator, -4300));
 
   }
 

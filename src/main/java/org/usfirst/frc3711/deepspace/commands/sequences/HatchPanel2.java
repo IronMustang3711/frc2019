@@ -16,7 +16,7 @@ public class HatchPanel2 extends MyCommandGroup {
     requires(Robot.wrist);
     requires(Robot.elevator);
 
-    double elevatorPosition = 13000;
+    double elevatorPosition = 12000;
 
     // elevator up:
     addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 90));
@@ -25,13 +25,13 @@ public class HatchPanel2 extends MyCommandGroup {
 
 
 
-    var armOut = new MotionMagicSetpoint("Arm Out", Robot.arm, 3300);
+    var armOut = new MotionMagicSetpoint("Arm Out", Robot.arm, 3200);
     addParallel(armOut);
 
     addSequential(Commands.delayUntil("wait unitl arm is about horizontal",
         ()->armOut.isRunning() && Robot.arm.talon.getSelectedSensorPosition() >= 1500));
 
-    addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1900));
+    addParallel(new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1500)); // was -1900
 
    // addSequential(new MotionMagicSetpoint("Elevator up", Robot.elevator, 13000));
 

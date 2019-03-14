@@ -148,6 +148,8 @@ public class OI {
     Robot.elevator.tab.add(new JogElevator(true));
     Robot.elevator.tab.add(new JogElevator(false));
 
+    Robot.chassis.tab.add(new ArcadeDrive());
+    Robot.chassis.tab.add(new CurvatureDrive());
 
 //    Robot.fickleFinger.tab.add(FickleFingerCommands.ejectCommand());
 //    Robot.fickleFinger.tab.add(FickleFingerCommands.hookCommand());

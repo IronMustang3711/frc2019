@@ -19,7 +19,7 @@ public class HatchFuel1 extends MyCommandGroup {
     addParallel(new MotionMagicSetpoint("Wrist Vertical", Robot.wrist, 0));
     addParallel(new MotionMagicSetpoint.ArmSetpoint("Arm Vertical", 0));
 
-    var elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 5000);
+    var elevatorUp = new MotionMagicSetpoint("bring elevator up", Robot.elevator, 5500);
     addParallel(elevatorUp);
     addSequential(Commands.delayUntil(()->elevatorUp.isRunning() && elevatorUp.getMotionProgress() > 0.3));
 

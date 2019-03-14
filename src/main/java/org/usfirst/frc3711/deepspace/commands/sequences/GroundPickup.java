@@ -22,15 +22,15 @@ public class GroundPickup extends Command {
   };
 
   private final Command wristDown = Commands.runWhenTrue(
-      new MotionMagicSetpoint("Wrist Down", Robot.wrist, -2200),
+      new MotionMagicSetpoint("Wrist Down", Robot.wrist, -1200),
       ()-> elevatorUp.getMotionProgress() > 0.7);
 
   private final Command armOut = Commands.runWhenTrue(
-      new MotionMagicSetpoint("Bring  Out", Robot.arm, 1800),
+      new MotionMagicSetpoint("Bring  Out", Robot.arm, 1300),
       ()->elevatorUp.getMotionProgress() >= 0.5);
 
 
-      private final Command elevatorDown = Commands.runWhenTrue( new MotionMagicSetpoint("bring elevator down", Robot.elevator, -6000, 2.5) {
+      private final Command elevatorDown = Commands.runWhenTrue( new MotionMagicSetpoint("bring elevator down", Robot.elevator, -7800, 2.5) {
         @Override
         protected boolean isFinished() {
           return isMotionFinished() || super.isFinished();

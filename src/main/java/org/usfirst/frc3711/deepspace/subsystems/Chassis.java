@@ -79,8 +79,7 @@ public class Chassis extends RobotSubsystem {
 
     tab.add(drive);
 
-    tab.add(new ArcadeDrive());
-    tab.add(new CurvatureDrive());
+  
     //  tab.add(new DrivewithJoystick());
 
   }
