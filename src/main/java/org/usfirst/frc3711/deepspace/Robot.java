@@ -12,6 +12,9 @@
 package org.usfirst.frc3711.deepspace;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
@@ -85,12 +88,19 @@ public class Robot extends TimedRobot {
     poser = new RobotPoser();
     lights = new Lights();
 
+
     subsystems = Arrays.asList(chassis, elevator, arm, wrist, intake/*,misc*/, fickleFinger, dogLeg, rearJack,poser, lights);
 
 
     oi = new OI();
 
-    CameraServer.getInstance().startAutomaticCapture();
+    UsbCamera camera1 = CameraServer.getInstance().startAutomaticCapture(0);
+    UsbCamera camera2 = CameraServer.getInstance().startAutomaticCapture(1);
+    // Set the resolution
+   // camera.setResolution(640, 480);
+
+   VideoSink server = CameraServer.getInstance().getServer();
+   server.setSource(camera1);
   }
 
   @Override
